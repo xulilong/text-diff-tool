@@ -1,0 +1,2879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专业文本对比工具 - 免费在线JSON/代码差异对比 | Text Diff Tool</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="免费在线文本对比工具，支持JSON、XML、HTML、SQL等8种格式。专业的代码差异对比，配置文件版本对比，智能格式识别，完全免费使用。">
+    <meta name="keywords" content="文本对比,JSON对比,代码对比,diff工具,文本差异,在线对比工具,免费diff,配置文件对比">
+    <meta name="author" content="Text Diff Tool">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="专业文本对比工具 - 免费在线使用">
+    <meta property="og:description" content="支持8种格式的专业文本对比工具，智能识别格式，完全免费使用">
+    <meta property="og:image" content="/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="专业文本对比工具">
+    <meta name="twitter:description" content="免费在线文本对比，支持JSON、代码等8种格式">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html@3.4.47/bundles/css/diff2html.min.css">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F95FZVJYCG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-F95FZVJYCG'); // 替换为你的GA ID
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* 专业配色 - 简洁浅色主题 */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f6f8fa;
+            --bg-tertiary: #eef2f6;
+            --bg-elevated: #ffffff;
+            
+            --border-default: #d0d7de;
+            --border-muted: #e7ecf0;
+            --border-accent: #0969da;
+            
+            --text-primary: #1f2328;
+            --text-secondary: #59636e;
+            --text-tertiary: #8c959f;
+            --text-link: #0969da;
+            
+            --accent-blue: #0969da;
+            --accent-green: #1a7f37;
+            --accent-red: #d1242f;
+            --accent-yellow: #bf8700;
+            --accent-purple: #8250df;
+            --accent-orange: #d97706;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-default);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .header-container {
+            max-width: 1920px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-green);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 24px;
+            padding-bottom: 80px;
+            max-width: 1920px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Editor Container */
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .editor-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-default);
+            background: var(--bg-tertiary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .panel-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .format-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid;
+        }
+
+        .format-badge.json { 
+            background: #ddf4ff; 
+            border-color: #54aeff;
+            color: #0969da; 
+        }
+        .format-badge.xml { 
+            background: #fff5e6; 
+            border-color: #fb923c;
+            color: #d97706; 
+        }
+        .format-badge.html { 
+            background: #ffebe9; 
+            border-color: #ff7b72;
+            color: #d1242f; 
+        }
+        .format-badge.sql { 
+            background: #dafbe1; 
+            border-color: #4ac26b;
+            color: #1a7f37; 
+        }
+        .format-badge.css { 
+            background: #fbefff; 
+            border-color: #c297ff;
+            color: #8250df; 
+        }
+        .format-badge.javascript { 
+            background: #fff8c5; 
+            border-color: #f0c92c;
+            color: #bf8700; 
+        }
+        .format-badge.yaml { 
+            background: #fbefff; 
+            border-color: #c297ff;
+            color: #8250df; 
+        }
+        .format-badge.text { 
+            background: #f6f8fa; 
+            border-color: #d0d7de;
+            color: #59636e; 
+        }
+        .format-badge.auto { 
+            background: #f6f8fa; 
+            border-color: #d0d7de;
+            color: #8c959f; 
+        }
+
+        .char-count {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+        }
+
+        .panel-toolbar {
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: var(--bg-secondary);
+        }
+
+        .format-select {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .format-select label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .format-select select {
+            padding: 4px 28px 4px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b949e' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+        }
+
+        .format-select select:hover {
+            border-color: var(--border-accent);
+        }
+
+        .format-select select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border-default);
+        }
+
+        .btn-tool {
+            padding: 4px 10px;
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .btn-tool:hover {
+            background: var(--bg-elevated);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        .panel-editor {
+            position: relative;
+        }
+
+        .panel-editor textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 16px;
+            background: #fafbfc;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: vertical;
+            tab-size: 2;
+        }
+
+        .panel-editor textarea:focus {
+            outline: none;
+        }
+
+        .panel-editor textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .editor-message {
+            padding: 8px 16px;
+            font-size: 12px;
+            display: none;
+        }
+
+        .editor-message.success {
+            display: block;
+            background: rgba(63, 185, 80, 0.1);
+            color: var(--accent-green);
+            border-top: 1px solid rgba(63, 185, 80, 0.2);
+            animation: fadeIn 0.2s ease;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #0860ca;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(9, 105, 218, 0.25);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-default);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-elevated);
+            border-color: var(--text-secondary);
+        }
+
+        .options-group {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--accent-blue);
+        }
+
+        .checkbox-wrapper label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-alert {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid rgba(248, 81, 73, 0.3);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            color: var(--accent-red);
+            font-size: 13px;
+        }
+
+        .summary-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .summary-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .summary-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-indicator {
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .mode-indicator.json {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .mode-indicator.text {
+            background: rgba(210, 153, 34, 0.1);
+            color: var(--accent-yellow);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .stat-icon.added { background: rgba(63, 185, 80, 0.15); }
+        .stat-icon.removed { background: rgba(248, 81, 73, 0.15); }
+        .stat-icon.modified { background: rgba(210, 153, 34, 0.15); }
+        .stat-icon.total { background: rgba(139, 148, 158, 0.15); }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        }
+
+        .changes-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .changes-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .changes-list::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        .changes-list::-webkit-scrollbar-thumb {
+            background: var(--border-default);
+            border-radius: 4px;
+        }
+
+        .changes-list::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        .change-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .change-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .change-path {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .change-type {
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .change-type.added {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--accent-green);
+        }
+
+        .change-type.removed {
+            background: rgba(248, 81, 73, 0.15);
+            color: var(--accent-red);
+        }
+
+        .change-type.modified {
+            background: rgba(210, 153, 34, 0.15);
+            color: var(--accent-yellow);
+        }
+
+        .change-values {
+            font-size: 12px;
+        }
+
+        .value-item {
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            margin-top: 6px;
+            border-left: 3px solid;
+        }
+
+        .value-item.old {
+            background: rgba(248, 81, 73, 0.08);
+            border-color: var(--accent-red);
+            color: var(--text-secondary);
+        }
+
+        .value-item.new {
+            background: rgba(63, 185, 80, 0.08);
+            border-color: var(--accent-green);
+            color: var(--text-primary);
+        }
+
+        .diff-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .diff-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-default);
+            background: var(--bg-tertiary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .diff-header h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 4px;
+        }
+
+        .view-toggle button {
+            padding: 6px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .view-toggle button.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
+
+        .view-toggle button:not(.active):hover {
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        .diff-content {
+            background: #fafbfc;
+            overflow: auto;
+        }
+
+        .no-diff-message {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .no-diff-message .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .no-diff-message p {
+            font-size: 14px;
+        }
+
+        /* Help Button in Header */
+        .help-button {
+            padding: 6px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .help-button:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Support Footer */
+        .support-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border-default);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 999;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .support-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .support-text .emoji {
+            font-size: 16px;
+        }
+
+        .donate-button {
+            padding: 6px 16px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #7c5d00;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .donate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Donate Modal */
+        .donate-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2001;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .donate-modal.show {
+            display: flex;
+        }
+
+        .donate-content {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .donate-header {
+            margin-bottom: 24px;
+        }
+
+        .donate-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .donate-header p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .qr-codes {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .qr-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .qr-placeholder {
+            width: 160px;
+            height: 160px;
+            background: var(--bg-tertiary);
+            border: 2px dashed var(--border-default);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .qr-placeholder .icon {
+            font-size: 48px;
+            opacity: 0.5;
+        }
+
+        .qr-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .donate-footer {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-default);
+        }
+
+        .donate-footer p {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            line-height: 1.6;
+        }
+
+        .close-donate {
+            margin-top: 20px;
+            padding: 8px 24px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .close-donate:hover {
+            background: var(--bg-elevated);
+            border-color: var(--text-secondary);
+        }
+
+        /* Share Button */
+        .share-button {
+            padding: 6px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .share-button:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Share Modal */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2001;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .share-modal.show {
+            display: flex;
+        }
+
+        .share-content {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .share-header {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .share-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .share-header p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .share-options {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .share-option {
+            padding: 20px 32px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s ease;
+            min-width: 140px;
+        }
+
+        .share-option:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .share-option .icon {
+            font-size: 32px;
+        }
+
+        .share-option .label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .share-url {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-default);
+        }
+
+        .share-url input {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
+
+        .share-url button {
+            padding: 8px 16px;
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .share-url button:hover {
+            background: #0860ca;
+        }
+
+        .close-share {
+            margin-top: 16px;
+            width: 100%;
+            padding: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .close-share:hover {
+            background: var(--bg-elevated);
+            border-color: var(--text-secondary);
+        }
+
+        .share-stats {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .share-stats p {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .share-stats .count {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            font-family: monospace;
+        }
+
+        /* Help Modal */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .help-modal.show {
+            display: flex;
+        }
+
+        .help-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .help-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            z-index: 1;
+        }
+
+        .help-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-button {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .close-button:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .help-body {
+            padding: 24px;
+        }
+
+        .help-section {
+            margin-bottom: 24px;
+        }
+
+        .help-section h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .help-section li {
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .help-section li:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .help-section li strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .kbd {
+            padding: 2px 6px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 12px;
+                padding-bottom: 72px;
+            }
+
+            .brand-text p {
+                display: none;
+            }
+
+            .header-badge {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .options-group {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .support-footer {
+                flex-direction: column;
+                gap: 8px;
+                padding: 10px 16px;
+            }
+
+            .support-text {
+                font-size: 12px;
+            }
+
+            .qr-codes {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .help-button span:last-child,
+            .share-button span:last-child {
+                display: none;
+            }
+
+            .share-options {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .share-option {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+
+        /* D2H Theme Override */
+        .d2h-wrapper {
+            background: #fafbfc !important;
+            color: var(--text-primary) !important;
+        }
+
+        .d2h-file-header {
+            background: var(--bg-tertiary) !important;
+            border-color: var(--border-default) !important;
+        }
+
+        .d2h-code-line {
+            background: #ffffff !important;
+            color: var(--text-primary) !important;
+        }
+
+        .d2h-ins {
+            background: rgba(26, 127, 55, 0.1) !important;
+        }
+
+        .d2h-del {
+            background: rgba(209, 36, 47, 0.1) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-container">
+                <div class="brand">
+                    <div class="brand-icon">⚡</div>
+                    <div class="brand-text">
+                        <h1>专业文本对比工具</h1>
+                        <p>Professional Text Diff Tool v3.0</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="header-badge">
+                        <span class="status-dot"></span>
+                        <span>8种格式支持</span>
+                    </div>
+                    <div class="header-badge">
+                        <span>完全免费</span>
+                    </div>
+                    <button class="share-button" onclick="toggleShare()">
+                        <span>🔗</span>
+                        <span>分享</span>
+                    </button>
+                    <button class="help-button" onclick="toggleHelp()">
+                        <span>❓</span>
+                        <span>帮助</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Editor Container -->
+            <div class="editor-container">
+                <!-- Left Editor -->
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <h3>左侧文本（旧版本）</h3>
+                        </div>
+                        <div class="panel-info">
+                            <span class="format-badge auto" id="leftFormatType">自动识别</span>
+                            <span class="char-count" id="leftCharCount">0字符 · 0行</span>
+                        </div>
+                    </div>
+                    <div class="panel-toolbar">
+                        <div class="format-select">
+                            <label>格式</label>
+                            <select id="leftFormatSelect" onchange="handleFormatChange('left')">
+                                <option value="auto">自动识别</option>
+                                <option value="json">JSON</option>
+                                <option value="xml">XML</option>
+                                <option value="html">HTML</option>
+                                <option value="sql">SQL</option>
+                                <option value="yaml">YAML</option>
+                                <option value="css">CSS</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="text">纯文本</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <button class="btn-tool" onclick="formatContent('left')">✨ 格式化</button>
+                        <button class="btn-tool" onclick="loadFromFile('left')">📁 加载文件</button>
+                        <button class="btn-tool" onclick="copyText('left')">📋 复制</button>
+                    </div>
+                    <div class="panel-editor">
+                        <textarea id="leftText" placeholder="在此输入或拖拽文件..."></textarea>
+                    </div>
+                    <div id="leftSuccess" class="editor-message success"></div>
+                </div>
+
+                <!-- Right Editor -->
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <h3>右侧文本（新版本）</h3>
+                        </div>
+                        <div class="panel-info">
+                            <span class="format-badge auto" id="rightFormatType">自动识别</span>
+                            <span class="char-count" id="rightCharCount">0字符 · 0行</span>
+                        </div>
+                    </div>
+                    <div class="panel-toolbar">
+                        <div class="format-select">
+                            <label>格式</label>
+                            <select id="rightFormatSelect" onchange="handleFormatChange('right')">
+                                <option value="auto">自动识别</option>
+                                <option value="json">JSON</option>
+                                <option value="xml">XML</option>
+                                <option value="html">HTML</option>
+                                <option value="sql">SQL</option>
+                                <option value="yaml">YAML</option>
+                                <option value="css">CSS</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="text">纯文本</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <button class="btn-tool" onclick="formatContent('right')">✨ 格式化</button>
+                        <button class="btn-tool" onclick="loadFromFile('right')">📁 加载文件</button>
+                        <button class="btn-tool" onclick="copyText('right')">📋 复制</button>
+                    </div>
+                    <div class="panel-editor">
+                        <textarea id="rightText" placeholder="在此输入或拖拽文件..."></textarea>
+                    </div>
+                    <div id="rightSuccess" class="editor-message success"></div>
+                </div>
+            </div>
+
+            <!-- Hidden File Input -->
+            <input type="file" id="fileInput" style="display: none;" accept=".txt,.json,.js,.css,.html,.xml,.yaml,.yml,.md,.log,.conf,.config,.sql">
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="action-group">
+                    <button class="btn btn-secondary" onclick="swapTexts()">
+                        <span>🔄</span> 交换左右
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearAll()">
+                        <span>🗑️</span> 清空
+                    </button>
+                    <button class="btn btn-secondary" onclick="loadExample('json')">
+                        <span>📋</span> JSON示例
+                    </button>
+                    <button class="btn btn-secondary" onclick="loadExample('text')">
+                        <span>📝</span> 文本示例
+                    </button>
+                </div>
+                <div class="options-group">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="ignoreWhitespace">
+                        <label for="ignoreWhitespace">忽略空白</label>
+                    </div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="autoFormatJson" checked>
+                        <label for="autoFormatJson">自动格式化JSON</label>
+                    </div>
+                    <button class="btn btn-primary" onclick="compareText()" style="margin-left: 8px;">
+                        <span>🔍</span> 开始对比
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultSection">
+                <div id="errorContainer"></div>
+                
+                <!-- Summary Panel -->
+                <div class="summary-panel" id="summaryBox">
+                    <div class="summary-header">
+                        <h3>
+                            <span>📊</span>
+                            <span>差异统计</span>
+                            <span class="mode-indicator json" id="modeIndicator">JSON对比模式</span>
+                        </h3>
+                    </div>
+                    <div class="stats-grid" id="diffStats"></div>
+                    <div id="diffDetails"></div>
+                </div>
+
+                <!-- Diff Panel -->
+                <div class="diff-panel">
+                    <div class="diff-header">
+                        <h3>详细对比</h3>
+                        <div class="view-toggle">
+                            <button class="active" onclick="changeViewMode('side-by-side')">并排对比</button>
+                            <button onclick="changeViewMode('line-by-line')">逐行对比</button>
+                            <button onclick="exportResult()" style="margin-left: 8px; background: var(--accent-green); color: #fff; border-color: var(--accent-green);">📥 导出</button>
+                        </div>
+                    </div>
+                    <div class="diff-content" id="diffViewer"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Support Footer -->
+        <div class="support-footer">
+            <div class="support-text">
+                <span class="emoji">☕</span>
+                <span>觉得好用？</span>
+            </div>
+            <button class="donate-button" onclick="toggleDonate()">
+                <span>❤️</span>
+                <span>请作者喝杯咖啡</span>
+            </button>
+        </div>
+
+        <!-- Donate Modal -->
+        <div class="donate-modal" id="donateModal" onclick="if(event.target===this) toggleDonate()">
+            <div class="donate-content">
+                <div class="donate-header">
+                    <h2>
+                        <span>☕</span>
+                        <span>感谢您的支持</span>
+                    </h2>
+                    <p>您的每一份支持都是我们持续改进的动力<br>如果这个工具帮到了您，欢迎请作者喝杯咖啡</p>
+                </div>
+                
+                <div class="qr-codes">
+                    <div class="qr-item">
+                        <div class="qr-placeholder">
+                            <div class="icon">💚</div>
+                            <div>微信赞赏码</div>
+                        </div>
+                        <div class="qr-label">微信扫一扫</div>
+                    </div>
+                    <div class="qr-item">
+                        <div class="qr-placeholder">
+                            <div class="icon">💙</div>
+                            <div>支付宝收款码</div>
+                        </div>
+                        <div class="qr-label">支付宝扫一扫</div>
+                    </div>
+                </div>
+
+                <div class="donate-footer">
+                    <p>💡 所有功能永久免费使用，您的支持将帮助我们：<br>
+                    · 持续优化产品体验<br>
+                    · 增加更多实用功能<br>
+                    · 保持服务稳定运行</p>
+                </div>
+
+                <button class="close-donate" onclick="toggleDonate()">关闭</button>
+            </div>
+        </div>
+
+        <!-- Share Modal -->
+        <div class="share-modal" id="shareModal" onclick="if(event.target===this) toggleShare()">
+            <div class="share-content">
+                <div class="share-header">
+                    <h2>
+                        <span>🔗</span>
+                        <span>分享工具</span>
+                    </h2>
+                    <p>帮助更多人发现这个好用的工具</p>
+                </div>
+
+                <div class="share-options">
+                    <div class="share-option" onclick="shareToWeChat()">
+                        <div class="icon">💬</div>
+                        <div class="label">微信分享</div>
+                    </div>
+                    <div class="share-option" onclick="shareToWeibo()">
+                        <div class="icon">🔵</div>
+                        <div class="label">微博分享</div>
+                    </div>
+                </div>
+
+                <div id="wechatShareContent" style="display: none;">
+                    <div style="background: var(--bg-secondary); padding: 16px; border-radius: var(--radius-md); margin-bottom: 16px;">
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 6px;">分享文案：</div>
+                            <div style="background: var(--bg-elevated); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-default); position: relative;">
+                                <p id="shareText" style="font-size: 13px; color: var(--text-primary); line-height: 1.6; margin: 0;">发现一个超好用的文本对比工具！✨ 支持JSON、XML、HTML、SQL等8种格式，智能识别、一键格式化、深度对比，完全免费使用！开发者必备神器 🚀</p>
+                                <button onclick="copyShareText()" style="position: absolute; top: 8px; right: 8px; padding: 4px 12px; background: var(--accent-blue); color: #fff; border: none; border-radius: 4px; font-size: 11px; cursor: pointer;">复制</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 6px;">链接：</div>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="shareUrlWechat" readonly value="" style="flex: 1; padding: 8px 12px; background: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); font-family: monospace;">
+                                <button onclick="copyWechatUrl()" style="padding: 8px 16px; background: var(--accent-green); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;">复制链接</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; font-size: 12px; color: var(--text-tertiary);">
+                        📱 复制后在微信中粘贴分享给好友
+                    </div>
+                </div>
+
+                <div class="share-url" id="shareUrlSection">
+                    <input type="text" id="shareUrl" readonly value="" placeholder="工具链接">
+                    <button onclick="copyShareUrl()">复制链接</button>
+                </div>
+
+                <div class="share-stats">
+                    <p>已有<span class="count" id="totalCompares">0</span>次对比</p>
+                </div>
+
+                <button class="close-share" onclick="toggleShare()">关闭</button>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="help-modal" id="helpModal" onclick="if(event.target===this) toggleHelp()">
+            <div class="help-content">
+                <div class="help-header">
+                    <h2>💡 使用帮助</h2>
+                    <button class="close-button" onclick="toggleHelp()">×</button>
+                </div>
+                <div class="help-body">
+                    <div class="help-section">
+                        <h3>🎯 核心功能</h3>
+                        <ul>
+                            <li>✅ 支持8种格式：JSON、XML、HTML、SQL、YAML、CSS、JavaScript、纯文本</li>
+                            <li>✅ 自动格式识别 + 手动选择</li>
+                            <li>✅ 一键美化格式化</li>
+                            <li>✅ 拖拽文件加载</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>⚡ 快捷键</h3>
+                        <ul>
+                            <li><span class="kbd">Ctrl/Cmd + Enter</span> - 快速对比</li>
+                            <li><span class="kbd">Esc</span> - 关闭帮助</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>📋 使用步骤</h3>
+                        <ul>
+                            <li><strong>1.</strong> 输入或拖拽文件到左右编辑器</li>
+                            <li><strong>2.</strong> 选择格式（可选，工具会自动识别）</li>
+                            <li><strong>3.</strong> 点击格式化（可选）</li>
+                            <li><strong>4.</strong> 点击"开始对比"</li>
+                            <li><strong>5.</strong> 查看差异统计和详细对比</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>💡 使用技巧</h3>
+                        <ul>
+                            <li>拖拽文件会自动识别格式</li>
+                            <li>JSON模式提供字段级深度对比</li>
+                            <li>可以导出对比结果为HTML文件</li>
+                            <li>完全免费使用，无需注册登录</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/diff2html@3.4.47/bundles/js/diff2html.min.js"></script>
+
+    <script>
+        let currentViewMode = 'side-by-side';
+        let currentDiffData = null;
+        let currentFileTarget = null;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('leftText').addEventListener('input', function() {
+                updateCharCount('left');
+                detectAndUpdateFormat('left');
+            });
+            
+            document.getElementById('rightText').addEventListener('input', function() {
+                updateCharCount('right');
+                detectAndUpdateFormat('right');
+            });
+
+            document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+            setupDragAndDrop('leftText');
+            setupDragAndDrop('rightText');
+        });
+
+        // 更新字符统计
+        function updateCharCount(side) {
+            const text = document.getElementById(side + 'Text').value;
+            const count = text.length;
+            const lines = text.split('\n').length;
+            document.getElementById(side + 'CharCount').textContent = 
+                `${count}字符 · ${lines}行`;
+        }
+
+        // 显示成功消息
+        function showSuccess(side, message) {
+            const el = document.getElementById(side + 'Success');
+            el.textContent = message;
+            el.style.display = 'block';
+            setTimeout(() => {
+                el.style.display = 'none';
+            }, 2000);
+        }
+
+        // 自动识别格式
+        function detectFormat(text) {
+            if (!text || !text.trim()) return 'text';
+            const trimmed = text.trim();
+            
+            // JSON
+            if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || 
+                (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+                try { JSON.parse(trimmed); return 'json'; } catch (e) {}
+            }
+
+            // XML/HTML
+            if (trimmed.startsWith('<?xml')) return 'xml';
+            if (trimmed.startsWith('<!DOCTYPE html') || trimmed.startsWith('<html')) return 'html';
+            if (trimmed.startsWith('<') && trimmed.includes('</')) {
+                if (/<(div|span|p|a|body|head|title|meta|link|script|style|img|ul|li|table|tr|td|th|form|input|button|nav|header|footer|section|article)/i.test(trimmed)) {
+                    return 'html';
+                }
+                return 'xml';
+            }
+
+            // SQL
+            if (/^\s*(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|GRANT|REVOKE|WITH|MERGE)\s+/i.test(trimmed)) {
+                return 'sql';
+            }
+
+            // CSS
+            if (/{[\s\S]*:[^:]+;[\s\S]*}/.test(trimmed) && !trimmed.startsWith('{')) {
+                return 'css';
+            }
+
+            // JavaScript
+            const jsPatterns = [
+                /^\s*(function|const|let|var|class|import|export|async|await)\s+/,
+                /=>\s*{/,
+                /console\.(log|error|warn|info)/
+            ];
+            if (jsPatterns.some(pattern => pattern.test(trimmed))) {
+                return 'javascript';
+            }
+
+            // YAML
+            const yamlPatterns = [
+                /^[a-zA-Z_][\w-]*:\s*$/m,
+                /^[a-zA-Z_][\w-]*:\s+.+$/m,
+                /^\s*-\s+\w+/m
+            ];
+            if (yamlPatterns.some(pattern => pattern.test(trimmed))) {
+                return 'yaml';
+            }
+
+            return 'text';
+        }
+
+        // 检测并更新格式指示器
+        function detectAndUpdateFormat(side) {
+            const selectElement = document.getElementById(side + 'FormatSelect');
+            if (selectElement.value === 'auto') {
+                const text = document.getElementById(side + 'Text').value;
+                const detected = detectFormat(text);
+                updateFormatIndicator(side, detected);
+            }
+        }
+
+        // 更新格式指示器
+        function updateFormatIndicator(side, format) {
+            const formatType = document.getElementById(side + 'FormatType');
+            const formatNames = {
+                'json': 'JSON', 'xml': 'XML', 'html': 'HTML', 'sql': 'SQL',
+                'yaml': 'YAML', 'css': 'CSS', 'javascript': 'JavaScript',
+                'text': '纯文本', 'auto': '自动识别'
+            };
+            
+            formatType.textContent = formatNames[format] || format.toUpperCase();
+            formatType.className = 'format-badge ' + format;
+        }
+
+        // 处理格式选择变化
+        function handleFormatChange(side) {
+            const selectElement = document.getElementById(side + 'FormatSelect');
+            const selectedFormat = selectElement.value;
+            
+            if (selectedFormat === 'auto') {
+                detectAndUpdateFormat(side);
+            } else {
+                updateFormatIndicator(side, selectedFormat);
+            }
+        }
+
+        // 获取当前格式
+        function getCurrentFormat(side) {
+            const selectElement = document.getElementById(side + 'FormatSelect');
+            if (selectElement.value === 'auto') {
+                const text = document.getElementById(side + 'Text').value;
+                return detectFormat(text);
+            }
+            return selectElement.value;
+        }
+
+        // 格式化内容
+        function formatContent(side) {
+            const textarea = document.getElementById(side + 'Text');
+            const text = textarea.value.trim();
+            
+            if (!text) {
+                alert('请先输入内容');
+                return;
+            }
+
+            const format = getCurrentFormat(side);
+            let formatted = null;
+            let success = false;
+
+            try {
+                switch (format) {
+                    case 'json':
+                        formatted = formatJSON(text);
+                        success = formatted !== null;
+                        break;
+                    case 'xml':
+                    case 'html':
+                        formatted = formatXML(text);
+                        success = formatted !== null;
+                        break;
+                    case 'sql':
+                        formatted = formatSQL(text);
+                        success = true;
+                        break;
+                    case 'css':
+                        formatted = formatCSS(text);
+                        success = true;
+                        break;
+                    case 'javascript':
+                        formatted = formatJavaScript(text);
+                        success = true;
+                        break;
+                    default:
+                        alert(`暂不支持 ${format.toUpperCase()} 格式的自动格式化`);
+                        return;
+                }
+
+                if (success && formatted) {
+                    textarea.value = formatted;
+                    updateCharCount(side);
+                    showSuccess(side, `✅ ${format.toUpperCase()} 格式化成功`);
+                    trackEvent('format', 'success', format);
+                } else {
+                    alert(`格式化失败，请检查内容是否为有效的 ${format.toUpperCase()} 格式`);
+                    trackEvent('format', 'error', format);
+                }
+            } catch (error) {
+                alert(`格式化失败: ${error.message}`);
+                trackEvent('format', 'error', format);
+            }
+        }
+
+        // 格式化JSON
+        function formatJSON(text) {
+            try {
+                const parsed = JSON.parse(text);
+                return JSON.stringify(parsed, null, 2);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // 格式化XML/HTML
+        function formatXML(text) {
+            try {
+                let formatted = '';
+                let indent = 0;
+                const tab = '  ';
+                
+                text = text.replace(/>\s+</g, '><').trim();
+                const nodes = text.split(/(<[^>]+>)/g).filter(n => n.trim());
+                
+                nodes.forEach(node => {
+                    if (node.match(/^<\/\w/)) {
+                        indent--;
+                        formatted += tab.repeat(Math.max(0, indent)) + node + '\n';
+                    } else if (node.match(/^<\w[^>]*[^\/]>$/)) {
+                        formatted += tab.repeat(indent) + node + '\n';
+                        indent++;
+                    } else if (node.match(/^<\w[^>]*\/>$/)) {
+                        formatted += tab.repeat(indent) + node + '\n';
+                    } else if (node.trim()) {
+                        formatted += tab.repeat(indent) + node.trim() + '\n';
+                    }
+                });
+                
+                return formatted.trim();
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // 格式化SQL
+        function formatSQL(text) {
+            const keywords = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'ORDER BY', 'GROUP BY', 
+                             'HAVING', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN',
+                             'INSERT INTO', 'UPDATE', 'DELETE FROM', 'CREATE', 'ALTER', 'DROP'];
+            
+            let formatted = text;
+            keywords.forEach(keyword => {
+                const regex = new RegExp('\\b' + keyword + '\\b', 'gi');
+                formatted = formatted.replace(regex, keyword);
+            });
+            
+            formatted = formatted
+                .replace(/\bSELECT\b/g, '\nSELECT')
+                .replace(/\bFROM\b/g, '\nFROM')
+                .replace(/\bWHERE\b/g, '\nWHERE')
+                .replace(/\bAND\b/g, '\n  AND')
+                .replace(/\bOR\b/g, '\n  OR')
+                .replace(/\bORDER BY\b/g, '\nORDER BY')
+                .replace(/\bGROUP BY\b/g, '\nGROUP BY')
+                .replace(/\bHAVING\b/g, '\nHAVING')
+                .replace(/,/g, ',\n  ')
+                .trim();
+            
+            return formatted;
+        }
+
+        // 格式化CSS
+        function formatCSS(text) {
+            let formatted = text.replace(/\s+/g, ' ').trim();
+            formatted = formatted
+                .replace(/\{/g, ' {\n  ')
+                .replace(/\}/g, '\n}\n\n')
+                .replace(/;/g, ';\n  ')
+                .replace(/,/g, ',\n')
+                .replace(/\n\s+\n/g, '\n')
+                .trim();
+            return formatted;
+        }
+
+        // 格式化JavaScript
+        function formatJavaScript(text) {
+            let indent = 0;
+            const tab = '  ';
+            const lines = text.split('\n');
+            const result = [];
+            
+            lines.forEach(line => {
+                const trimmed = line.trim();
+                if (!trimmed) {
+                    result.push('');
+                    return;
+                }
+                
+                if (trimmed.startsWith('}') || trimmed.startsWith(']') || trimmed.startsWith(')')) {
+                    indent = Math.max(0, indent - 1);
+                }
+                
+                result.push(tab.repeat(indent) + trimmed);
+                
+                if (trimmed.endsWith('{') || trimmed.endsWith('[') || trimmed.endsWith('(')) {
+                    indent++;
+                }
+                
+                const opens = (trimmed.match(/[{[(]/g) || []).length;
+                const closes = (trimmed.match(/[}\])]/g) || []).length;
+                indent = Math.max(0, indent - (closes - opens));
+            });
+            
+            return result.join('\n');
+        }
+
+        // 复制文本
+        function copyText(side) {
+            const textarea = document.getElementById(side + 'Text');
+            const text = textarea.value;
+            
+            if (!text) {
+                alert('没有内容可复制');
+                return;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                showSuccess(side, '✅ 已复制到剪贴板');
+            }).catch(() => {
+                textarea.select();
+                document.execCommand('copy');
+                showSuccess(side, '✅ 已复制到剪贴板');
+            });
+        }
+
+        // 从文件加载
+        function loadFromFile(side) {
+            currentFileTarget = side;
+            document.getElementById('fileInput').click();
+        }
+
+        // 处理文件选择
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                document.getElementById(currentFileTarget + 'Text').value = content;
+                updateCharCount(currentFileTarget);
+                
+                const ext = file.name.split('.').pop().toLowerCase();
+                const formatMap = {
+                    'json': 'json', 'xml': 'xml', 'html': 'html', 'htm': 'html',
+                    'sql': 'sql', 'yaml': 'yaml', 'yml': 'yaml',
+                    'css': 'css', 'js': 'javascript', 'jsx': 'javascript',
+                    'ts': 'javascript', 'tsx': 'javascript'
+                };
+                
+                const selectElement = document.getElementById(currentFileTarget + 'FormatSelect');
+                if (formatMap[ext]) {
+                    selectElement.value = formatMap[ext];
+                    updateFormatIndicator(currentFileTarget, formatMap[ext]);
+                } else {
+                    selectElement.value = 'auto';
+                    detectAndUpdateFormat(currentFileTarget);
+                }
+                
+                showSuccess(currentFileTarget, `✅ 已加载文件: ${file.name}`);
+            };
+            reader.onerror = function() {
+                alert('文件读取失败');
+            };
+            reader.readAsText(file);
+
+            event.target.value = '';
+        }
+
+        // 拖拽支持
+        function setupDragAndDrop(textareaId) {
+            const textarea = document.getElementById(textareaId);
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                textarea.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                textarea.addEventListener(eventName, () => {
+                    textarea.style.borderColor = 'var(--accent-blue)';
+                    textarea.style.background = 'rgba(9, 105, 218, 0.05)';
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                textarea.addEventListener(eventName, () => {
+                    textarea.style.borderColor = '';
+                    textarea.style.background = '';
+                }, false);
+            });
+
+            textarea.addEventListener('drop', function(e) {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        textarea.value = e.target.result;
+                        const side = textareaId.replace('Text', '');
+                        updateCharCount(side);
+                        
+                        const ext = file.name.split('.').pop().toLowerCase();
+                        const formatMap = {
+                            'json': 'json', 'xml': 'xml', 'html': 'html', 'htm': 'html',
+                            'sql': 'sql', 'yaml': 'yaml', 'yml': 'yaml',
+                            'css': 'css', 'js': 'javascript', 'jsx': 'javascript',
+                            'ts': 'javascript', 'tsx': 'javascript'
+                        };
+                        
+                        const selectElement = document.getElementById(side + 'FormatSelect');
+                        if (formatMap[ext]) {
+                            selectElement.value = formatMap[ext];
+                            updateFormatIndicator(side, formatMap[ext]);
+                        } else {
+                            selectElement.value = 'auto';
+                            detectAndUpdateFormat(side);
+                        }
+                        
+                        showSuccess(side, `✅ 已加载文件: ${file.name}`);
+                    };
+                    
+                    reader.readAsText(file);
+                }
+            }, false);
+        }
+
+        // 交换左右
+        function swapTexts() {
+            const leftText = document.getElementById('leftText').value;
+            const rightText = document.getElementById('rightText').value;
+            const leftFormat = document.getElementById('leftFormatSelect').value;
+            const rightFormat = document.getElementById('rightFormatSelect').value;
+            
+            document.getElementById('leftText').value = rightText;
+            document.getElementById('rightText').value = leftText;
+            document.getElementById('leftFormatSelect').value = rightFormat;
+            document.getElementById('rightFormatSelect').value = leftFormat;
+            
+            updateCharCount('left');
+            updateCharCount('right');
+            handleFormatChange('left');
+            handleFormatChange('right');
+            
+            trackEvent('action', 'swap', 'swap_texts');
+            
+            if (currentDiffData) {
+                compareText();
+            }
+        }
+
+        // 清空
+        function clearAll() {
+            document.getElementById('leftText').value = '';
+            document.getElementById('rightText').value = '';
+            document.getElementById('leftFormatSelect').value = 'auto';
+            document.getElementById('rightFormatSelect').value = 'auto';
+            document.getElementById('resultSection').classList.remove('active');
+            currentDiffData = null;
+            updateCharCount('left');
+            updateCharCount('right');
+            updateFormatIndicator('left', 'auto');
+            updateFormatIndicator('right', 'auto');
+        }
+
+        // 加载示例
+        function loadExample(type) {
+            trackEvent('example', 'load', type);
+            
+            let leftExample, rightExample, format;
+            
+            if (type === 'json') {
+                format = 'json';
+                leftExample = `{
+  "name": "张三",
+  "age": 25,
+  "email": "zhangsan@example.com",
+  "address": {
+    "city": "北京",
+    "district": "朝阳区"
+  },
+  "skills": ["JavaScript", "Python"],
+  "isActive": true
+}`;
+                rightExample = `{
+  "name": "张三",
+  "age": 26,
+  "email": "zhangsan@newmail.com",
+  "address": {
+    "city": "上海",
+    "district": "浦东新区",
+    "street": "世纪大道"
+  },
+  "skills": ["JavaScript", "Python", "Go"],
+  "isActive": true,
+  "department": "技术部"
+}`;
+            } else {
+                format = 'auto';
+                leftExample = `# 项目配置
+
+host: localhost
+port: 8080
+debug: true
+
+database:
+  type: mysql
+  host: 127.0.0.1`;
+                rightExample = `# 项目配置
+
+host: 0.0.0.0
+port: 9000
+debug: false
+ssl: true
+
+database:
+  type: postgresql
+  host: db.example.com`;
+            }
+
+            document.getElementById('leftText').value = leftExample;
+            document.getElementById('rightText').value = rightExample;
+            document.getElementById('leftFormatSelect').value = format;
+            document.getElementById('rightFormatSelect').value = format;
+            
+            updateCharCount('left');
+            updateCharCount('right');
+            handleFormatChange('left');
+            handleFormatChange('right');
+        }
+
+        // 尝试解析JSON
+        function tryParseJSON(str) {
+            try {
+                const parsed = JSON.parse(str);
+                return { success: true, data: parsed };
+            } catch (e) {
+                return { success: false, error: e };
+            }
+        }
+
+        // 深度对比JSON
+        function deepCompare(oldObj, newObj, path = '') {
+            const diffs = [];
+
+            if (oldObj === null || oldObj === undefined) {
+                if (newObj !== null && newObj !== undefined) {
+                    diffs.push({ path: path || '(root)', type: 'added', new: newObj });
+                }
+                return diffs;
+            }
+
+            if (newObj === null || newObj === undefined) {
+                diffs.push({ path: path || '(root)', type: 'removed', old: oldObj });
+                return diffs;
+            }
+
+            if (typeof oldObj !== typeof newObj) {
+                diffs.push({ path: path || '(root)', type: 'modified', old: oldObj, new: newObj });
+                return diffs;
+            }
+
+            if (typeof oldObj !== 'object') {
+                if (oldObj !== newObj) {
+                    diffs.push({ path: path || '(root)', type: 'modified', old: oldObj, new: newObj });
+                }
+                return diffs;
+            }
+
+            if (Array.isArray(oldObj) && Array.isArray(newObj)) {
+                const maxLen = Math.max(oldObj.length, newObj.length);
+                for (let i = 0; i < maxLen; i++) {
+                    const currentPath = `${path}[${i}]`;
+                    if (i >= oldObj.length) {
+                        diffs.push({ path: currentPath, type: 'added', new: newObj[i] });
+                    } else if (i >= newObj.length) {
+                        diffs.push({ path: currentPath, type: 'removed', old: oldObj[i] });
+                    } else {
+                        diffs.push(...deepCompare(oldObj[i], newObj[i], currentPath));
+                    }
+                }
+                return diffs;
+            }
+
+            const allKeys = new Set([...Object.keys(oldObj), ...Object.keys(newObj)]);
+            
+            allKeys.forEach(key => {
+                const currentPath = path ? `${path}.${key}` : key;
+                const oldVal = oldObj[key];
+                const newVal = newObj[key];
+
+                if (!(key in oldObj)) {
+                    diffs.push({ path: currentPath, type: 'added', new: newVal });
+                } else if (!(key in newObj)) {
+                    diffs.push({ path: currentPath, type: 'removed', old: oldVal });
+                } else {
+                    diffs.push(...deepCompare(oldVal, newVal, currentPath));
+                }
+            });
+
+            return diffs;
+        }
+
+        // 分析文本差异
+        function analyzeTextDiff(leftStr, rightStr) {
+            const changes = Diff.diffLines(leftStr, rightStr);
+            
+            let addedLines = 0;
+            let removedLines = 0;
+            let modifiedBlocks = 0;
+            const details = [];
+            
+            let lineNum = 0;
+            changes.forEach((change) => {
+                if (change.added) {
+                    const count = change.value.split('\n').length - 1 || 1;
+                    addedLines += count;
+                    details.push({
+                        type: 'added',
+                        line: lineNum + 1,
+                        count: count,
+                        content: change.value.trim()
+                    });
+                } else if (change.removed) {
+                    const count = change.value.split('\n').length - 1 || 1;
+                    removedLines += count;
+                    details.push({
+                        type: 'removed',
+                        line: lineNum + 1,
+                        count: count,
+                        content: change.value.trim()
+                    });
+                } else {
+                    lineNum += change.value.split('\n').length - 1;
+                }
+            });
+            
+            for (let i = 0; i < details.length - 1; i++) {
+                if ((details[i].type === 'removed' && details[i + 1].type === 'added') ||
+                    (details[i].type === 'added' && details[i + 1].type === 'removed')) {
+                    modifiedBlocks++;
+                    i++;
+                }
+            }
+            
+            return {
+                addedLines,
+                removedLines,
+                modifiedBlocks,
+                details,
+                totalChanges: details.length
+            };
+        }
+
+        // 格式化值用于显示
+        function formatValue(value) {
+            if (value === null) return 'null';
+            if (value === undefined) return 'undefined';
+            if (typeof value === 'object') {
+                return JSON.stringify(value, null, 2);
+            }
+            return String(value);
+        }
+
+        // 渲染JSON差异摘要
+        function renderJsonSummary(diffs) {
+            const added = diffs.filter(d => d.type === 'added').length;
+            const removed = diffs.filter(d => d.type === 'removed').length;
+            const modified = diffs.filter(d => d.type === 'modified').length;
+
+            const statsHtml = `
+                <div class="stat-card">
+                    <div class="stat-icon added">+</div>
+                    <div class="stat-content">
+                        <div class="stat-label">新增字段</div>
+                        <div class="stat-value">${added}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon removed">-</div>
+                    <div class="stat-content">
+                        <div class="stat-label">删除字段</div>
+                        <div class="stat-value">${removed}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon modified">~</div>
+                    <div class="stat-content">
+                        <div class="stat-label">修改字段</div>
+                        <div class="stat-value">${modified}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon total">#</div>
+                    <div class="stat-content">
+                        <div class="stat-label">总计变更</div>
+                        <div class="stat-value">${diffs.length}</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('diffStats').innerHTML = statsHtml;
+
+            if (diffs.length > 0) {
+                const maxDisplay = 50;
+                const displayDiffs = diffs.slice(0, maxDisplay);
+                
+                const itemsHtml = displayDiffs.map(diff => {
+                    let valuesHtml = '';
+                    if (diff.type === 'modified') {
+                        valuesHtml = `
+                            <div class="change-values">
+                                <div class="value-item old">旧值: ${formatValue(diff.old)}</div>
+                                <div class="value-item new">新值: ${formatValue(diff.new)}</div>
+                            </div>
+                        `;
+                    } else if (diff.type === 'added') {
+                        valuesHtml = `
+                            <div class="change-values">
+                                <div class="value-item new">新增: ${formatValue(diff.new)}</div>
+                            </div>
+                        `;
+                    } else if (diff.type === 'removed') {
+                        valuesHtml = `
+                            <div class="change-values">
+                                <div class="value-item old">删除: ${formatValue(diff.old)}</div>
+                            </div>
+                        `;
+                    }
+
+                    const typeNames = { 'added': '新增', 'removed': '删除', 'modified': '修改' };
+
+                    return `
+                        <div class="change-item">
+                            <div class="change-header">
+                                <span class="change-path">${diff.path}</span>
+                                <span class="change-type ${diff.type}">${typeNames[diff.type]}</span>
+                            </div>
+                            ${valuesHtml}
+                        </div>
+                    `;
+                }).join('');
+
+                const moreInfo = diffs.length > maxDisplay 
+                    ? `<p style="text-align: center; color: var(--text-tertiary); margin-top: 16px; font-size: 12px;">... 还有 ${diffs.length - maxDisplay} 处变更</p>`
+                    : '';
+
+                document.getElementById('diffDetails').innerHTML = `
+                    <h3 style="margin: 20px 0 12px 0; font-size: 14px; font-weight: 600;">详细变更</h3>
+                    <div class="changes-list">${itemsHtml}</div>
+                    ${moreInfo}
+                `;
+            }
+        }
+
+        // 渲染文本差异摘要
+        function renderTextSummary(diffAnalysis) {
+            const statsHtml = `
+                <div class="stat-card">
+                    <div class="stat-icon added">+</div>
+                    <div class="stat-content">
+                        <div class="stat-label">新增行数</div>
+                        <div class="stat-value">${diffAnalysis.addedLines}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon removed">-</div>
+                    <div class="stat-content">
+                        <div class="stat-label">删除行数</div>
+                        <div class="stat-value">${diffAnalysis.removedLines}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon modified">~</div>
+                    <div class="stat-content">
+                        <div class="stat-label">修改块数</div>
+                        <div class="stat-value">${diffAnalysis.modifiedBlocks}</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon total">#</div>
+                    <div class="stat-content">
+                        <div class="stat-label">总变更</div>
+                        <div class="stat-value">${diffAnalysis.totalChanges}</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('diffStats').innerHTML = statsHtml;
+
+            if (diffAnalysis.details.length > 0) {
+                const maxDisplay = 20;
+                const displayDetails = diffAnalysis.details.slice(0, maxDisplay);
+                
+                const itemsHtml = displayDetails.map(detail => {
+                    const typeText = detail.type === 'added' ? '新增' : '删除';
+                    const contentPreview = detail.content.length > 100 
+                        ? detail.content.substring(0, 100) + '...' 
+                        : detail.content;
+                    
+                    return `
+                        <div class="change-item">
+                            <div class="change-header">
+                                <span class="change-path">第 ${detail.line} 行附近</span>
+                                <span class="change-type ${detail.type}">${typeText} ${detail.count}行</span>
+                            </div>
+                            <div class="change-values">
+                                <div class="value-item ${detail.type === 'added' ? 'new' : 'old'}">${contentPreview || '(空行)'}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const moreInfo = diffAnalysis.details.length > maxDisplay 
+                    ? `<p style="text-align: center; color: var(--text-tertiary); margin-top: 16px; font-size: 12px;">... 还有 ${diffAnalysis.details.length - maxDisplay} 处变更</p>`
+                    : '';
+
+                document.getElementById('diffDetails').innerHTML = `
+                    <h3 style="margin: 20px 0 12px 0; font-size: 14px; font-weight: 600;">变更摘要</h3>
+                    <div class="changes-list">${itemsHtml}</div>
+                    ${moreInfo}
+                `;
+            }
+        }
+
+        // 渲染diff视图
+        function renderDiff(leftStr, rightStr) {
+            try {
+                const diffString = Diff.createTwoFilesPatch(
+                    '旧版本',
+                    '新版本',
+                    leftStr,
+                    rightStr,
+                    '',
+                    '',
+                    { context: 999999 }
+                );
+
+                const diffHtml = Diff2Html.html(diffString, {
+                    drawFileList: false,
+                    matching: 'lines',
+                    outputFormat: currentViewMode,
+                    renderNothingWhenEmpty: false,
+                });
+
+                document.getElementById('diffViewer').innerHTML = diffHtml;
+            } catch (error) {
+                console.error('渲染diff视图失败:', error);
+                document.getElementById('diffViewer').innerHTML = 
+                    '<div class="error-alert">渲染对比视图失败: ' + error.message + '</div>';
+            }
+        }
+
+        // 切换视图模式
+        function changeViewMode(mode) {
+            currentViewMode = mode;
+            document.querySelectorAll('.view-toggle button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (currentDiffData) {
+                renderDiff(currentDiffData.leftStr, currentDiffData.rightStr);
+            }
+        }
+
+        // 主对比函数
+        function compareText() {
+            let leftInput = document.getElementById('leftText').value;
+            let rightInput = document.getElementById('rightText').value;
+            const errorContainer = document.getElementById('errorContainer');
+            const resultSection = document.getElementById('resultSection');
+            const autoFormatJson = document.getElementById('autoFormatJson').checked;
+            const ignoreWhitespace = document.getElementById('ignoreWhitespace').checked;
+
+            errorContainer.innerHTML = '';
+
+            if (leftInput === '' && rightInput === '') {
+                errorContainer.innerHTML = '<div class="error-alert">⚠️ 请输入左右两段文本内容</div>';
+                return;
+            }
+
+            try {
+                const leftJson = tryParseJSON(leftInput);
+                const rightJson = tryParseJSON(rightInput);
+                const isJsonMode = leftJson.success && rightJson.success;
+
+                if (isJsonMode && autoFormatJson) {
+                    leftInput = JSON.stringify(leftJson.data, null, 2);
+                    rightInput = JSON.stringify(rightJson.data, null, 2);
+                    
+                    document.getElementById('leftText').value = leftInput;
+                    document.getElementById('rightText').value = rightInput;
+                    updateCharCount('left');
+                    updateCharCount('right');
+                }
+
+                let leftCompare = leftInput;
+                let rightCompare = rightInput;
+                if (ignoreWhitespace && !isJsonMode) {
+                    leftCompare = leftInput.replace(/\s+/g, ' ').trim();
+                    rightCompare = rightInput.replace(/\s+/g, ' ').trim();
+                }
+
+                if (leftCompare === rightCompare) {
+                    resultSection.classList.add('active');
+                    const ignoreMsg = ignoreWhitespace ? '（忽略空白字符后）' : '';
+                    document.getElementById('summaryBox').innerHTML = `
+                        <div class="no-diff-message">
+                            <div class="icon">✅</div>
+                            <p>两段文本完全相同，没有差异！${ignoreMsg}</p>
+                        </div>
+                    `;
+                    document.getElementById('diffViewer').innerHTML = '';
+                    return;
+                }
+
+                if (isJsonMode) {
+                    console.log('使用JSON对比模式');
+                    
+                    const leftStr = JSON.stringify(leftJson.data, null, 2);
+                    const rightStr = JSON.stringify(rightJson.data, null, 2);
+                    
+                    currentDiffData = { leftStr, rightStr };
+                    const diffs = deepCompare(leftJson.data, rightJson.data);
+
+                    resultSection.classList.add('active');
+
+                    document.getElementById('modeIndicator').textContent = 'JSON对比模式';
+                    document.getElementById('modeIndicator').className = 'mode-indicator json';
+                    
+                    renderJsonSummary(diffs);
+                    renderDiff(leftStr, rightStr);
+                    
+                    // 统计追踪
+                    incrementCompareCount('json');
+                    trackEvent('compare', 'execute', 'json_mode', diffs.length);
+                } else {
+                    console.log('使用文本对比模式');
+                    
+                    currentDiffData = { leftStr: leftInput, rightStr: rightInput };
+                    const diffAnalysis = analyzeTextDiff(leftInput, rightInput);
+
+                    resultSection.classList.add('active');
+
+                    const ignoreMsg = ignoreWhitespace ? ' · 已忽略空白字符' : '';
+                    document.getElementById('modeIndicator').textContent = '文本对比模式' + ignoreMsg;
+                    document.getElementById('modeIndicator').className = 'mode-indicator text';
+                    
+                    renderTextSummary(diffAnalysis);
+                    renderDiff(leftInput, rightInput);
+                    
+                    // 统计追踪
+                    incrementCompareCount('text');
+                    trackEvent('compare', 'execute', 'text_mode', diffAnalysis.totalChanges);
+                }
+            } catch (error) {
+                errorContainer.innerHTML = '<div class="error-alert">❌ ' + error.message + '</div>';
+                console.error('对比失败:', error);
+            }
+        }
+
+        // 导出结果
+        function exportResult() {
+            const summaryBox = document.getElementById('summaryBox');
+            const diffViewer = document.getElementById('diffViewer');
+            
+            if (!summaryBox || !diffViewer.innerHTML) {
+                alert('请先执行对比操作');
+                return;
+            }
+            
+            trackEvent('export', 'download', 'html_export');
+
+            const htmlContent = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文本对比结果 - ${new Date().toLocaleString()}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html@3.4.47/bundles/css/diff2html.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 40px; background: #f6f8fa; color: #1f2328; }
+        .container { max-width: 1600px; margin: 0 auto; background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #d0d7de; }
+        ${document.querySelector('style').textContent}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>文本对比结果</h1>
+            <p style="color: #59636e; margin-top: 8px;">生成时间: ${new Date().toLocaleString()}</p>
+        </div>
+        ${summaryBox.outerHTML}
+        <div style="margin-top: 24px;">
+            ${diffViewer.outerHTML}
+        </div>
+    </div>
+</body>
+</html>`;
+
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `文本对比结果_${new Date().getTime()}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 切换帮助
+        function toggleHelp() {
+            const modal = document.getElementById('helpModal');
+            modal.classList.toggle('show');
+            trackEvent('help', 'open', 'help_modal');
+        }
+
+        // 切换打赏弹窗
+        function toggleDonate() {
+            const modal = document.getElementById('donateModal');
+            modal.classList.toggle('show');
+            if (modal.classList.contains('show')) {
+                trackEvent('donate', 'open', 'donate_modal');
+            }
+        }
+
+        // 切换分享弹窗
+        function toggleShare() {
+            const modal = document.getElementById('shareModal');
+            modal.classList.toggle('show');
+            if (modal.classList.contains('show')) {
+                // 重置状态
+                document.getElementById('wechatShareContent').style.display = 'none';
+                document.getElementById('shareUrlSection').style.display = 'flex';
+                // 设置分享链接
+                const url = window.location.href;
+                document.getElementById('shareUrl').value = url;
+                document.getElementById('shareUrlWechat').value = url;
+                // 更新统计数据
+                updateShareStats();
+                trackEvent('share', 'open', 'share_modal');
+            }
+        }
+
+        // Google Analytics 事件追踪
+        function trackEvent(category, action, label, value) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', action, {
+                    'event_category': category,
+                    'event_label': label,
+                    'value': value
+                });
+            }
+            console.log('Track Event:', category, action, label, value);
+        }
+
+        // 本地统计数据
+        function getStats() {
+            const stats = localStorage.getItem('textDiffStats');
+            return stats ? JSON.parse(stats) : {
+                totalCompares: 0,
+                jsonCompares: 0,
+                textCompares: 0,
+                lastCompareDate: null
+            };
+        }
+
+        function saveStats(stats) {
+            localStorage.setItem('textDiffStats', JSON.stringify(stats));
+        }
+
+        function incrementCompareCount(type) {
+            const stats = getStats();
+            stats.totalCompares++;
+            if (type === 'json') {
+                stats.jsonCompares++;
+            } else {
+                stats.textCompares++;
+            }
+            stats.lastCompareDate = new Date().toISOString();
+            saveStats(stats);
+        }
+
+        function updateShareStats() {
+            const stats = getStats();
+            document.getElementById('totalCompares').textContent = stats.totalCompares.toLocaleString();
+        }
+
+        // 复制分享链接
+        function copyShareUrl() {
+            const input = document.getElementById('shareUrl');
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile
+            
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '已复制！';
+                btn.style.background = 'var(--accent-green)';
+                
+                trackEvent('share', 'copy_link', 'url_copied');
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(() => {
+                alert('复制失败，请手动复制');
+            });
+        }
+
+        // 分享到微信（显示分享内容）
+        function shareToWeChat() {
+            document.getElementById('wechatShareContent').style.display = 'block';
+            document.getElementById('shareUrlSection').style.display = 'none';
+            trackEvent('share', 'click', 'wechat');
+        }
+
+        // 复制微信分享文案
+        function copyShareText() {
+            const text = document.getElementById('shareText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '已复制！';
+                btn.style.background = 'var(--accent-green)';
+                
+                trackEvent('share', 'copy_text', 'wechat_text');
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(() => {
+                alert('复制失败，请手动复制');
+            });
+        }
+
+        // 复制微信分享链接
+        function copyWechatUrl() {
+            const input = document.getElementById('shareUrlWechat');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '已复制！';
+                
+                trackEvent('share', 'copy_link', 'wechat_url');
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }).catch(() => {
+                alert('复制失败，请手动复制');
+            });
+        }
+
+        // 分享到微博
+        function shareToWeibo() {
+            const text = '发现一个超好用的文本对比工具！✨ 支持JSON、XML、HTML、SQL等8种格式，智能识别、一键格式化、深度对比，完全免费使用！开发者必备神器 🚀';
+            const url = encodeURIComponent(window.location.href);
+            const shareUrl = `https://service.weibo.com/share/share.php?url=${url}&title=${encodeURIComponent(text)}`;
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+            trackEvent('share', 'click', 'weibo');
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const helpModal = document.getElementById('helpModal');
+                const donateModal = document.getElementById('donateModal');
+                const shareModal = document.getElementById('shareModal');
+                if (helpModal.classList.contains('show')) {
+                    toggleHelp();
+                }
+                if (donateModal.classList.contains('show')) {
+                    toggleDonate();
+                }
+                if (shareModal.classList.contains('show')) {
+                    toggleShare();
+                }
+            }
+        });
+
+        document.getElementById('leftText').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                compareText();
+            }
+        });
+
+        document.getElementById('rightText').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                compareText();
+            }
+        });
+    </script>
+</body>
+</html>
+

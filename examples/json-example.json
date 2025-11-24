@@ -1,0 +1,49 @@
+{
+  "user": {
+    "id": 1001,
+    "name": "张三",
+    "age": 25,
+    "email": "zhangsan@example.com",
+    "phone": "+86 138-0000-0000",
+    "address": {
+      "country": "中国",
+      "province": "北京市",
+      "city": "北京",
+      "district": "朝阳区",
+      "street": "建国路1号",
+      "zipcode": "100000"
+    },
+    "skills": [
+      "JavaScript",
+      "Python",
+      "Java"
+    ],
+    "projects": [
+      {
+        "id": 101,
+        "name": "项目A",
+        "role": "开发者",
+        "startDate": "2024-01-01"
+      },
+      {
+        "id": 102,
+        "name": "项目B",
+        "role": "架构师",
+        "startDate": "2024-06-01"
+      }
+    ],
+    "settings": {
+      "theme": "light",
+      "language": "zh-CN",
+      "notifications": {
+        "email": true,
+        "sms": false,
+        "push": true
+      }
+    },
+    "status": "active",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-12-01T10:30:00Z"
+  }
+}
+
