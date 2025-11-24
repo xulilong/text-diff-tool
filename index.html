@@ -2793,6 +2793,12 @@ database:
                         </div>
                     `;
                     document.getElementById('diffViewer').innerHTML = '';
+                    
+                    // 滚动到结果区域
+                    setTimeout(() => {
+                        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                    
                     return;
                 }
 
@@ -2817,6 +2823,11 @@ database:
                     // 统计追踪
                     incrementCompareCount('json');
                     trackEvent('compare', 'execute', 'json_mode', diffs.length);
+                    
+                    // 滚动到结果区域
+                    setTimeout(() => {
+                        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
                 } else {
                     console.log('使用文本对比模式');
                     
@@ -2836,6 +2847,11 @@ database:
                     // 统计追踪
                     incrementCompareCount('text');
                     trackEvent('compare', 'execute', 'text_mode', diffAnalysis.totalChanges);
+                    
+                    // 滚动到结果区域
+                    setTimeout(() => {
+                        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
                 }
             } catch (error) {
                 errorContainer.innerHTML = '<div class="error-alert">❌ ' + error.message + '</div>';
