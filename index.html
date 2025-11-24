@@ -1564,18 +1564,12 @@
                     <div class="results-left-panel">
                 <!-- Summary Panel -->
                         <div class="summary-panel" id="summaryBox" style="margin-bottom: 0;">
-                            <div class="summary-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <div class="summary-header" style="margin-bottom: 16px;">
                                 <h3 style="margin: 0;">
-                            <span>📊</span>
-                            <span>差异统计</span>
-                        </h3>
-                                <select id="diffFilter" onchange="filterDifferences()" style="padding: 6px 12px; background: var(--bg-tertiary); border: 1px solid var(--border-default); border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; min-width: 120px;">
-                                    <option value="all">显示全部</option>
-                                    <option value="added">只显示新增</option>
-                                    <option value="removed">只显示删除</option>
-                                    <option value="modified">只显示修改</option>
-                                </select>
-                    </div>
+                                    <span>📊</span>
+                                    <span>差异统计</span>
+                                </h3>
+                            </div>
                     <div class="stats-grid" id="diffStats"></div>
                             
                             <!-- 变更列表 -->
@@ -2439,23 +2433,6 @@ database:
             return String(value);
         }
 
-        // 全局存储差异数据用于筛选
-        let allDifferences = [];
-        
-        // 筛选差异
-        function filterDifferences() {
-            const filterValue = document.getElementById('diffFilter').value;
-            
-            if (filterValue === 'all') {
-                renderDiffList(allDifferences);
-            } else {
-                const filtered = allDifferences.filter(diff => diff.type === filterValue);
-                renderDiffList(filtered);
-            }
-            
-            trackEvent('filter', 'change', filterValue);
-        }
-        
         // 渲染差异列表
         function renderDiffList(diffs) {
             if (diffs.length === 0) {
@@ -2588,9 +2565,6 @@ database:
         
         // 渲染JSON差异摘要
         function renderJsonSummary(diffs) {
-            // 保存差异数据用于筛选
-            allDifferences = diffs;
-            
             const added = diffs.filter(d => d.type === 'added').length;
             const removed = diffs.filter(d => d.type === 'removed').length;
             const modified = diffs.filter(d => d.type === 'modified').length;
@@ -2917,33 +2891,6 @@ database:
             htmlParts.push('            ' + diffViewer.outerHTML);
             htmlParts.push('        </div>');
             htmlParts.push('    </div>');
-            
-            // 添加JavaScript功能
-            htmlParts.push('    <script>');
-            htmlParts.push('        // 存储所有差异项');
-            htmlParts.push('        const allChangeItems = Array.from(document.querySelectorAll(\'.change-item\'));');
-            htmlParts.push('        ');
-            htmlParts.push('        // 过滤功能');
-            htmlParts.push('        function filterDifferences() {');
-            htmlParts.push('            const filterValue = document.getElementById(\'diffFilter\').value;');
-            htmlParts.push('            ');
-            htmlParts.push('            allChangeItems.forEach(item => {');
-            htmlParts.push('                if (filterValue === \'all\') {');
-            htmlParts.push('                    item.style.display = \'block\';');
-            htmlParts.push('                } else {');
-            htmlParts.push('                    const types = item.querySelectorAll(\'.change-type\');');
-            htmlParts.push('                    let hasMatch = false;');
-            htmlParts.push('                    types.forEach(type => {');
-            htmlParts.push('                        if (type.classList.contains(filterValue)) {');
-            htmlParts.push('                            hasMatch = true;');
-            htmlParts.push('                        }');
-            htmlParts.push('                    });');
-            htmlParts.push('                    item.style.display = hasMatch ? \'block\' : \'none\';');
-            htmlParts.push('                }');
-            htmlParts.push('            });');
-            htmlParts.push('        }');
-            htmlParts.push('    </script>');
-            
             htmlParts.push('</body>');
             htmlParts.push('</html>');
             
