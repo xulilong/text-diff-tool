@@ -1560,13 +1560,8 @@
                             </div>
                             <div class="stats-grid" id="diffStats"></div>
                             
-                            <!-- 模式指示器 -->
-                            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-default);">
-                                <span class="mode-indicator json" id="modeIndicator">JSON对比模式</span>
-                            </div>
-                            
                             <!-- 变更列表 -->
-                            <div id="diffDetails"></div>
+                            <div id="diffDetails" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-default);"></div>
                         </div>
                     </div>
                     
@@ -2884,8 +2879,9 @@ database:
 
                     resultSection.classList.add('active');
 
-                    document.getElementById('modeIndicator').textContent = 'JSON对比模式';
-                    document.getElementById('modeIndicator').className = 'mode-indicator json';
+                    // 已移除模式指示器显示
+                    // document.getElementById('modeIndicator').textContent = 'JSON对比模式';
+                    // document.getElementById('modeIndicator').className = 'mode-indicator json';
                     
                     renderJsonSummary(diffs);
                     renderDiff(leftStr, rightStr);
@@ -2901,9 +2897,10 @@ database:
 
                     resultSection.classList.add('active');
 
-                    const ignoreMsg = ignoreWhitespace ? ' · 已忽略空白字符' : '';
-                    document.getElementById('modeIndicator').textContent = '文本对比模式' + ignoreMsg;
-                    document.getElementById('modeIndicator').className = 'mode-indicator text';
+                    // 已移除模式指示器显示
+                    // const ignoreMsg = ignoreWhitespace ? ' · 已忽略空白字符' : '';
+                    // document.getElementById('modeIndicator').textContent = '文本对比模式' + ignoreMsg;
+                    // document.getElementById('modeIndicator').className = 'mode-indicator text';
                     
                     renderTextSummary(diffAnalysis);
                     renderDiff(leftInput, rightInput);
