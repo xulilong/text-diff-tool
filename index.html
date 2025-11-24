@@ -2761,24 +2761,50 @@ database:
         // 复制分享链接
         function copyShareUrl() {
             const input = document.getElementById('shareUrl');
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
             input.select();
             input.setSelectionRange(0, 99999); // For mobile
             
-            navigator.clipboard.writeText(input.value).then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = '已复制！';
-                btn.style.background = 'var(--accent-green)';
-                
-                trackEvent('share', 'copy_link', 'url_copied');
-                
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '';
-                }, 2000);
-            }).catch(() => {
-                alert('复制失败，请手动复制');
-            });
+            // 方法1：尝试使用现代 Clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(input.value).then(() => {
+                    btn.textContent = '已复制！';
+                    btn.style.background = 'var(--accent-green)';
+                    trackEvent('share', 'copy_link', 'url_copied');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                }).catch(() => {
+                    // 使用备用方法
+                    tryExecCommandCopy(input, btn, originalText);
+                });
+            } else {
+                // 方法2：使用传统兼容方法
+                tryExecCommandCopy(input, btn, originalText);
+            }
+        }
+        
+        // 备用复制方法
+        function tryExecCommandCopy(input, btn, originalText) {
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    btn.textContent = '已复制！';
+                    btn.style.background = 'var(--accent-green)';
+                    trackEvent('share', 'copy_link', 'url_copied_fallback');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                } else {
+                    alert('复制失败，请长按链接手动复制');
+                }
+            } catch (err) {
+                alert('复制失败，请长按链接手动复制');
+            }
         }
 
         // 分享到微信（显示分享内容）
@@ -2791,42 +2817,102 @@ database:
         // 复制微信分享文案
         function copyShareText() {
             const text = document.getElementById('shareText').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = '已复制！';
-                btn.style.background = 'var(--accent-green)';
-                
-                trackEvent('share', 'copy_text', 'wechat_text');
-                
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '';
-                }, 2000);
-            }).catch(() => {
-                alert('复制失败，请手动复制');
-            });
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
+            // 方法1：尝试使用现代 Clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = '已复制！';
+                    btn.style.background = 'var(--accent-green)';
+                    trackEvent('share', 'copy_text', 'wechat_text');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                }).catch(() => {
+                    fallbackCopyText(text, btn, originalText);
+                });
+            } else {
+                // 方法2：使用传统兼容方法
+                fallbackCopyText(text, btn, originalText);
+            }
+        }
+        
+        // 备用复制方法（兼容性更好）
+        function fallbackCopyText(text, btn, originalText) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    btn.textContent = '已复制！';
+                    btn.style.background = 'var(--accent-green)';
+                    trackEvent('share', 'copy_text', 'wechat_text');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                } else {
+                    alert('复制失败，请长按文案手动复制');
+                }
+            } catch (err) {
+                alert('复制失败，请长按文案手动复制');
+            }
+            
+            document.body.removeChild(textArea);
         }
 
         // 复制微信分享链接
         function copyWechatUrl() {
             const input = document.getElementById('shareUrlWechat');
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
             input.select();
             input.setSelectionRange(0, 99999);
             
-            navigator.clipboard.writeText(input.value).then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = '已复制！';
-                
-                trackEvent('share', 'copy_link', 'wechat_url');
-                
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            }).catch(() => {
-                alert('复制失败，请手动复制');
-            });
+            // 方法1：尝试使用现代 Clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(input.value).then(() => {
+                    btn.textContent = '已复制！';
+                    trackEvent('share', 'copy_link', 'wechat_url');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                }).catch(() => {
+                    // 使用备用方法
+                    copyWithExecCommand(input, btn, originalText);
+                });
+            } else {
+                // 方法2：使用传统兼容方法
+                copyWithExecCommand(input, btn, originalText);
+            }
+        }
+        
+        // 使用 execCommand 复制
+        function copyWithExecCommand(input, btn, originalText) {
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    btn.textContent = '已复制！';
+                    trackEvent('share', 'copy_link', 'wechat_url_fallback');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                } else {
+                    alert('复制失败，请长按链接手动复制');
+                }
+            } catch (err) {
+                alert('复制失败，请长按链接手动复制');
+            }
         }
 
         // 分享到微博
