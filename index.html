@@ -2977,6 +2977,148 @@ database:
             ${diffViewer.outerHTML}
         </div>
     </div>
+    <script>
+        // 存储差异数据
+        let allDifferences = ${JSON.stringify(allDifferences)};
+        
+        // 格式化值用于显示
+        function formatValue(value) {
+            if (value === null) return 'null';
+            if (value === undefined) return 'undefined';
+            if (typeof value === 'object') {
+                return JSON.stringify(value, null, 2);
+            }
+            return String(value);
+        }
+        
+        // 筛选差异
+        function filterDifferences() {
+            const filterValue = document.getElementById('diffFilter').value;
+            
+            if (filterValue === 'all') {
+                renderDiffList(allDifferences);
+            } else {
+                const filtered = allDifferences.filter(diff => diff.type === filterValue);
+                renderDiffList(filtered);
+            }
+        }
+        
+        // 渲染差异列表
+        function renderDiffList(diffs) {
+            if (diffs.length === 0) {
+                document.getElementById('diffDetails').innerHTML = \`
+                    <div style="text-align: center; padding: 40px; color: #848d97;">
+                        <p>没有符合筛选条件的差异</p>
+                    </div>
+                \`;
+                return;
+            }
+            
+            const maxDisplay = 50;
+            const displayDiffs = diffs.slice(0, maxDisplay);
+            
+            const itemsHtml = displayDiffs.map((diff, index) => {
+                let valuesHtml = '';
+                if (diff.type === 'modified') {
+                    valuesHtml = \`
+                        <div class="change-values">
+                            <div class="value-item old">旧值: \${formatValue(diff.old)}</div>
+                            <div class="value-item new">新值: \${formatValue(diff.new)}</div>
+                        </div>
+                    \`;
+                } else if (diff.type === 'added') {
+                    valuesHtml = \`
+                        <div class="change-values">
+                            <div class="value-item new">新增: \${formatValue(diff.new)}</div>
+                        </div>
+                    \`;
+                } else if (diff.type === 'removed') {
+                    valuesHtml = \`
+                        <div class="change-values">
+                            <div class="value-item old">删除: \${formatValue(diff.old)}</div>
+                        </div>
+                    \`;
+                }
+
+                const typeNames = { 'added': '新增', 'removed': '删除', 'modified': '修改' };
+
+                return \`
+                    <div class="change-item" id="diff-item-\${index}" data-path="\${diff.path}">
+                        <div class="change-header">
+                            <span class="change-path" onclick="navigateToPath('\${diff.path}', \${index})" title="点击在详细对比中定位">
+                                📍 \${diff.path}
+                            </span>
+                            <span class="change-type \${diff.type}">\${typeNames[diff.type]}</span>
+                        </div>
+                        \${valuesHtml}
+                    </div>
+                \`;
+            }).join('');
+
+            const moreInfo = diffs.length > maxDisplay 
+                ? \`<p style="text-align: center; color: #848d97; margin-top: 16px; font-size: 12px;">... 还有 \${diffs.length - maxDisplay} 处变更</p>\`
+                : '';
+
+            document.getElementById('diffDetails').innerHTML = \`
+                <div style="margin: 16px 0 8px 0; padding-top: 16px; border-top: 1px solid #d0d7de;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size: 14px; font-weight: 600; margin: 0;">
+                            详细变更 (\${diffs.length})
+                        </h3>
+                    </div>
+                    <p style="font-size: 11px; color: #848d97; margin-bottom: 12px;">
+                        💡 点击路径定位到右侧对比视图
+                    </p>
+                </div>
+                <div class="changes-list">\${itemsHtml}</div>
+                \${moreInfo}
+            \`;
+        }
+        
+        // JSON路径导航功能
+        function navigateToPath(path, index) {
+            // 移除之前的高亮
+            document.querySelectorAll('.change-item.highlight').forEach(el => {
+                el.classList.remove('highlight');
+            });
+            
+            // 高亮当前项
+            const item = document.getElementById(\`diff-item-\${index}\`);
+            if (item) {
+                item.classList.add('highlight');
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            
+            // 在详细对比视图中查找并高亮该路径
+            const diffViewer = document.querySelector('.d2h-file-wrapper');
+            if (diffViewer) {
+                try {
+                    const pathText = path.replace(/\\[(\\d+)\\]/g, '\\\\\\\\[$1\\\\\\\\]').replace(/\\./g, '\\\\\\\\.');
+                    const searchText = new RegExp(pathText, 'i');
+                    const diffLines = diffViewer.querySelectorAll('.d2h-code-line-ctn');
+                    
+                    let found = false;
+                    diffLines.forEach(line => {
+                        line.style.backgroundColor = '';
+                        
+                        if (!found && searchText.test(line.textContent)) {
+                            line.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            line.style.backgroundColor = 'rgba(255, 223, 0, 0.3)';
+                            line.style.transition = 'background-color 0.3s ease';
+                            
+                            setTimeout(() => {
+                                line.style.backgroundColor = '';
+                            }, 2000);
+                            
+                            found = true;
+                        }
+                    });
+                } catch (e) {
+                    console.error('导航错误:', e);
+                }
+            }
+        }
+    </script>
 </body>
 </html>`;
 
