@@ -2917,6 +2917,33 @@ database:
             htmlParts.push('            ' + diffViewer.outerHTML);
             htmlParts.push('        </div>');
             htmlParts.push('    </div>');
+            
+            // 添加JavaScript功能
+            htmlParts.push('    <script>');
+            htmlParts.push('        // 存储所有差异项');
+            htmlParts.push('        const allChangeItems = Array.from(document.querySelectorAll(".change-item"));');
+            htmlParts.push('        ');
+            htmlParts.push('        // 过滤功能');
+            htmlParts.push('        function filterDifferences() {');
+            htmlParts.push('            const filterValue = document.getElementById("diffFilter").value;');
+            htmlParts.push('            ');
+            htmlParts.push('            allChangeItems.forEach(item => {');
+            htmlParts.push('                if (filterValue === "all") {');
+            htmlParts.push('                    item.style.display = "block";');
+            htmlParts.push('                } else {');
+            htmlParts.push('                    const types = item.querySelectorAll(".change-type");');
+            htmlParts.push('                    let hasMatch = false;');
+            htmlParts.push('                    types.forEach(type => {');
+            htmlParts.push('                        if (type.classList.contains(filterValue)) {');
+            htmlParts.push('                            hasMatch = true;');
+            htmlParts.push('                        }');
+            htmlParts.push('                    });');
+            htmlParts.push('                    item.style.display = hasMatch ? "block" : "none";');
+            htmlParts.push('                }');
+            htmlParts.push('            });');
+            htmlParts.push('        }');
+            htmlParts.push('    </script>');
+            
             htmlParts.push('</body>');
             htmlParts.push('</html>');
             
