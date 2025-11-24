@@ -2794,9 +2794,14 @@ database:
                     `;
                     document.getElementById('diffViewer').innerHTML = '';
                     
-                    // 滚动到结果区域
+                    // 滚动到结果区域（稍微向上偏移）
                     setTimeout(() => {
-                        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        const rect = resultSection.getBoundingClientRect();
+                        const offset = 80; // 向上偏移80像素
+                        window.scrollTo({
+                            top: window.pageYOffset + rect.top - offset,
+                            behavior: 'smooth'
+                        });
                     }, 100);
                     
                     return;
@@ -2824,9 +2829,14 @@ database:
                     incrementCompareCount('json');
                     trackEvent('compare', 'execute', 'json_mode', diffs.length);
                     
-                    // 滚动到结果区域
+                    // 滚动到结果区域（稍微向上偏移）
                     setTimeout(() => {
-                        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        const rect = resultSection.getBoundingClientRect();
+                        const offset = 80; // 向上偏移80像素
+                        window.scrollTo({
+                            top: window.pageYOffset + rect.top - offset,
+                            behavior: 'smooth'
+                        });
                     }, 100);
                 } else {
                     console.log('使用文本对比模式');
@@ -2848,9 +2858,14 @@ database:
                     incrementCompareCount('text');
                     trackEvent('compare', 'execute', 'text_mode', diffAnalysis.totalChanges);
                     
-                    // 滚动到结果区域
+                    // 滚动到结果区域（稍微向上偏移）
                     setTimeout(() => {
-                        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        const rect = resultSection.getBoundingClientRect();
+                        const offset = 80; // 向上偏移80像素
+                        window.scrollTo({
+                            top: window.pageYOffset + rect.top - offset,
+                            behavior: 'smooth'
+                        });
                     }, 100);
                 }
             } catch (error) {
