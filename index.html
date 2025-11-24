@@ -2855,175 +2855,78 @@ database:
             
             trackEvent('export', 'download', 'html_export');
 
-            const htmlContent = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文本对比结果 - ${new Date().toLocaleString()}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html@3.4.47/bundles/css/diff2html.min.css">
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 40px; background: #f6f8fa; color: #1f2328; }
-        .container { max-width: 1600px; margin: 0 auto; background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .header { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #d0d7de; }
-        ${document.querySelector('style').textContent}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>文本对比结果</h1>
-            <p style="color: #59636e; margin-top: 8px;">生成时间: ${new Date().toLocaleString()}</p>
-        </div>
-        ${summaryBox.outerHTML}
-        <div style="margin-top: 24px;">
-            ${diffViewer.outerHTML}
-        </div>
-    </div>
-    <script>
-        // 存储差异数据
-        let allDifferences = ${JSON.stringify(allDifferences)};
-        
-        // 格式化值用于显示
-        function formatValue(value) {
-            if (value === null) return 'null';
-            if (value === undefined) return 'undefined';
-            if (typeof value === 'object') {
-                return JSON.stringify(value, null, 2);
-            }
-            return String(value);
-        }
-        
-        // 筛选差异
-        function filterDifferences() {
-            const filterValue = document.getElementById('diffFilter').value;
+            // 构建导出的HTML内容
+            const styleContent = document.querySelector('style').textContent;
+            const timestamp = new Date().toLocaleString();
+            const differencesData = JSON.stringify(allDifferences);
             
-            if (filterValue === 'all') {
-                renderDiffList(allDifferences);
-            } else {
-                const filtered = allDifferences.filter(diff => diff.type === filterValue);
-                renderDiffList(filtered);
-            }
-        }
-        
-        // 渲染差异列表
-        function renderDiffList(diffs) {
-            if (diffs.length === 0) {
-                document.getElementById('diffDetails').innerHTML = \`
-                    <div style="text-align: center; padding: 40px; color: #848d97;">
-                        <p>没有符合筛选条件的差异</p>
-                    </div>
-                \`;
-                return;
-            }
-            
-            const maxDisplay = 50;
-            const displayDiffs = diffs.slice(0, maxDisplay);
-            
-            const itemsHtml = displayDiffs.map((diff, index) => {
-                let valuesHtml = '';
-                if (diff.type === 'modified') {
-                    valuesHtml = \`
-                        <div class="change-values">
-                            <div class="value-item old">旧值: \${formatValue(diff.old)}</div>
-                            <div class="value-item new">新值: \${formatValue(diff.new)}</div>
-                        </div>
-                    \`;
-                } else if (diff.type === 'added') {
-                    valuesHtml = \`
-                        <div class="change-values">
-                            <div class="value-item new">新增: \${formatValue(diff.new)}</div>
-                        </div>
-                    \`;
-                } else if (diff.type === 'removed') {
-                    valuesHtml = \`
-                        <div class="change-values">
-                            <div class="value-item old">删除: \${formatValue(diff.old)}</div>
-                        </div>
-                    \`;
-                }
-
-                const typeNames = { 'added': '新增', 'removed': '删除', 'modified': '修改' };
-
-                return \`
-                    <div class="change-item" id="diff-item-\${index}" data-path="\${diff.path}">
-                        <div class="change-header">
-                            <span class="change-path" onclick="navigateToPath('\${diff.path}', \${index})" title="点击在详细对比中定位">
-                                📍 \${diff.path}
-                            </span>
-                            <span class="change-type \${diff.type}">\${typeNames[diff.type]}</span>
-                        </div>
-                        \${valuesHtml}
-                    </div>
-                \`;
-            }).join('');
-
-            const moreInfo = diffs.length > maxDisplay 
-                ? \`<p style="text-align: center; color: #848d97; margin-top: 16px; font-size: 12px;">... 还有 \${diffs.length - maxDisplay} 处变更</p>\`
-                : '';
-
-            document.getElementById('diffDetails').innerHTML = \`
-                <div style="margin: 16px 0 8px 0; padding-top: 16px; border-top: 1px solid #d0d7de;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <h3 style="font-size: 14px; font-weight: 600; margin: 0;">
-                            详细变更 (\${diffs.length})
-                        </h3>
-                    </div>
-                    <p style="font-size: 11px; color: #848d97; margin-bottom: 12px;">
-                        💡 点击路径定位到右侧对比视图
-                    </p>
-                </div>
-                <div class="changes-list">\${itemsHtml}</div>
-                \${moreInfo}
-            \`;
-        }
-        
-        // JSON路径导航功能
-        function navigateToPath(path, index) {
-            // 移除之前的高亮
-            document.querySelectorAll('.change-item.highlight').forEach(el => {
-                el.classList.remove('highlight');
-            });
-            
-            // 高亮当前项
-            const item = document.getElementById(\`diff-item-\${index}\`);
-            if (item) {
-                item.classList.add('highlight');
-                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-            
-            // 在详细对比视图中查找并高亮该路径
-            const diffViewer = document.querySelector('.d2h-file-wrapper');
-            if (diffViewer) {
-                try {
-                    const pathText = path.replace(/\\[(\\d+)\\]/g, '\\\\\\\\[$1\\\\\\\\]').replace(/\\./g, '\\\\\\\\.');
-                    const searchText = new RegExp(pathText, 'i');
-                    const diffLines = diffViewer.querySelectorAll('.d2h-code-line-ctn');
-                    
-                    let found = false;
-                    diffLines.forEach(line => {
-                        line.style.backgroundColor = '';
-                        
-                        if (!found && searchText.test(line.textContent)) {
-                            line.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            line.style.backgroundColor = 'rgba(255, 223, 0, 0.3)';
-                            line.style.transition = 'background-color 0.3s ease';
-                            
-                            setTimeout(() => {
-                                line.style.backgroundColor = '';
-                            }, 2000);
-                            
-                            found = true;
-                        }
-                    });
-                } catch (e) {
-                    console.error('导航错误:', e);
-                }
-            }
-        }
-    </script>
-</body>
-</html>`;
+            const htmlContent = '<!DOCTYPE html>\n' +
+'<html lang="zh-CN">\n' +
+'<head>\n' +
+'    <meta charset="UTF-8">\n' +
+'    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'    <title>文本对比结果 - ' + timestamp + '</title>\n' +
+'    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html@3.4.47/bundles/css/diff2html.min.css">\n' +
+'    <style>\n' +
+'        body { font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', sans-serif; padding: 40px; background: #f6f8fa; color: #1f2328; }\n' +
+'        .container { max-width: 1600px; margin: 0 auto; background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }\n' +
+'        .header { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #d0d7de; }\n' +
+'        ' + styleContent + '\n' +
+'    </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'    <div class="container">\n' +
+'        <div class="header">\n' +
+'            <h1>文本对比结果</h1>\n' +
+'            <p style="color: #59636e; margin-top: 8px;">生成时间: ' + timestamp + '</p>\n' +
+'        </div>\n' +
+'        ' + summaryBox.outerHTML + '\n' +
+'        <div style="margin-top: 24px;">\n' +
+'            ' + diffViewer.outerHTML + '\n' +
+'        </div>\n' +
+'    </div>\n' +
+'    <script>\n' +
+'        let allDifferences = ' + differencesData + ';\n' +
+'        function filterDifferences() {\n' +
+'            const filterValue = document.getElementById("diffFilter").value;\n' +
+'            if (filterValue === "all") {\n' +
+'                renderDiffList(allDifferences);\n' +
+'            } else {\n' +
+'                renderDiffList(allDifferences.filter(diff => diff.type === filterValue));\n' +
+'            }\n' +
+'        }\n' +
+'        function formatValue(value) {\n' +
+'            if (value === null) return "null";\n' +
+'            if (value === undefined) return "undefined";\n' +
+'            if (typeof value === "object") return JSON.stringify(value, null, 2);\n' +
+'            return String(value);\n' +
+'        }\n' +
+'        function renderDiffList(diffs) {\n' +
+'            if (diffs.length === 0) {\n' +
+'                document.getElementById("diffDetails").innerHTML = "<div style=\\"text-align: center; padding: 40px; color: #848d97;\\"><p>没有符合筛选条件的差异</p></div>";\n' +
+'                return;\n' +
+'            }\n' +
+'            const maxDisplay = 50;\n' +
+'            const displayDiffs = diffs.slice(0, maxDisplay);\n' +
+'            const typeNames = { "added": "新增", "removed": "删除", "modified": "修改" };\n' +
+'            const itemsHtml = displayDiffs.map((diff, index) => {\n' +
+'                let valuesHtml = "";\n' +
+'                if (diff.type === "modified") valuesHtml = "<div class=\\"change-values\\"><div class=\\"value-item old\\">旧值: " + formatValue(diff.old) + "</div><div class=\\"value-item new\\">新值: " + formatValue(diff.new) + "</div></div>";\n' +
+'                else if (diff.type === "added") valuesHtml = "<div class=\\"change-values\\"><div class=\\"value-item new\\">新增: " + formatValue(diff.new) + "</div></div>";\n' +
+'                else if (diff.type === "removed") valuesHtml = "<div class=\\"change-values\\"><div class=\\"value-item old\\">删除: " + formatValue(diff.old) + "</div></div>";\n' +
+'                return "<div class=\\"change-item\\" id=\\"diff-item-" + index + "\\" data-path=\\"" + diff.path + "\\"><div class=\\"change-header\\"><span class=\\"change-path\\" onclick=\\"navigateToPath(\'" + diff.path + "\'," + index + ")\\" title=\\"点击在详细对比中定位\\">📍 " + diff.path + "</span><span class=\\"change-type " + diff.type + "\\">" + typeNames[diff.type] + "</span></div>" + valuesHtml + "</div>";\n' +
+'            }).join("");\n' +
+'            const moreInfo = diffs.length > maxDisplay ? "<p style=\\"text-align: center; color: #848d97; margin-top: 16px; font-size: 12px;\\">... 还有 " + (diffs.length - maxDisplay) + " 处变更</p>" : "";\n' +
+'            document.getElementById("diffDetails").innerHTML = "<div style=\\"margin: 16px 0 8px 0; padding-top: 16px; border-top: 1px solid #d0d7de;\\"><div style=\\"display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;\\"><h3 style=\\"font-size: 14px; font-weight: 600; margin: 0;\\">详细变更 (" + diffs.length + ")</h3></div><p style=\\"font-size: 11px; color: #848d97; margin-bottom: 12px;\\">💡 点击路径定位到右侧对比视图</p></div><div class=\\"changes-list\\">" + itemsHtml + "</div>" + moreInfo;\n' +
+'        }\n' +
+'        function navigateToPath(path, index) {\n' +
+'            document.querySelectorAll(".change-item.highlight").forEach(el => el.classList.remove("highlight"));\n' +
+'            const item = document.getElementById("diff-item-" + index);\n' +
+'            if (item) { item.classList.add("highlight"); item.scrollIntoView({ behavior: "smooth", block: "nearest" }); }\n' +
+'        }\n' +
+'    </script>\n' +
+'</body>\n' +
+'</html>';
 
             const blob = new Blob([htmlContent], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
