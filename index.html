@@ -1546,19 +1546,17 @@
                     <div class="results-left-panel">
                         <!-- Summary Panel -->
                         <div class="summary-panel" id="summaryBox" style="margin-bottom: 0;">
-                            <div class="summary-header">
+                            <div class="summary-header" style="display: flex; justify-content: space-between; align-items: center;">
                                 <h3>
                                     <span>📊</span>
                                     <span data-i18n="diffStats">差异统计</span>
                                 </h3>
+                                <span class="mode-indicator json" id="modeIndicator">JSON对比模式</span>
                             </div>
                             <div class="stats-grid" id="diffStats"></div>
                             
-                            <!-- 模式和筛选器 -->
+                            <!-- 筛选器 -->
                             <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-default);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                    <span class="mode-indicator json" id="modeIndicator">JSON对比模式</span>
-                                </div>
                                 <select id="diffFilter" onchange="filterDifferences()" style="width: 100%; padding: 6px 8px; background: var(--bg-tertiary); border: 1px solid var(--border-default); border-radius: var(--radius-sm); font-size: 12px; cursor: pointer;">
                                     <option value="all" data-i18n="showAll">显示全部</option>
                                     <option value="added" data-i18n="showAdded">只显示新增</option>
