@@ -503,6 +503,28 @@
             flex-direction: column;
             gap: 0;
         }
+        
+        /* 全屏模式 */
+        .results-right-panel.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            background: var(--bg-primary);
+            padding: 16px;
+            margin: 0;
+        }
+        
+        .results-right-panel.fullscreen .diff-panel {
+            height: 100%;
+        }
+        
+        .results-right-panel.fullscreen .diff-content {
+            max-height: none !important;
+            height: calc(100% - 60px);
+        }
 
         .error-alert {
             background: rgba(248, 81, 73, 0.1);
@@ -1566,7 +1588,7 @@
                     </div>
                     
                     <!-- 右侧面板：详细对比 -->
-                    <div class="results-right-panel">
+                    <div class="results-right-panel" id="diffPanelContainer">
                         <!-- Diff Panel -->
                         <div class="diff-panel" style="margin-bottom: 0; height: 100%;">
                             <div class="diff-header">
@@ -1577,6 +1599,9 @@
                                     <button onclick="exportResult()" style="margin-left: 8px; background: var(--accent-green); color: #fff; border-color: var(--accent-green);">
                                         <span>📥</span>
                                         <span data-i18n="export">导出</span>
+                                    </button>
+                                    <button onclick="toggleFullscreen()" id="fullscreenBtn" style="margin-left: 8px;" title="全屏">
+                                        <span>⛶</span>
                                     </button>
                                 </div>
                             </div>
@@ -2965,6 +2990,38 @@ database:
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
+
+        // 全屏切换
+        function toggleFullscreen() {
+            const container = document.getElementById('diffPanelContainer');
+            const btn = document.getElementById('fullscreenBtn');
+            
+            if (!container) return;
+            
+            if (container.classList.contains('fullscreen')) {
+                // 退出全屏
+                container.classList.remove('fullscreen');
+                btn.innerHTML = '<span>⛶</span>';
+                btn.title = '全屏';
+                trackEvent('ui', 'fullscreen', 'exit');
+            } else {
+                // 进入全屏
+                container.classList.add('fullscreen');
+                btn.innerHTML = '<span>⛶</span>';
+                btn.title = '退出全屏';
+                trackEvent('ui', 'fullscreen', 'enter');
+            }
+        }
+        
+        // ESC键退出全屏
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const container = document.getElementById('diffPanelContainer');
+                if (container && container.classList.contains('fullscreen')) {
+                    toggleFullscreen();
+                }
+            }
+        });
 
         // 切换帮助
         function toggleHelp() {
