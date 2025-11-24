@@ -478,8 +478,30 @@
         }
 
         .results-section.active {
-            display: block;
+            display: flex;
+            gap: 16px;
             animation: fadeIn 0.3s ease;
+            flex-direction: column;
+        }
+        
+        /* 左右分栏布局 */
+        .results-split-view {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 16px;
+            min-height: 600px;
+        }
+        
+        .results-left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .results-right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
         }
 
         .error-alert {
@@ -498,6 +520,9 @@
             border-radius: var(--radius-md);
             padding: 20px;
             margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            max-height: 100%;
         }
 
         .summary-header {
@@ -583,9 +608,11 @@
         }
 
         .changes-list {
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
             padding-right: 8px;
+            flex: 1;
+            min-height: 200px;
         }
 
         .changes-list::-webkit-scrollbar {
@@ -1262,6 +1289,23 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            /* 中等屏幕：调整左侧面板宽度 */
+            .results-split-view {
+                grid-template-columns: 320px 1fr;
+            }
+        }
+        
+        @media (max-width: 960px) {
+            /* 小屏幕：改为上下布局 */
+            .results-split-view {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+            
+            .changes-list {
+                max-height: 300px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1496,38 +1540,56 @@
             <div class="results-section" id="resultSection">
                 <div id="errorContainer"></div>
                 
-                <!-- Summary Panel -->
-                <div class="summary-panel" id="summaryBox">
-                    <div class="summary-header">
-                        <h3>
-                            <span>📊</span>
-                            <span data-i18n="diffStats">差异统计</span>
-                            <span class="mode-indicator json" id="modeIndicator">JSON对比模式</span>
-                        </h3>
-                        <div style="display: flex; gap: 8px;">
-                            <select id="diffFilter" onchange="filterDifferences()" style="padding: 4px 8px; background: var(--bg-tertiary); border: 1px solid var(--border-default); border-radius: var(--radius-sm); font-size: 12px; cursor: pointer;">
-                                <option value="all" data-i18n="showAll">显示全部</option>
-                                <option value="added" data-i18n="showAdded">只显示新增</option>
-                                <option value="removed" data-i18n="showRemoved">只显示删除</option>
-                                <option value="modified" data-i18n="showModified">只显示修改</option>
-                            </select>
+                <!-- 左右分栏布局 -->
+                <div class="results-split-view">
+                    <!-- 左侧面板：差异统计和列表 -->
+                    <div class="results-left-panel">
+                        <!-- Summary Panel -->
+                        <div class="summary-panel" id="summaryBox" style="margin-bottom: 0;">
+                            <div class="summary-header">
+                                <h3>
+                                    <span>📊</span>
+                                    <span data-i18n="diffStats">差异统计</span>
+                                </h3>
+                            </div>
+                            <div class="stats-grid" id="diffStats"></div>
+                            
+                            <!-- 模式和筛选器 -->
+                            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-default);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <span class="mode-indicator json" id="modeIndicator">JSON对比模式</span>
+                                </div>
+                                <select id="diffFilter" onchange="filterDifferences()" style="width: 100%; padding: 6px 8px; background: var(--bg-tertiary); border: 1px solid var(--border-default); border-radius: var(--radius-sm); font-size: 12px; cursor: pointer;">
+                                    <option value="all" data-i18n="showAll">显示全部</option>
+                                    <option value="added" data-i18n="showAdded">只显示新增</option>
+                                    <option value="removed" data-i18n="showRemoved">只显示删除</option>
+                                    <option value="modified" data-i18n="showModified">只显示修改</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 变更列表 -->
+                            <div id="diffDetails"></div>
                         </div>
                     </div>
-                    <div class="stats-grid" id="diffStats"></div>
-                    <div id="diffDetails"></div>
-                </div>
-
-                <!-- Diff Panel -->
-                <div class="diff-panel">
-                    <div class="diff-header">
-                        <h3>详细对比</h3>
-                        <div class="view-toggle">
-                            <button class="active" onclick="changeViewMode('side-by-side')">并排对比</button>
-                            <button onclick="changeViewMode('line-by-line')">逐行对比</button>
-                            <button onclick="exportResult()" style="margin-left: 8px; background: var(--accent-green); color: #fff; border-color: var(--accent-green);">📥 导出</button>
+                    
+                    <!-- 右侧面板：详细对比 -->
+                    <div class="results-right-panel">
+                        <!-- Diff Panel -->
+                        <div class="diff-panel" style="margin-bottom: 0; height: 100%;">
+                            <div class="diff-header">
+                                <h3 data-i18n="detailedCompare">详细对比</h3>
+                                <div class="view-toggle">
+                                    <button class="active" onclick="changeViewMode('side-by-side')" data-i18n="sideBySide">并排对比</button>
+                                    <button onclick="changeViewMode('line-by-line')" data-i18n="lineByLine">逐行对比</button>
+                                    <button onclick="exportResult()" style="margin-left: 8px; background: var(--accent-green); color: #fff; border-color: var(--accent-green);">
+                                        <span>📥</span>
+                                        <span data-i18n="export">导出</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="diff-content" id="diffViewer" style="max-height: 600px;"></div>
                         </div>
                     </div>
-                    <div class="diff-content" id="diffViewer"></div>
                 </div>
             </div>
         </main>
@@ -2530,12 +2592,16 @@ database:
                 : '';
 
             document.getElementById('diffDetails').innerHTML = `
-                <h3 style="margin: 20px 0 12px 0; font-size: 14px; font-weight: 600;">
-                    详细变更 (${diffs.length})
-                    <span style="font-size: 11px; font-weight: normal; color: var(--text-tertiary); margin-left: 8px;">
-                        💡 点击路径可定位到详细对比视图
-                    </span>
-                </h3>
+                <div style="margin: 16px 0 8px 0; padding-top: 16px; border-top: 1px solid var(--border-default);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size: 14px; font-weight: 600; margin: 0;">
+                            详细变更 (${diffs.length})
+                        </h3>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-tertiary); margin-bottom: 12px;">
+                        💡 点击路径定位到右侧对比视图
+                    </p>
+                </div>
                 <div class="changes-list">${itemsHtml}</div>
                 ${moreInfo}
             `;
@@ -2552,33 +2618,48 @@ database:
             const item = document.getElementById(`diff-item-${index}`);
             if (item) {
                 item.classList.add('highlight');
+                
+                // 在左侧列表中滚动到当前项
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
             
-            // 滚动到详细对比视图
+            // 在右侧详细对比视图中查找并高亮该路径
             const diffViewer = document.getElementById('diffViewer');
             if (diffViewer) {
-                diffViewer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
                 // 尝试在diff视图中查找并高亮该路径
-                setTimeout(() => {
-                    try {
-                        const pathText = path.replace(/\[(\d+)\]/g, '\\[$1\\]');
-                        const searchText = new RegExp(pathText, 'i');
-                        const diffLines = diffViewer.querySelectorAll('.d2h-code-line-ctn');
+                try {
+                    const pathText = path.replace(/\[(\d+)\]/g, '\\[$1\\]').replace(/\./g, '\\.');
+                    const searchText = new RegExp(pathText, 'i');
+                    const diffLines = diffViewer.querySelectorAll('.d2h-code-line-ctn');
+                    
+                    let found = false;
+                    diffLines.forEach(line => {
+                        // 清除之前的高亮
+                        line.style.backgroundColor = '';
                         
-                        diffLines.forEach(line => {
-                            if (searchText.test(line.textContent)) {
-                                line.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                line.style.backgroundColor = 'rgba(9, 105, 218, 0.2)';
-                                setTimeout(() => {
-                                    line.style.backgroundColor = '';
-                                }, 2000);
-                            }
-                        });
-                    } catch (e) {
-                        console.log('路径导航:', e);
-                    }
-                }, 300);
+                        if (!found && searchText.test(line.textContent)) {
+                            // 在diff容器内滚动
+                            const container = diffViewer;
+                            const lineTop = line.offsetTop;
+                            container.scrollTo({
+                                top: lineTop - container.offsetHeight / 2,
+                                behavior: 'smooth'
+                            });
+                            
+                            // 高亮该行
+                            line.style.backgroundColor = 'rgba(9, 105, 218, 0.2)';
+                            line.style.transition = 'background-color 0.3s ease';
+                            
+                            setTimeout(() => {
+                                line.style.backgroundColor = '';
+                            }, 2000);
+                            
+                            found = true;
+                        }
+                    });
+                } catch (e) {
+                    console.log('路径导航:', e);
+                }
             }
             
             trackEvent('navigation', 'path_click', path);
