@@ -3734,7 +3734,8 @@ database:
             
             const hour = date.getHours().toString().padStart(2, '0');
             const minute = date.getMinutes().toString().padStart(2, '0');
-            const timeStr = `${hour}:${minute}`;
+            const second = date.getSeconds().toString().padStart(2, '0');
+            const timeStr = `${hour}:${minute}:${second}`;
             
             // 判断是今天、昨天还是更早
             if (dateOnly.getTime() === today.getTime()) {
