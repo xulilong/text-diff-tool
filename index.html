@@ -3724,35 +3724,29 @@ database:
             trackEvent('history', 'clear', 'all_cleared');
         }
 
-        // 格式化时间显示
+        // 格式化时间显示（具体时间）
         function formatTime(timestamp) {
             const date = new Date(timestamp);
             const now = new Date();
-            const diff = now - date;
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const yesterday = new Date(today - 86400000);
+            const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
             
-            // 小于1分钟
-            if (diff < 60000) {
-                return '刚刚';
-            }
-            // 小于1小时
-            if (diff < 3600000) {
-                return Math.floor(diff / 60000) + '分钟前';
-            }
-            // 小于24小时
-            if (diff < 86400000) {
-                return Math.floor(diff / 3600000) + '小时前';
-            }
-            // 小于7天
-            if (diff < 604800000) {
-                return Math.floor(diff / 86400000) + '天前';
-            }
-            
-            // 超过7天显示具体日期
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
             const hour = date.getHours().toString().padStart(2, '0');
             const minute = date.getMinutes().toString().padStart(2, '0');
-            return `${month}月${day}日 ${hour}:${minute}`;
+            const timeStr = `${hour}:${minute}`;
+            
+            // 判断是今天、昨天还是更早
+            if (dateOnly.getTime() === today.getTime()) {
+                return `今天 ${timeStr}`;
+            } else if (dateOnly.getTime() === yesterday.getTime()) {
+                return `昨天 ${timeStr}`;
+            } else {
+                // 更早的日期显示具体日期
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                return `${month}月${day}日 ${timeStr}`;
+            }
         }
 
         // 格式化文件大小
