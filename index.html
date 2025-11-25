@@ -433,7 +433,9 @@
 
         .panel-editor textarea {
             width: 100%;
-            min-height: 400px;
+            height: 360px;
+            min-height: 360px;
+            max-height: 360px;
             padding: 16px;
             background: #fafbfc;
             border: none;
@@ -441,8 +443,10 @@
             font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
             font-size: 13px;
             line-height: 1.6;
-            resize: vertical;
+            resize: none;
             tab-size: 2;
+            overflow: auto;
+            white-space: pre;
         }
 
         .panel-editor textarea:focus {
@@ -869,7 +873,9 @@
 
         .diff-content {
             background: #fafbfc;
-            overflow: auto;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: auto;
         }
 
         .no-diff-message {
