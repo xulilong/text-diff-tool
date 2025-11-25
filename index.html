@@ -1587,15 +1587,31 @@
 
         .history-item-header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 12px;
+        }
+
+        .history-item-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(9, 105, 218, 0.1);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(9, 105, 218, 0.2);
         }
 
         .history-item-time {
             font-size: 12px;
             color: var(--text-tertiary);
             font-weight: 500;
+            flex: 1;
         }
 
         .history-item-delete {
@@ -3631,9 +3647,11 @@ database:
             
             listContainer.innerHTML = history.map((record, index) => {
                 const time = formatTime(record.timestamp);
+                const number = index + 1; // 编号从1开始
                 return `
                     <div class="history-item" onclick="loadHistory(${record.id})">
                         <div class="history-item-header">
+                            <div class="history-item-number">#${number}</div>
                             <div class="history-item-time">${time}</div>
                             <button class="history-item-delete" onclick="event.stopPropagation(); deleteHistory(${record.id})" title="删除">
                                 🗑️
