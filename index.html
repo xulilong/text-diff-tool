@@ -1541,11 +1541,11 @@
                 </div>
                 <div class="options-group">
                     <div class="checkbox-wrapper">
-                        <input type="checkbox" id="ignoreWhitespace">
+                        <input type="checkbox" id="ignoreWhitespace" onchange="trackEvent('option', 'toggle', 'ignore_whitespace', this.checked ? 1 : 0)">
                         <label for="ignoreWhitespace">忽略空白</label>
                     </div>
                     <div class="checkbox-wrapper">
-                        <input type="checkbox" id="autoFormatJson" checked>
+                        <input type="checkbox" id="autoFormatJson" checked onchange="trackEvent('option', 'toggle', 'auto_format_json', this.checked ? 1 : 0)">
                         <label for="autoFormatJson">自动格式化JSON</label>
                     </div>
                     <button class="btn btn-primary" onclick="compareText()" style="margin-left: 8px;">
@@ -1768,15 +1768,37 @@ https://json.asia</p>
 
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 页面加载完成打点
+            trackEvent('page', 'load', 'page_ready');
+            
+            // 文本输入打点（使用防抖，避免过多事件）
+            let leftInputTimer = null;
+            let rightInputTimer = null;
             
             document.getElementById('leftText').addEventListener('input', function() {
                 updateCharCount('left');
                 detectAndUpdateFormat('left');
+                
+                // 防抖打点：用户停止输入300ms后才记录
+                clearTimeout(leftInputTimer);
+                leftInputTimer = setTimeout(() => {
+                    if (this.value.length > 0) {
+                        trackEvent('input', 'start', 'left_text', this.value.length);
+                    }
+                }, 300);
             });
             
             document.getElementById('rightText').addEventListener('input', function() {
                 updateCharCount('right');
                 detectAndUpdateFormat('right');
+                
+                // 防抖打点：用户停止输入300ms后才记录
+                clearTimeout(rightInputTimer);
+                rightInputTimer = setTimeout(() => {
+                    if (this.value.length > 0) {
+                        trackEvent('input', 'start', 'right_text', this.value.length);
+                    }
+                }, 300);
             });
 
             document.getElementById('fileInput').addEventListener('change', handleFileSelect);
@@ -2084,10 +2106,12 @@ https://json.asia</p>
 
             navigator.clipboard.writeText(text).then(() => {
                 showSuccess(side, '✅ 已复制到剪贴板');
+                trackEvent('action', 'copy', side + '_text', text.length);
             }).catch(() => {
                 textarea.select();
                 document.execCommand('copy');
                 showSuccess(side, '✅ 已复制到剪贴板');
+                trackEvent('action', 'copy', side + '_text', text.length);
             });
         }
 
@@ -2126,6 +2150,7 @@ https://json.asia</p>
                 }
                 
                 showSuccess(currentFileTarget, `✅ 已加载文件: ${file.name}`);
+                trackEvent('file', 'load', currentFileTarget + '_' + ext, file.size);
             };
             reader.onerror = function() {
                 alert('文件读取失败');
@@ -2189,6 +2214,7 @@ https://json.asia</p>
                         }
                         
                         showSuccess(side, `✅ 已加载文件: ${file.name}`);
+                        trackEvent('file', 'drop', side + '_' + ext, file.size);
                     };
                     
                     reader.readAsText(file);
@@ -2227,6 +2253,8 @@ https://json.asia</p>
             document.getElementById('leftFormatSelect').value = 'auto';
             document.getElementById('rightFormatSelect').value = 'auto';
             document.getElementById('resultSection').classList.remove('active');
+            
+            trackEvent('action', 'clear', 'clear_all');
             currentDiffData = null;
             updateCharCount('left');
             updateCharCount('right');
@@ -2714,6 +2742,8 @@ database:
             });
             event.target.classList.add('active');
             
+            trackEvent('view', 'switch', mode);
+            
             if (currentDiffData) {
                 renderDiff(currentDiffData.leftStr, currentDiffData.rightStr);
             }
@@ -2942,24 +2972,36 @@ database:
         // 切换帮助
         function toggleHelp() {
             const modal = document.getElementById('helpModal');
+            const isOpening = !modal.classList.contains('show');
             modal.classList.toggle('show');
-            trackEvent('help', 'open', 'help_modal');
+            
+            if (isOpening) {
+                trackEvent('help', 'open', 'help_modal');
+            } else {
+                trackEvent('help', 'close', 'help_modal');
+            }
         }
 
         // 切换打赏弹窗
         function toggleDonate() {
             const modal = document.getElementById('donateModal');
+            const isOpening = !modal.classList.contains('show');
             modal.classList.toggle('show');
-            if (modal.classList.contains('show')) {
+            
+            if (isOpening) {
                 trackEvent('donate', 'open', 'donate_modal');
+            } else {
+                trackEvent('donate', 'close', 'donate_modal');
             }
         }
 
         // 切换分享弹窗
         function toggleShare() {
             const modal = document.getElementById('shareModal');
+            const isOpening = !modal.classList.contains('show');
             modal.classList.toggle('show');
-            if (modal.classList.contains('show')) {
+            
+            if (isOpening) {
                 // 重置状态
                 document.getElementById('wechatShareContent').style.display = 'none';
                 document.getElementById('shareUrlSection').style.display = 'flex';
@@ -2970,6 +3012,8 @@ database:
                 // 更新统计数据
                 updateShareStats();
                 trackEvent('share', 'open', 'share_modal');
+            } else {
+                trackEvent('share', 'close', 'share_modal');
             }
         }
 
