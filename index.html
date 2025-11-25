@@ -1833,6 +1833,10 @@
                         <input type="checkbox" id="autoFormatJson" checked onchange="trackEvent('option', 'toggle', 'auto_format_json', this.checked ? 1 : 0)">
                         <label for="autoFormatJson">自动格式化JSON</label>
                     </div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="realtimeCompare" checked onchange="toggleRealtime(this.checked); trackEvent('option', 'toggle', 'realtime_compare', this.checked ? 1 : 0)">
+                        <label for="realtimeCompare">实时对比</label>
+                    </div>
                     <button class="btn btn-primary" onclick="compareText()" style="margin-left: 8px;">
                         <span>🔍</span> 开始对比
                     </button>
@@ -2104,6 +2108,9 @@ https://json.asia</p>
 
             setupDragAndDrop('leftText');
             setupDragAndDrop('rightText');
+
+            // Add realtime init
+            toggleRealtime(true); // Default on
         });
 
         // 更新字符统计
@@ -2625,6 +2632,12 @@ database:
             updateCharCount('right');
             handleFormatChange('left');
             handleFormatChange('right');
+
+            // 实时对比开启时，自动触发一次对比
+            const realtimeCheckbox = document.getElementById('realtimeCompare');
+            if (realtimeCheckbox && realtimeCheckbox.checked) {
+                setTimeout(() => compareText(), 50);
+            }
         }
 
         // 尝试解析JSON
@@ -3779,6 +3792,38 @@ database:
                 saveToHistory(leftText, rightText);
             }
         };
+
+        // Add toggle function
+        function toggleRealtime(enabled) {
+            const leftText = document.getElementById('leftText');
+            const rightText = document.getElementById('rightText');
+            
+            if (!toggleRealtime.autoCompare) {
+                const debounce = (func, delay) => {
+                    let timer;
+                    return function() {
+                        clearTimeout(timer);
+                        timer = setTimeout(func, delay);
+                    };
+                };
+                
+                toggleRealtime.autoCompare = debounce(() => {
+                    // 避免空内容时频繁触发
+                    if (!leftText.value && !rightText.value) return;
+                    compareText();
+                }, 500);
+            }
+            
+            if (enabled && !toggleRealtime.attached) {
+                leftText.addEventListener('input', toggleRealtime.autoCompare);
+                rightText.addEventListener('input', toggleRealtime.autoCompare);
+                toggleRealtime.attached = true;
+            } else if (!enabled && toggleRealtime.attached) {
+                leftText.removeEventListener('input', toggleRealtime.autoCompare);
+                rightText.removeEventListener('input', toggleRealtime.autoCompare);
+                toggleRealtime.attached = false;
+            }
+        }
     </script>
 </body>
 </html>
