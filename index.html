@@ -36,8 +36,10 @@
     
     <!-- Performance Optimization -->
     <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://hm.baidu.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://hm.baidu.com">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     
     <!-- Google Search Console Verification -->
@@ -93,6 +95,18 @@
         gtag('js', new Date());
         gtag('config', 'G-F95FZVJYCG'); // 替换为你的GA ID
     </script>
+    
+    <!-- 百度统计 -->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?7c8e8ba3ee11726613b556be87f7bd9a";
+          var s = document.getElementsByTagName("script")[0]; 
+          s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -3079,8 +3093,9 @@ database:
             }
         }
 
-        // Google Analytics 事件追踪
+        // 统计事件追踪（同时支持Google Analytics和百度统计）
         function trackEvent(category, action, label, value) {
+            // Google Analytics
             if (typeof gtag !== 'undefined') {
                 gtag('event', action, {
                     'event_category': category,
@@ -3088,6 +3103,12 @@ database:
                     'value': value
                 });
             }
+            
+            // 百度统计
+            if (typeof _hmt !== 'undefined') {
+                _hmt.push(['_trackEvent', category, action, label, value]);
+            }
+            
             console.log('Track Event:', category, action, label, value);
         }
 
