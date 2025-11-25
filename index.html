@@ -1078,6 +1078,28 @@
             border-color: var(--text-secondary);
         }
 
+        /* History Button */
+        .history-button {
+            padding: 6px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .history-button:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
         /* Share Button */
         .share-button {
             padding: 6px 14px;
@@ -1483,6 +1505,201 @@
         .d2h-del {
             background: rgba(209, 36, 47, 0.1) !important;
         }
+
+        /* History Drawer */
+        .history-drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100vh;
+            background: var(--bg-elevated);
+            border-left: 1px solid var(--border-default);
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+            z-index: 2001;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-drawer.show {
+            right: 0;
+        }
+
+        .history-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 2000;
+            backdrop-filter: blur(3px);
+            transition: opacity 0.3s ease;
+        }
+
+        .history-overlay.show {
+            display: block;
+        }
+
+        .history-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-default);
+            background: var(--bg-secondary);
+        }
+
+        .history-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .history-actions button {
+            padding: 8px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+
+        .history-actions button:hover {
+            background: var(--bg-elevated);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .history-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .history-item:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(9, 105, 218, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .history-item-time {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .history-item-delete {
+            padding: 4px 10px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-tertiary);
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+
+        .history-item-delete:hover {
+            background: rgba(248, 81, 73, 0.1);
+            border-color: rgba(248, 81, 73, 0.3);
+            color: var(--danger-text);
+        }
+
+        .history-item-preview {
+            margin-bottom: 10px;
+        }
+
+        .history-item-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .history-item-text {
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: var(--bg-tertiary);
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-default);
+            line-height: 1.4;
+        }
+
+        .history-item-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            padding-top: 8px;
+            border-top: 1px solid var(--border-default);
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 80px 32px;
+            color: var(--text-tertiary);
+        }
+
+        .history-empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .history-empty-text {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .history-drawer {
+                width: 100%;
+                right: -100%;
+            }
+
+            .history-button span:last-child {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1494,7 +1711,7 @@
                     <div class="brand-icon">⚡</div>
                     <div class="brand-text">
                         <h1>专业文本对比工具</h1>
-                        <p>Professional Text Diff Tool v3.0</p>
+                        <p>Professional Text Diff Tool</p>
                     </div>
                 </div>
                 <div class="header-actions">
@@ -1505,6 +1722,10 @@
                     <div class="header-badge">
                         <span>完全免费</span>
                     </div>
+                    <button class="history-button" onclick="toggleHistory()">
+                        <span>📜</span>
+                        <span>历史</span>
+                    </button>
                     <button class="share-button" onclick="toggleShare()">
                         <span>🔗</span>
                         <span>分享</span>
@@ -1677,6 +1898,24 @@
                 </div>
             </div>
         </main>
+
+        <!-- History Drawer -->
+        <div class="history-overlay" id="historyOverlay" onclick="toggleHistory()"></div>
+        <div class="history-drawer" id="historyDrawer">
+            <div class="history-header">
+                <h3>
+                    <span>📜</span>
+                    <span>历史记录</span>
+                </h3>
+                <div class="history-actions">
+                    <button onclick="clearHistory()" title="清空所有">🗑️ 清空</button>
+                    <button onclick="toggleHistory()" title="关闭">×</button>
+                </div>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- History items will be inserted here -->
+            </div>
+        </div>
 
         <!-- Support Footer -->
         <div class="support-footer">
@@ -3339,6 +3578,233 @@ database:
                 compareText();
             }
         });
+
+        // ==================== 历史记录功能 ====================
+        
+        const HISTORY_KEY = 'textDiffHistory';
+        const MAX_HISTORY = 20; // 最多保存20条记录
+
+        // 切换历史记录抽屉
+        function toggleHistory() {
+            const drawer = document.getElementById('historyDrawer');
+            const overlay = document.getElementById('historyOverlay');
+            const isOpening = !drawer.classList.contains('show');
+            
+            drawer.classList.toggle('show');
+            overlay.classList.toggle('show');
+            
+            if (isOpening) {
+                loadHistoryList();
+                trackEvent('history', 'open', 'history_drawer');
+            } else {
+                trackEvent('history', 'close', 'history_drawer');
+            }
+        }
+
+        // 保存对比到历史记录
+        function saveToHistory(leftText, rightText) {
+            if (!leftText || !rightText) return;
+            
+            const history = getHistory();
+            const newRecord = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                leftText: leftText,
+                rightText: rightText,
+                leftPreview: leftText.substring(0, 100),
+                rightPreview: rightText.substring(0, 100),
+                leftLength: leftText.length,
+                rightLength: rightText.length
+            };
+            
+            // 添加到数组开头
+            history.unshift(newRecord);
+            
+            // 限制数量
+            if (history.length > MAX_HISTORY) {
+                history.splice(MAX_HISTORY);
+            }
+            
+            // 保存到localStorage
+            try {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+                trackEvent('history', 'save', 'record_saved');
+            } catch (e) {
+                console.error('保存历史记录失败:', e);
+                // 如果存储满了，删除一半旧记录后重试
+                if (e.name === 'QuotaExceededError') {
+                    const reduced = history.slice(0, Math.floor(MAX_HISTORY / 2));
+                    localStorage.setItem(HISTORY_KEY, JSON.stringify(reduced));
+                }
+            }
+        }
+
+        // 获取历史记录
+        function getHistory() {
+            try {
+                const data = localStorage.getItem(HISTORY_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                console.error('读取历史记录失败:', e);
+                return [];
+            }
+        }
+
+        // 加载历史记录列表
+        function loadHistoryList() {
+            const history = getHistory();
+            const listContainer = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="history-empty">
+                        <div class="history-empty-icon">📜</div>
+                        <div class="history-empty-text">
+                            暂无历史记录<br>
+                            执行对比后会自动保存
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            listContainer.innerHTML = history.map((record, index) => {
+                const time = formatTime(record.timestamp);
+                return `
+                    <div class="history-item" onclick="loadHistory(${record.id})">
+                        <div class="history-item-header">
+                            <div class="history-item-time">${time}</div>
+                            <button class="history-item-delete" onclick="event.stopPropagation(); deleteHistory(${record.id})" title="删除">
+                                🗑️
+                            </button>
+                        </div>
+                        <div class="history-item-preview">
+                            <div class="history-item-label">左侧文本</div>
+                            <div class="history-item-text" title="${escapeHtml(record.leftPreview)}">${escapeHtml(record.leftPreview)}</div>
+                        </div>
+                        <div class="history-item-preview">
+                            <div class="history-item-label">右侧文本</div>
+                            <div class="history-item-text" title="${escapeHtml(record.rightPreview)}">${escapeHtml(record.rightPreview)}</div>
+                        </div>
+                        <div class="history-item-meta">
+                            <span>左: ${formatSize(record.leftLength)}</span>
+                            <span>右: ${formatSize(record.rightLength)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 加载某条历史记录
+        function loadHistory(id) {
+            const history = getHistory();
+            const record = history.find(r => r.id === id);
+            
+            if (!record) return;
+            
+            document.getElementById('leftText').value = record.leftText;
+            document.getElementById('rightText').value = record.rightText;
+            
+            updateCharCount('left');
+            updateCharCount('right');
+            detectAndUpdateFormat('left');
+            detectAndUpdateFormat('right');
+            
+            toggleHistory();
+            trackEvent('history', 'load', 'record_loaded');
+            
+            // 提示用户
+            setTimeout(() => {
+                const leftSuccess = document.getElementById('leftSuccess');
+                leftSuccess.textContent = '✅ 已加载历史记录';
+                leftSuccess.style.display = 'block';
+                setTimeout(() => {
+                    leftSuccess.style.display = 'none';
+                }, 2000);
+            }, 100);
+        }
+
+        // 删除某条历史记录
+        function deleteHistory(id) {
+            if (!confirm('确定删除这条记录吗？')) return;
+            
+            const history = getHistory();
+            const filtered = history.filter(r => r.id !== id);
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(filtered));
+            
+            loadHistoryList();
+            trackEvent('history', 'delete', 'record_deleted');
+        }
+
+        // 清空所有历史记录
+        function clearHistory() {
+            if (!confirm('确定清空所有历史记录吗？此操作不可恢复。')) return;
+            
+            localStorage.removeItem(HISTORY_KEY);
+            loadHistoryList();
+            trackEvent('history', 'clear', 'all_cleared');
+        }
+
+        // 格式化时间显示
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            // 小于1分钟
+            if (diff < 60000) {
+                return '刚刚';
+            }
+            // 小于1小时
+            if (diff < 3600000) {
+                return Math.floor(diff / 60000) + '分钟前';
+            }
+            // 小于24小时
+            if (diff < 86400000) {
+                return Math.floor(diff / 3600000) + '小时前';
+            }
+            // 小于7天
+            if (diff < 604800000) {
+                return Math.floor(diff / 86400000) + '天前';
+            }
+            
+            // 超过7天显示具体日期
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const hour = date.getHours().toString().padStart(2, '0');
+            const minute = date.getMinutes().toString().padStart(2, '0');
+            return `${month}月${day}日 ${hour}:${minute}`;
+        }
+
+        // 格式化文件大小
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + '字符';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB';
+            return (bytes / 1024 / 1024).toFixed(1) + 'MB';
+        }
+
+        // HTML转义
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 在compareText函数中添加自动保存
+        // 需要在对比成功后调用 saveToHistory
+        const originalCompareText = compareText;
+        compareText = function() {
+            const leftText = document.getElementById('leftText').value;
+            const rightText = document.getElementById('rightText').value;
+            
+            // 调用原始对比函数
+            originalCompareText();
+            
+            // 对比成功后保存到历史
+            if (leftText && rightText) {
+                saveToHistory(leftText, rightText);
+            }
+        };
     </script>
 </body>
 </html>
