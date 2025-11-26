@@ -176,12 +176,19 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
 
-        .header-container {
+.header-container {
             max-width: 1920px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 24px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
         }
 
         .brand {
@@ -212,6 +219,35 @@
             font-size: 12px;
             color: var(--text-tertiary);
             margin: 0;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-nav .nav-link {
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            transition: all 0.15s ease;
+        }
+
+        .header-nav .nav-link:hover {
+            color: var(--text-primary);
+            border-color: var(--border-default);
+            background: var(--bg-secondary);
+        }
+
+        .header-nav .nav-link.active {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+            box-shadow: 0 2px 6px rgba(9, 105, 218, 0.2);
         }
 
         .header-actions {
@@ -1706,6 +1742,17 @@
             .history-button span:last-child {
                 display: none;
             }
+
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .header-nav {
+                width: 100%;
+                overflow-x: auto;
+            }
         }
     </style>
 </head>
@@ -1714,12 +1761,18 @@
         <!-- Header -->
         <header class="app-header">
             <div class="header-container">
-                <div class="brand">
-                    <div class="brand-icon">⚡</div>
-                    <div class="brand-text">
-                        <h1>专业文本对比工具</h1>
-                        <p>Professional Text Diff Tool</p>
+                <div class="header-left">
+                    <div class="brand">
+                        <div class="brand-icon">⚡</div>
+                        <div class="brand-text">
+                            <h1>专业文本对比工具</h1>
+                            <p>Professional Text Diff Tool</p>
+                        </div>
                     </div>
+                    <nav class="header-nav">
+                        <a href="index.html" class="nav-link active">文本对比</a>
+                        <a href="json-tools.html" class="nav-link">JSON工具</a>
+                    </nav>
                 </div>
                 <div class="header-actions">
                     <button class="history-button" onclick="toggleHistory()">
