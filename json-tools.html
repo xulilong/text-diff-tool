@@ -179,6 +179,16 @@
             background: var(--bg-tertiary);
             border-top-left-radius: var(--radius-md);
             border-top-right-radius: var(--radius-md);
+            flex-wrap: nowrap;
+        }
+
+        .panel-header > div:first-child {
+            flex-shrink: 1;
+            min-width: 0;
+        }
+
+        .panel-header > div:last-child {
+            flex-shrink: 0;
         }
 
         .panel-actions {
@@ -398,6 +408,233 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-wrap: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tree-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tree-node {
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        .tree-node.dragging {
+            opacity: 0.5;
+        }
+
+        .tree-node.drag-over {
+            border-top: 2px solid var(--accent-blue);
+            background: rgba(9, 105, 218, 0.05);
+        }
+
+        .tree-node.drag-over-bottom {
+            border-bottom: 2px solid var(--accent-blue);
+            background: rgba(9, 105, 218, 0.05);
+        }
+
+        .tree-node.selected {
+            background: rgba(9, 105, 218, 0.1);
+        }
+
+        .tree-node.selected > .tree-label {
+            background: rgba(9, 105, 218, 0.15);
+        }
+
+
+        .tree-label {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        .tree-label.selectable {
+            padding-left: 24px;
+        }
+
+        .tree-label.selectable .tree-dot {
+            margin-left: 18px;
+        }
+
+        .tree-label.selectable .tree-toggle {
+            margin-left: 18px;
+        }
+
+        .tree-label.selectable::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border-default);
+            border-radius: 3px;
+            background: var(--bg-primary);
+            transition: all 0.15s ease;
+            z-index: 1;
+        }
+
+        .tree-node.selected > .tree-label.selectable::before {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .tree-node.selected > .tree-label.selectable::after {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            color: white;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .tree-node-actions {
+            display: inline-flex;
+            gap: 4px;
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .tree-label:hover .tree-node-actions {
+            opacity: 1;
+        }
+
+        .tree-action-btn {
+            padding: 3px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+
+        .tree-action-btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .tree-action-btn.add {
+            background: rgba(45, 164, 78, 0.1);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .tree-action-btn.add:hover {
+            background: rgba(45, 164, 78, 0.2);
+        }
+
+        .tree-action-btn.delete {
+            background: rgba(248, 81, 73, 0.1);
+            border-color: #d1242f;
+            color: #d1242f;
+        }
+
+        .tree-action-btn.delete:hover {
+            background: rgba(248, 81, 73, 0.2);
+        }
+
+        .tree-node.draggable {
+            cursor: grab;
+        }
+
+        .tree-node.draggable:active {
+            cursor: grabbing;
+        }
+
+        .tree-node.draggable .tree-label {
+            cursor: grab;
+        }
+
+        .tree-node.draggable .tree-label:active {
+            cursor: grabbing;
+        }
+
+        .add-node-form {
+            display: none;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-green);
+            border-radius: var(--radius-sm);
+            margin-top: 8px;
+            margin-left: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-node-form.show {
+            display: block;
+        }
+
+        .add-node-form .form-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .add-node-form .form-row {
+            margin-bottom: 8px;
+        }
+
+        .add-node-form label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .add-node-form input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border-default);
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'SF Mono', Monaco, monospace;
+            background: var(--bg-primary);
+        }
+
+        .add-node-form input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.1);
+        }
+
+        .add-node-form .form-hint {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .add-node-form .form-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+            margin-top: 8px;
         }
 
         .tree-card {
@@ -430,10 +667,12 @@
 
         .stats-row {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 16px;
             font-size: 12px;
             color: var(--text-tertiary);
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         @media (max-width: 1024px) {
@@ -989,7 +1228,14 @@
                         </div>
                         <div class="panel-tools">
                             <div class="stats-row" id="treeStats">未解析</div>
-                            <button class="btn ghost" id="treeFullscreenBtn" type="button" title="全屏查看树结构">⛶ 全屏</button>
+                            <div class="tree-actions">
+                                <button class="btn ghost" id="treeExpandAllBtn" type="button" title="全部展开">📂 展开</button>
+                                <button class="btn ghost" id="treeCollapseAllBtn" type="button" title="全部收起">📁 收起</button>
+                                <button class="btn ghost" id="treeSelectModeBtn" type="button" title="切换选择模式">✓ 选择模式</button>
+                                <button class="btn ghost" id="treeCopySelectedBtn" type="button" title="复制选中节点" disabled>📋 复制选中</button>
+                                <button class="btn ghost" id="treeCopyAllBtn" type="button" title="复制全部节点">📋 复制全部</button>
+                                <button class="btn ghost" id="treeFullscreenBtn" type="button" title="全屏查看树结构">⛶ 全屏</button>
+                            </div>
                         </div>
                     </div>
                     <div class="tree-search">
@@ -1148,6 +1394,8 @@ https://json.asia/json-tools.html</p>
         let treeSearchIndex = -1;
         let treeNodeRegistry = new Map();
         let currentJsonData = null;
+        let selectMode = false; // 选择模式开关
+        let selectedNodes = new Set(); // 选中的节点路径集合
 
         document.getElementById('formatBtn').addEventListener('click', () => formatJson('pretty'));
         document.getElementById('compressBtn').addEventListener('click', () => formatJson('minify'));
@@ -1170,6 +1418,11 @@ https://json.asia/json-tools.html</p>
         if (treeFullscreenBtn) {
             treeFullscreenBtn.addEventListener('click', toggleTreeFullscreen);
         }
+        document.getElementById('treeExpandAllBtn').addEventListener('click', expandAllNodes);
+        document.getElementById('treeCollapseAllBtn').addEventListener('click', collapseAllNodes);
+        document.getElementById('treeSelectModeBtn').addEventListener('click', toggleSelectMode);
+        document.getElementById('treeCopySelectedBtn').addEventListener('click', copySelectedNodes);
+        document.getElementById('treeCopyAllBtn').addEventListener('click', copyAllNodes);
 
         updateStats();
 
@@ -1234,9 +1487,37 @@ https://json.asia/json-tools.html</p>
                 showStatus('没有可复制的内容', 'error');
                 return;
             }
+            const btn = document.getElementById('copyOutputBtn');
+            const originalText = btn.textContent;
+            
             navigator.clipboard.writeText(jsonOutput.value).then(() => {
-                showStatus('已复制到剪贴板');
-            }).catch(() => showStatus('复制失败', 'error'));
+                btn.textContent = '✓ 已复制';
+                btn.style.background = 'var(--accent-green)';
+                btn.style.color = '#fff';
+                showStatus('JSON数据已复制到剪贴板，可直接粘贴使用');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 2000);
+            }).catch(() => {
+                // 备用方法
+                try {
+                    jsonOutput.select();
+                    document.execCommand('copy');
+                    btn.textContent = '✓ 已复制';
+                    btn.style.background = 'var(--accent-green)';
+                    btn.style.color = '#fff';
+                    showStatus('JSON数据已复制到剪贴板');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.style.color = '';
+                    }, 2000);
+                } catch (err) {
+                    showStatus('复制失败，请手动选择文本复制', 'error');
+                }
+            });
         }
 
         function loadSample() {
@@ -1283,20 +1564,44 @@ https://json.asia/json-tools.html</p>
         function renderTree(value) {
             jsonTree.innerHTML = '';
             treeNodeRegistry = new Map();
-            const rootNode = createTreeNode('root', value, 0, 'root');
+            const rootNode = createTreeNode('root', value, 0, 'root', null, null);
             jsonTree.appendChild(rootNode);
             resetTreeSearchState();
         }
 
-        function createTreeNode(key, value, depth, path) {
+        function createTreeNode(key, value, depth, path, parentValue = null, parentPath = null) {
             const node = document.createElement('div');
             node.className = 'tree-node';
+            
             const label = document.createElement('div');
             label.className = 'tree-label';
             label.style.paddingLeft = depth * 14 + 'px';
             label.dataset.path = path;
 
-            const registryEntry = { value, label, depth, toggle: null, container: null };
+            // 添加选择功能（非根节点）
+            if (parentValue !== null) {
+                // 如果选择模式开启，添加selectable类和事件监听器
+                if (selectMode) {
+                    label.classList.add('selectable');
+                label.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // 如果点击的是按钮或操作区域，不触发选择
+                    if (e.target.closest('.tree-toggle, .tree-node-actions, .tree-action-btn')) {
+                        return;
+                    }
+                    if (selectMode) {
+                        toggleNodeSelection(path);
+                    }
+                });
+                    label.setAttribute('data-selection-listener', 'true');
+                }
+            }
+
+            const registryEntry = { value, label, depth, toggle: null, container: null, node, key, parentValue, parentPath };
+
+            // 操作按钮容器
+            const actionsContainer = document.createElement('div');
+            actionsContainer.className = 'tree-node-actions';
 
             if (isExpandable(value)) {
                 const toggle = document.createElement('button');
@@ -1312,14 +1617,96 @@ https://json.asia/json-tools.html</p>
                 keySpan.className = 'tree-key';
                 keySpan.textContent = key;
 
+                // 添加节点按钮
+                const addBtn = document.createElement('button');
+                addBtn.className = 'tree-action-btn add';
+                addBtn.textContent = '+ 添加';
+                addBtn.title = '添加子节点';
+                addBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    showAddNodeForm(node, value, path);
+                };
+
+                // 删除按钮
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'tree-action-btn delete';
+                deleteBtn.textContent = '×';
+                deleteBtn.title = '删除节点';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteNode(path, parentValue, parentPath, key);
+                };
+
+                actionsContainer.appendChild(addBtn);
+                if (parentValue !== null) {
+                    actionsContainer.appendChild(deleteBtn);
+                }
+
                 label.appendChild(toggle);
                 label.appendChild(keySpan);
                 label.appendChild(meta);
+                label.appendChild(actionsContainer);
                 node.appendChild(label);
 
                 const childrenContainer = document.createElement('div');
                 childrenContainer.className = 'tree-children hidden';
+                childrenContainer.dataset.path = path;
+                childrenContainer.dataset.parentValue = 'object';
                 node.appendChild(childrenContainer);
+
+                // 为容器添加拖拽支持
+                childrenContainer.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.dataTransfer.dropEffect = 'move';
+                    const draggingNode = document.querySelector('.dragging');
+                    if (draggingNode) {
+                        const dragPath = draggingNode.dataset.path;
+                        if (dragPath && dragPath !== path && !path.startsWith(dragPath + '/')) {
+                            childrenContainer.style.backgroundColor = 'rgba(9, 105, 218, 0.1)';
+                            childrenContainer.style.border = '2px dashed var(--accent-blue)';
+                        }
+                    }
+                });
+
+                childrenContainer.addEventListener('dragleave', (e) => {
+                    // 只有当鼠标真正离开容器时才清除样式
+                    if (!childrenContainer.contains(e.relatedTarget)) {
+                        childrenContainer.style.backgroundColor = '';
+                        childrenContainer.style.border = '';
+                    }
+                });
+
+                childrenContainer.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    childrenContainer.style.backgroundColor = '';
+                    childrenContainer.style.border = '';
+                    
+                    try {
+                        const dragDataStr = e.dataTransfer.getData('text/plain');
+                        if (!dragDataStr) return;
+                        
+                        const dragData = JSON.parse(dragDataStr);
+                        if (!dragData || dragData.path === path) return;
+                        
+                        if (path.startsWith(dragData.path + '/')) {
+                            showStatus('不能将节点拖到自己内部', 'error');
+                            return;
+                        }
+                        
+                        // 确保目标节点已展开
+                        const toggle = node.querySelector('.tree-toggle');
+                        if (toggle && toggle.getAttribute('data-expanded') === 'false') {
+                            toggle.click();
+                        }
+                        
+                        moveNodeToTarget(dragData, path, value, path, parentValue, parentPath, 'inside');
+                    } catch (err) {
+                        console.error('拖拽失败:', err);
+                        showStatus('拖拽失败：' + err.message, 'error');
+                    }
+                });
 
                 registryEntry.toggle = toggle;
                 registryEntry.container = childrenContainer;
@@ -1342,17 +1729,134 @@ https://json.asia/json-tools.html</p>
                 valueSpan.className = 'tree-value ' + typeof value;
                 valueSpan.textContent = formatPrimitive(value);
 
-                label.appendChild(document.createElement('span')).textContent = '•';
+                // 删除按钮
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'tree-action-btn delete';
+                deleteBtn.textContent = '×';
+                deleteBtn.title = '删除节点';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteNode(path, parentValue, parentPath, key);
+                };
+
+                if (parentValue !== null) {
+                    actionsContainer.appendChild(deleteBtn);
+                }
+
+                const dotSpan = document.createElement('span');
+                dotSpan.className = 'tree-dot';
+                dotSpan.textContent = '•';
+                label.appendChild(dotSpan);
                 label.appendChild(keySpan);
                 label.appendChild(valueSpan);
+                label.appendChild(actionsContainer);
                 node.appendChild(label);
+            }
+
+            // 拖拽功能 - 所有非根节点都可以拖动
+            if (parentValue !== null) {
+                node.classList.add('draggable');
+                node.draggable = true;
+                node.dataset.path = path;
+                node.dataset.parentPath = parentPath || '';
+                node.dataset.key = key;
+
+                node.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.effectAllowed = 'move';
+                    // 深拷贝节点值，避免引用问题
+                    const clonedValue = JSON.parse(JSON.stringify(value));
+                    e.dataTransfer.setData('text/plain', JSON.stringify({
+                        path: path,
+                        key: key,
+                        parentPath: parentPath,
+                        value: clonedValue
+                    }));
+                    node.classList.add('dragging');
+                });
+
+                node.addEventListener('dragend', () => {
+                    node.classList.remove('dragging');
+                    document.querySelectorAll('.drag-over, .drag-over-bottom').forEach(el => {
+                        el.classList.remove('drag-over', 'drag-over-bottom');
+                    });
+                });
+
+                // 允许拖拽到其他节点上
+                node.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    const draggingNode = document.querySelector('.dragging');
+                    if (!draggingNode || draggingNode === node || node.contains(draggingNode)) {
+                        return;
+                    }
+                    
+                    // 获取拖拽节点的路径（从 draggingNode 的 dataset 获取）
+                    const dragPath = draggingNode.dataset.path;
+                    if (!dragPath || dragPath === path || path.startsWith(dragPath + '/')) {
+                        return;
+                    }
+                    
+                    const rect = node.getBoundingClientRect();
+                    const midY = rect.top + rect.height / 2;
+                    const isTopHalf = e.clientY < midY;
+                    
+                    // 如果目标节点是可展开的，上半部分表示插入到内部，下半部分表示插入到旁边
+                    if (isExpandable(value)) {
+                        if (isTopHalf) {
+                            node.classList.remove('drag-over-bottom');
+                            node.classList.add('drag-over');
+                            node.dataset.dropMode = 'inside';
+                        } else {
+                            node.classList.remove('drag-over');
+                            node.classList.add('drag-over-bottom');
+                            node.dataset.dropMode = 'after';
+                        }
+                    } else {
+                        // 叶子节点，只能插入到旁边
+                        node.classList.remove('drag-over');
+                        node.classList.add('drag-over-bottom');
+                        node.dataset.dropMode = 'after';
+                    }
+                });
+
+                node.addEventListener('dragleave', () => {
+                    node.classList.remove('drag-over', 'drag-over-bottom');
+                    delete node.dataset.dropMode;
+                });
+
+                node.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const dropMode = node.dataset.dropMode || 'inside';
+                    node.classList.remove('drag-over', 'drag-over-bottom');
+                    delete node.dataset.dropMode;
+                    
+                    try {
+                        const dragDataStr = e.dataTransfer.getData('text/plain');
+                        if (!dragDataStr) return;
+                        
+                        const dragData = JSON.parse(dragDataStr);
+                        if (!dragData || dragData.path === path) return;
+                        
+                        // 检查是否试图拖到自己内部
+                        if (path.startsWith(dragData.path + '/')) {
+                            showStatus('不能将节点拖到自己内部', 'error');
+                            return;
+                        }
+                        
+                        moveNodeToTarget(dragData, path, value, path, parentValue, parentPath, dropMode);
+                    } catch (err) {
+                        console.error('拖拽失败:', err);
+                        showStatus('拖拽失败：' + err.message, 'error');
+                    }
+                });
             }
 
             treeNodeRegistry.set(path, registryEntry);
             return node;
         }
 
-        function renderChildren(container, value, depth, parentPath) {
+        function renderChildren(container, value, depth, parentPath, parentValue = null) {
             if (container.dataset.loaded === 'true') return;
             container.dataset.abort = 'false';
             const entries = Array.isArray(value)
@@ -1372,7 +1876,7 @@ https://json.asia/json-tools.html</p>
                 while (index < entries.length && (deadline.timeRemaining ? deadline.timeRemaining() > 0 : fragment.childNodes.length < 200)) {
                     const [childKey, childVal] = entries[index++];
                     const childPath = buildChildPath(parentPath, childKey);
-                    fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath));
+                    fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath, value, parentPath));
                 }
                 container.appendChild(fragment);
                 if (index < entries.length) {
@@ -1386,7 +1890,7 @@ https://json.asia/json-tools.html</p>
             schedule(process);
         }
 
-        function renderChildrenImmediate(container, value, depth, parentPath) {
+        function renderChildrenImmediate(container, value, depth, parentPath, parentValue = null) {
             if (container.dataset.loaded === 'true') return;
             const fragment = document.createDocumentFragment();
             const entries = Array.isArray(value)
@@ -1394,7 +1898,7 @@ https://json.asia/json-tools.html</p>
                 : Object.entries(value);
             entries.forEach(([childKey, childVal]) => {
                 const childPath = buildChildPath(parentPath, childKey);
-                fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath));
+                fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath, value, parentPath));
             });
             container.appendChild(fragment);
             container.dataset.loaded = 'true';
@@ -1430,6 +1934,701 @@ https://json.asia/json-tools.html</p>
             treeSearchIndex = -1;
             treeSearchResult.textContent = '未搜索';
             jsonTree.querySelectorAll('.tree-search-match').forEach(el => el.classList.remove('tree-search-match'));
+        }
+
+        // ==================== 树形结构操作功能 ====================
+
+        // 展开所有节点
+        function expandAllNodes() {
+            const allToggles = jsonTree.querySelectorAll('.tree-toggle[data-expanded="false"]');
+            allToggles.forEach(toggle => {
+                const node = toggle.closest('.tree-node');
+                const container = node.querySelector('.tree-children');
+                if (container && container.dataset.loaded !== 'true') {
+                    const path = node.querySelector('.tree-label')?.dataset.path;
+                    if (path) {
+                        const entry = treeNodeRegistry.get(path);
+                        if (entry && entry.value && isExpandable(entry.value)) {
+                            renderChildrenImmediate(container, entry.value, entry.depth + 1, path, entry.value);
+                        }
+                    }
+                }
+                toggle.setAttribute('data-expanded', 'true');
+                toggle.textContent = '-';
+                if (container) container.classList.remove('hidden');
+            });
+        }
+
+        // 收起所有节点
+        function collapseAllNodes() {
+            const allToggles = jsonTree.querySelectorAll('.tree-toggle[data-expanded="true"]');
+            allToggles.forEach(toggle => {
+                toggle.setAttribute('data-expanded', 'false');
+                toggle.textContent = '+';
+                const container = toggle.closest('.tree-node').querySelector('.tree-children');
+                if (container) container.classList.add('hidden');
+            });
+        }
+
+        // 删除节点
+        function deleteNode(path, parentValue, parentPath, key) {
+            if (!confirm(`确定删除节点 "${key}" 吗？`)) return;
+
+            try {
+                if (Array.isArray(parentValue)) {
+                    const index = parseInt(key);
+                    parentValue.splice(index, 1);
+                } else if (typeof parentValue === 'object' && parentValue !== null) {
+                    delete parentValue[key];
+                }
+
+                // 更新 JSON 数据
+                updateJsonFromTree();
+                showStatus('节点已删除');
+            } catch (err) {
+                showStatus('删除失败：' + err.message, 'error');
+            }
+        }
+
+        // 显示添加节点表单
+        function showAddNodeForm(node, parentValue, parentPath) {
+            // 移除已存在的表单
+            const existingForm = jsonTree.querySelector('.add-node-form');
+            if (existingForm) {
+                existingForm.remove();
+            }
+
+            const form = document.createElement('div');
+            form.className = 'add-node-form show';
+            
+            const title = document.createElement('div');
+            title.className = 'form-title';
+            title.innerHTML = '<span>➕</span><span>添加新节点</span>';
+            
+            const keyRow = document.createElement('div');
+            keyRow.className = 'form-row';
+            const keyLabel = document.createElement('label');
+            keyLabel.textContent = Array.isArray(parentValue) ? '数组索引（自动生成）' : '键名 (Key)';
+            const keyInput = document.createElement('input');
+            keyInput.type = 'text';
+            keyInput.placeholder = Array.isArray(parentValue) ? '自动分配索引' : '例如: name, age, status';
+            keyInput.disabled = Array.isArray(parentValue);
+            keyRow.appendChild(keyLabel);
+            keyRow.appendChild(keyInput);
+            
+            const valueRow = document.createElement('div');
+            valueRow.className = 'form-row';
+            const valueLabel = document.createElement('label');
+            valueLabel.textContent = '值 (Value)';
+            const valueInput = document.createElement('input');
+            valueInput.type = 'text';
+            valueInput.placeholder = '例如: "文本" 或 123 或 {"key": "value"}';
+            const valueHint = document.createElement('div');
+            valueHint.className = 'form-hint';
+            valueHint.textContent = '支持字符串、数字、布尔值、对象、数组等JSON格式';
+            valueRow.appendChild(valueLabel);
+            valueRow.appendChild(valueInput);
+            valueRow.appendChild(valueHint);
+            
+            const actions = document.createElement('div');
+            actions.className = 'form-actions';
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn primary';
+            confirmBtn.textContent = '✓ 添加';
+            confirmBtn.onclick = () => {
+                if (!valueInput.value.trim()) {
+                    alert('请输入值');
+                    return;
+                }
+                addNode(parentValue, parentPath, keyInput.value, valueInput.value, form);
+            };
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'btn ghost';
+            cancelBtn.textContent = '取消';
+            cancelBtn.onclick = () => form.remove();
+            
+            actions.appendChild(confirmBtn);
+            actions.appendChild(cancelBtn);
+            
+            form.appendChild(title);
+            form.appendChild(keyRow);
+            form.appendChild(valueRow);
+            form.appendChild(actions);
+            
+            const container = node.querySelector('.tree-children');
+            if (container) {
+                // 确保容器是展开的
+                const toggle = node.querySelector('.tree-toggle');
+                if (toggle && toggle.getAttribute('data-expanded') === 'false') {
+                    toggle.click();
+                }
+                container.appendChild(form);
+                container.classList.remove('hidden');
+            } else {
+                node.appendChild(form);
+            }
+            
+            // 聚焦到输入框
+            setTimeout(() => {
+                if (!Array.isArray(parentValue)) {
+                    keyInput.focus();
+                } else {
+                    valueInput.focus();
+                }
+            }, 100);
+        }
+
+        // 添加节点
+        function addNode(parentValue, parentPath, key, valueStr, form) {
+            try {
+                if (!valueStr || valueStr.trim() === '') {
+                    alert('请输入值');
+                    return;
+                }
+
+                let parsedValue;
+                try {
+                    parsedValue = JSON.parse(valueStr);
+                } catch {
+                    // 如果不是有效的 JSON，当作字符串处理
+                    parsedValue = valueStr;
+                }
+
+                if (Array.isArray(parentValue)) {
+                    parentValue.push(parsedValue);
+                } else if (typeof parentValue === 'object' && parentValue !== null) {
+                    if (!key || key.trim() === '') {
+                        alert('请输入键名');
+                        return;
+                    }
+                    parentValue[key.trim()] = parsedValue;
+                }
+
+                form.remove();
+                updateJsonFromTree();
+                showStatus('节点已添加');
+            } catch (err) {
+                showStatus('添加失败：' + err.message, 'error');
+            }
+        }
+
+        // 移动节点到目标位置（支持任意拖动）
+        function moveNodeToTarget(dragData, targetPath, targetValue, targetParentPath, targetParentValue, targetParentPathActual, dropMode) {
+            try {
+                const fromPath = dragData.path;
+                const fromKey = dragData.key;
+                const fromValue = dragData.value; // 已经是深拷贝
+                const fromParentPath = dragData.parentPath;
+                
+                // 获取源节点的父对象
+                const fromParentEntry = treeNodeRegistry.get(fromParentPath);
+                if (!fromParentEntry) {
+                    showStatus('找不到源节点', 'error');
+                    return;
+                }
+                
+                const fromParentValue = fromParentEntry.value;
+                
+                // 获取目标节点信息
+                const targetEntry = treeNodeRegistry.get(targetPath);
+                if (!targetEntry) {
+                    showStatus('找不到目标节点', 'error');
+                    return;
+                }
+                
+                // 检查是否试图将节点拖到自己内部
+                if (fromPath === targetPath || targetPath.startsWith(fromPath + '/')) {
+                    showStatus('不能将节点拖到自己内部', 'error');
+                    return;
+                }
+
+                // 检查源节点和目标节点是否是同一个（防止重复操作）
+                if (fromPath === targetPath) {
+                    return;
+                }
+
+                // 判断是否是同一父节点内的移动
+                const isSameParent = fromParentPath === targetParentPathActual;
+                
+                // 根据 dropMode 决定插入位置
+                let insertTarget = null;
+                let insertKey = null;
+                let insertIndex = -1;
+                
+                if (dropMode === 'inside') {
+                    // 插入到目标节点内部
+                    if (Array.isArray(targetValue)) {
+                        insertTarget = targetValue;
+                        insertIndex = targetValue.length; // 插入到末尾
+                    } else if (typeof targetValue === 'object' && targetValue !== null) {
+                        insertTarget = targetValue;
+                        insertKey = fromKey;
+                        // 如果键名冲突，使用新键名
+                        if (targetValue.hasOwnProperty(insertKey)) {
+                            insertKey = fromKey + '_' + Date.now();
+                        }
+                    } else {
+                        showStatus('不能插入到非对象/数组节点内部', 'error');
+                        return;
+                    }
+                } else {
+                    // 插入到目标节点后面（同父节点）
+                    const actualParentValue = targetParentValue || (targetParentPathActual ? treeNodeRegistry.get(targetParentPathActual)?.value : null);
+                    
+                    if (!actualParentValue) {
+                        showStatus('找不到目标父节点', 'error');
+                        return;
+                    }
+
+                    if (Array.isArray(actualParentValue)) {
+                        // 数组：插入到目标节点后面
+                        const targetIndex = parseInt(targetEntry.key);
+                        insertTarget = actualParentValue;
+                        insertIndex = targetIndex + 1;
+                    } else if (typeof actualParentValue === 'object' && actualParentValue !== null) {
+                        // 对象：添加到对象中
+                        insertTarget = actualParentValue;
+                        insertKey = fromKey;
+                        if (actualParentValue.hasOwnProperty(insertKey)) {
+                            insertKey = fromKey + '_' + Date.now();
+                        }
+                    } else {
+                        showStatus('目标父节点不是对象或数组', 'error');
+                        return;
+                    }
+                }
+
+                // 如果是同一父节点内的数组移动，需要先计算正确的插入位置
+                if (isSameParent && Array.isArray(fromParentValue) && Array.isArray(insertTarget) && insertIndex >= 0) {
+                    const fromIndex = parseInt(fromKey);
+                    // 如果从前面删除，插入位置需要调整
+                    if (fromIndex < insertIndex) {
+                        insertIndex--;
+                    }
+                }
+
+                // 先删除源节点
+                let removed = false;
+                if (Array.isArray(fromParentValue)) {
+                    const fromIndex = parseInt(fromKey);
+                    if (fromIndex >= 0 && fromIndex < fromParentValue.length) {
+                        fromParentValue.splice(fromIndex, 1);
+                        removed = true;
+                    }
+                } else if (typeof fromParentValue === 'object' && fromParentValue !== null) {
+                    if (fromParentValue.hasOwnProperty(fromKey)) {
+                        delete fromParentValue[fromKey];
+                        removed = true;
+                    }
+                }
+
+                if (!removed) {
+                    showStatus('删除源节点失败', 'error');
+                    return;
+                }
+
+                // 插入到目标位置
+                if (insertTarget) {
+                    if (Array.isArray(insertTarget)) {
+                        insertTarget.splice(insertIndex, 0, fromValue);
+                    } else if (typeof insertTarget === 'object' && insertTarget !== null && insertKey) {
+                        insertTarget[insertKey] = fromValue;
+                    }
+                }
+
+                updateJsonFromTree();
+                showStatus('节点已移动');
+            } catch (err) {
+                console.error('移动节点失败:', err);
+                showStatus('移动失败：' + err.message, 'error');
+            }
+        }
+
+        // 从树形结构更新 JSON 数据
+        function updateJsonFromTree() {
+            if (!currentJsonData) return;
+            
+            // 保存当前展开的路径
+            const expandedPaths = new Set();
+            jsonTree.querySelectorAll('.tree-toggle[data-expanded="true"]').forEach(toggle => {
+                const path = toggle.closest('.tree-node')?.querySelector('.tree-label')?.dataset.path;
+                if (path) expandedPaths.add(path);
+            });
+            
+            // 保存选中的路径
+            const savedSelectedNodes = new Set(selectedNodes);
+            
+            // 重新格式化 JSON
+            const formatted = JSON.stringify(currentJsonData, null, 2);
+            jsonOutput.value = formatted;
+            
+            // 重新渲染树
+            renderTree(currentJsonData);
+            
+            // 恢复展开状态和选中状态
+            setTimeout(() => {
+                expandedPaths.forEach(path => {
+                    const entry = treeNodeRegistry.get(path);
+                    if (entry && entry.toggle && entry.container) {
+                        if (entry.container.dataset.loaded !== 'true') {
+                            renderChildrenImmediate(entry.container, entry.value, entry.depth + 1, path, entry.value);
+                        }
+                        entry.toggle.setAttribute('data-expanded', 'true');
+                        entry.toggle.textContent = '-';
+                        entry.container.classList.remove('hidden');
+                    }
+                });
+                
+                // 恢复选中状态
+                savedSelectedNodes.forEach(path => {
+                    const entry = treeNodeRegistry.get(path);
+                    if (entry && entry.node) {
+                        entry.node.classList.add('selected');
+                        selectedNodes.add(path);
+                    }
+                });
+                
+                updateSelectionButtons();
+                
+                // 如果根节点未展开，自动展开
+                const rootNode = jsonTree.querySelector('.tree-node');
+                const rootToggle = rootNode?.querySelector('.tree-toggle');
+                if (rootToggle && rootToggle.getAttribute('data-expanded') === 'false') {
+                    rootToggle.click();
+                }
+            }, 100);
+        }
+
+        // 切换选择模式
+        function toggleSelectMode() {
+            selectMode = !selectMode;
+            const btn = document.getElementById('treeSelectModeBtn');
+
+            if (selectMode) {
+                btn.textContent = '✓ 选择中';
+                btn.style.background = 'var(--accent-blue)';
+                btn.style.color = '#fff';
+                // 为所有现有节点添加选择功能
+                jsonTree.querySelectorAll('.tree-label').forEach(label => {
+                    // 根节点不添加选择功能
+                    if (label.dataset.path !== 'root') {
+                        if (!label.classList.contains('selectable')) {
+                            label.classList.add('selectable');
+                        }
+                        // 添加点击事件监听器（如果还没有的话）
+                        if (!label.hasAttribute('data-selection-listener')) {
+                            label.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                // 如果点击的是按钮或操作区域，不触发选择
+                                if (e.target.closest('.tree-toggle, .tree-node-actions, .tree-action-btn')) {
+                                    return;
+                                }
+                                if (selectMode) {
+                                    const path = label.dataset.path;
+                                    toggleNodeSelection(path);
+                                }
+                            });
+                            label.setAttribute('data-selection-listener', 'true');
+                        }
+                    }
+                });
+            } else {
+                btn.textContent = '✓ 选择模式';
+                btn.style.background = '';
+                btn.style.color = '';
+                // 移除选择功能
+                jsonTree.querySelectorAll('.tree-label').forEach(label => {
+                    label.classList.remove('selectable');
+                    label.removeAttribute('data-selection-listener');
+                });
+            }
+            updateSelectionButtons();
+        }
+
+        // 更新选择按钮状态
+        function updateSelectionButtons() {
+            const copyBtn = document.getElementById('treeCopySelectedBtn');
+            const hasSelection = selectedNodes.size > 0;
+            copyBtn.disabled = !hasSelection;
+        }
+
+        // 获取节点的所有子节点路径（递归，仅获取已加载的）
+        function getAllChildPaths(path) {
+            const childPaths = [];
+            const entry = treeNodeRegistry.get(path);
+            if (!entry || !entry.container) return childPaths;
+            
+            // 只获取已加载的子节点
+            const children = entry.container.querySelectorAll('.tree-node');
+            children.forEach(childNode => {
+                const childLabel = childNode.querySelector('.tree-label');
+                if (childLabel) {
+                    const childPath = childLabel.dataset.path;
+                    if (childPath) {
+                        childPaths.push(childPath);
+                        // 递归获取子节点的子节点
+                        childPaths.push(...getAllChildPaths(childPath));
+                    }
+                }
+            });
+            
+            return childPaths;
+        }
+
+        // 获取节点的所有子节点路径（包括未加载的，通过值递归）
+        function getAllChildPathsFromValue(path, value, parentPath) {
+            const childPaths = [];
+            if (!value || (typeof value !== 'object')) return childPaths;
+            
+            if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    const childPath = parentPath ? `${parentPath}/${index}` : `${path}/${index}`;
+                    childPaths.push(childPath);
+                    // 递归获取子节点的子节点
+                    if (item && typeof item === 'object') {
+                        childPaths.push(...getAllChildPathsFromValue(childPath, item, childPath));
+                    }
+                });
+            } else if (typeof value === 'object' && value !== null) {
+                Object.keys(value).forEach(key => {
+                    const childPath = parentPath ? `${parentPath}/${key}` : `${path}/${key}`;
+                    childPaths.push(childPath);
+                    // 递归获取子节点的子节点
+                    const childValue = value[key];
+                    if (childValue && typeof childValue === 'object') {
+                        childPaths.push(...getAllChildPathsFromValue(childPath, childValue, childPath));
+                    }
+                });
+            }
+            
+            return childPaths;
+        }
+
+        // 更新节点的选择状态UI
+        function updateNodeSelectionUI(path, isSelected) {
+            const entry = treeNodeRegistry.get(path);
+            if (!entry || !entry.node) return;
+
+            entry.node.classList.remove('selected', 'partial-selected');
+            if (isSelected) {
+                entry.node.classList.add('selected');
+            }
+        }
+
+        // 切换节点选择状态（简单独立选择）
+        function toggleNodeSelection(path) {
+            if (!selectMode) return;
+
+            const entry = treeNodeRegistry.get(path);
+            if (!entry) return;
+
+            const wasSelected = selectedNodes.has(path);
+
+            if (wasSelected) {
+                // 取消选中当前节点
+                selectedNodes.delete(path);
+                updateNodeSelectionUI(path, false);
+            } else {
+                // 选中当前节点
+                selectedNodes.add(path);
+                updateNodeSelectionUI(path, true);
+            }
+
+            updateSelectionButtons();
+        }
+
+        // 复制全部节点
+        function copyAllNodes() {
+            if (!currentJsonData) {
+                showStatus('没有数据可复制', 'error');
+                return;
+            }
+
+            try {
+                const jsonToCopy = JSON.stringify(currentJsonData, null, 2);
+
+                navigator.clipboard.writeText(jsonToCopy).then(() => {
+                    const btn = document.getElementById('treeCopyAllBtn');
+                    const originalText = btn.textContent;
+                    btn.textContent = '✓ 已复制全部';
+                    btn.style.background = 'var(--accent-green)';
+                    btn.style.color = '#fff';
+                    showStatus('已复制全部JSON数据');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.style.color = '';
+                    }, 2000);
+                }).catch(() => {
+                    // 备用方法
+                    try {
+                        const textarea = document.createElement('textarea');
+                        textarea.value = jsonToCopy;
+                        textarea.style.position = 'fixed';
+                        textarea.style.opacity = '0';
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showStatus('已复制全部JSON数据');
+                    } catch (err) {
+                        showStatus('复制失败，请手动复制', 'error');
+                    }
+                });
+            } catch (err) {
+                console.error('复制全部节点失败:', err);
+                showStatus('复制失败：' + err.message, 'error');
+            }
+        }
+
+        // 复制选中的节点
+        function copySelectedNodes() {
+            if (selectedNodes.size === 0) {
+                showStatus('请先选择要复制的节点', 'error');
+                return;
+            }
+
+            const selectedPathsArray = Array.from(selectedNodes);
+            console.log('选中的节点路径:', selectedPathsArray);
+
+            let jsonToCopy;
+
+            try {
+                const result = {};
+
+                // 找出所有父节点
+                const parentNodes = new Map();
+                selectedPathsArray.forEach(path => {
+                    const entry = treeNodeRegistry.get(path);
+                    if (!entry) return;
+
+                    const isExpandable = entry.value && (Array.isArray(entry.value) || (typeof entry.value === 'object' && entry.value !== null));
+                    if (isExpandable) {
+                        parentNodes.set(path, entry);
+                    }
+                });
+
+                console.log('识别的父节点:', Array.from(parentNodes.keys()));
+
+                // 处理每个选中的节点
+                selectedPathsArray.forEach(path => {
+                    const entry = treeNodeRegistry.get(path);
+                    if (!entry) return;
+
+                    const key = entry.key;
+                    const value = entry.value;
+
+                    // 检查是否有父节点也被选中
+                    let hasParentSelected = false;
+                    let parentPath = null;
+                    for (const pPath of parentNodes.keys()) {
+                        if (path.startsWith(pPath + '/') && path !== pPath) {
+                            hasParentSelected = true;
+                            parentPath = pPath;
+                            break;
+                        }
+                    }
+
+                    console.log(`处理节点 ${path}: 父节点选中=${hasParentSelected}, 是父节点=${parentNodes.has(path)}`);
+
+                    if (!hasParentSelected) {
+                        // 这个节点没有父节点被选中
+                        if (parentNodes.has(path)) {
+                            // 这个节点是父节点，检查是否有子节点被选中
+                            const selectedChildren = selectedPathsArray.filter(childPath =>
+                                childPath.startsWith(path + '/') && childPath !== path
+                            );
+
+                            console.log(`父节点 ${path} 的选中子节点:`, selectedChildren);
+
+                            if (selectedChildren.length > 0) {
+                                // 有子节点被选中，构建包含选中子节点的父结构
+                                if (Array.isArray(value)) {
+                                    result[key] = [];
+                                    selectedChildren.forEach(childPath => {
+                                        const childEntry = treeNodeRegistry.get(childPath);
+                                        if (childEntry) {
+                                            const index = parseInt(childPath.split('/').pop());
+                                            result[key][index] = childEntry.value;
+                                            console.log(`添加数组元素 [${index}] = ${childEntry.value}`);
+                                        }
+                                    });
+                                } else {
+                                    result[key] = {};
+                                    selectedChildren.forEach(childPath => {
+                                        const childEntry = treeNodeRegistry.get(childPath);
+                                        if (childEntry) {
+                                            const childKey = childPath.split('/').pop();
+                                            result[key][childKey] = childEntry.value;
+                                            console.log(`添加对象属性 ${childKey} = ${childEntry.value}`);
+                                        }
+                                    });
+                                }
+                            } else {
+                                // 没有子节点被选中，复制完整父节点值
+                                result[key] = value;
+                                console.log(`复制完整父节点 ${path}:`, value);
+                            }
+                        } else {
+                            // 这个节点不是父节点，直接添加其值
+                            result[key] = value;
+                            console.log(`添加独立节点 ${path}:`, value);
+                        }
+                    } else {
+                        console.log(`跳过子节点 ${path}，因为父节点 ${parentPath} 已被选中`);
+                    }
+                    // 如果有父节点被选中，子节点已在处理父节点时处理过了
+                });
+
+                console.log('构建的result对象:', result);
+
+                // 清理数组结果
+                Object.keys(result).forEach(key => {
+                    if (Array.isArray(result[key])) {
+                        const original = result[key];
+                        result[key] = result[key].filter(item => item !== undefined);
+                        console.log(`清理数组 ${key}: ${original} -> ${result[key]}`);
+                    }
+                });
+
+                jsonToCopy = JSON.stringify(result, null, 2);
+                console.log('最终JSON:', jsonToCopy);
+
+                // 复制到剪贴板
+                navigator.clipboard.writeText(jsonToCopy).then(() => {
+                    const btn = document.getElementById('treeCopySelectedBtn');
+                    const originalText = btn.textContent;
+                    btn.textContent = '✓ 已复制';
+                    btn.style.background = 'var(--accent-green)';
+                    btn.style.color = '#fff';
+                    showStatus(`已复制选中节点的数据`);
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.style.color = '';
+                    }, 2000);
+                }).catch(() => {
+                    // 备用方法
+                    try {
+                        const textarea = document.createElement('textarea');
+                        textarea.value = jsonToCopy;
+                        textarea.style.position = 'fixed';
+                        textarea.style.opacity = '0';
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showStatus(`已复制选中节点的数据`);
+                    } catch (err) {
+                        showStatus('复制失败，请手动复制', 'error');
+                    }
+                });
+            } catch (err) {
+                console.error('复制选中节点失败:', err);
+                showStatus('复制失败：' + err.message, 'error');
+            }
         }
 
         function searchTree() {
@@ -1507,7 +2706,7 @@ https://json.asia/json-tools.html</p>
                 const parentEntry = treeNodeRegistry.get(parentPath);
                 if (parentEntry && parentEntry.toggle) {
                     if (parentEntry.container && parentEntry.container.dataset.loaded !== 'true') {
-                        renderChildrenImmediate(parentEntry.container, parentEntry.value, parentEntry.depth + 1, parentPath);
+                        renderChildrenImmediate(parentEntry.container, parentEntry.value, parentEntry.depth + 1, parentPath, parentEntry.value);
                     }
                     if (parentEntry.toggle.getAttribute('data-expanded') === 'false') {
                         parentEntry.toggle.setAttribute('data-expanded', 'true');
@@ -1520,7 +2719,7 @@ https://json.asia/json-tools.html</p>
                 let entry = treeNodeRegistry.get(currentPath);
 
                 if (!entry && parentEntry && parentEntry.container) {
-                    renderChildrenImmediate(parentEntry.container, parentEntry.value, parentEntry.depth + 1, parentPath);
+                    renderChildrenImmediate(parentEntry.container, parentEntry.value, parentEntry.depth + 1, parentPath, parentEntry.value);
                     entry = treeNodeRegistry.get(currentPath);
                 }
 
