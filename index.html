@@ -256,6 +256,10 @@
             align-items: center;
         }
 
+        .header-actions:empty {
+            display: none;
+        }
+
         .header-badge {
             display: inline-flex;
             align-items: center;
@@ -275,14 +279,55 @@
             background: var(--accent-green);
         }
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
+        .app-footer {
+            margin-top: auto;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-default);
             padding: 24px;
-            padding-bottom: 80px;
+        }
+
+        .footer-container {
             max-width: 1920px;
             margin: 0 auto;
-            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .footer-brand small {
+            display: block;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Main Content */
+.main-content {
+            flex: 1;
+            padding: clamp(24px, 3vw, 48px);
+            padding-bottom: 80px;
+            width: min(96vw, 1920px);
+            margin: 0 auto;
         }
 
         /* Editor Container */
@@ -958,55 +1003,6 @@
             color: var(--text-primary);
         }
 
-        /* Support Footer */
-        .support-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-elevated);
-            border-top: 1px solid var(--border-default);
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            z-index: 999;
-            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .support-text {
-            font-size: 13px;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .support-text .emoji {
-            font-size: 16px;
-        }
-
-        .donate-button {
-            padding: 6px 16px;
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            color: #7c5d00;
-            border: none;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
-        }
-
-        .donate-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
-        }
 
         /* Donate Modal */
         .donate-modal {
@@ -1478,14 +1474,10 @@
                 width: 100%;
             }
 
-            .support-footer {
-                flex-direction: column;
-                gap: 8px;
-                padding: 10px 16px;
-            }
-
-            .support-text {
-                font-size: 12px;
+            .footer-cta,
+            .support-text,
+            .footer-contact {
+                font-size: inherit;
             }
 
             .qr-codes {
@@ -1756,40 +1748,10 @@
         }
     </style>
 </head>
-<body>
+<body data-page="diff" data-header-actions="diff">
     <div class="app-container">
         <!-- Header -->
-        <header class="app-header">
-            <div class="header-container">
-                <div class="header-left">
-                    <div class="brand">
-                        <div class="brand-icon">⚡</div>
-                        <div class="brand-text">
-                            <h1>专业文本对比工具</h1>
-                            <p>Professional Text Diff Tool</p>
-                        </div>
-                    </div>
-                    <nav class="header-nav">
-                        <a href="index.html" class="nav-link active">文本对比</a>
-                        <a href="json-tools.html" class="nav-link">JSON工具</a>
-                    </nav>
-                </div>
-                <div class="header-actions">
-                    <button class="history-button" onclick="toggleHistory()">
-                        <span>📜</span>
-                        <span>历史</span>
-                    </button>
-                    <button class="share-button" onclick="toggleShare()">
-                        <span>🔗</span>
-                        <span>分享</span>
-                    </button>
-                    <button class="help-button" onclick="toggleHelp()">
-                        <span>❓</span>
-                        <span>帮助</span>
-                    </button>
-                </div>
-            </div>
-        </header>
+        <div data-include="partials/header.html"></div>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -1973,19 +1935,6 @@
                 <!-- History items will be inserted here -->
             </div>
         </div>
-
-        <!-- Support Footer -->
-        <div class="support-footer">
-            <div class="support-text">
-                <span class="emoji">☕</span>
-                <span>觉得好用？</span>
-            </div>
-            <button class="donate-button" onclick="toggleDonate()">
-                <span>❤️</span>
-                <span>请作者喝杯咖啡</span>
-            </button>
-        </div>
-
         <!-- Donate Modal -->
         <div class="donate-modal" id="donateModal" onclick="if(event.target===this) toggleDonate()">
             <div class="donate-content">
@@ -2123,9 +2072,12 @@ https://json.asia</p>
                 </div>
             </div>
         </div>
+        
+        <div data-include="partials/footer.html"></div>
     </div>
 
     <!-- Scripts -->
+    <script src="include-partials.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/diff2html@3.4.47/bundles/js/diff2html.min.js"></script>
 

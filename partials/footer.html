@@ -1,0 +1,130 @@
+<style>
+    .app-footer {
+        margin-top: 48px;
+        border-top: 1px solid var(--border-default);
+        background: var(--bg-primary);
+        padding: 20px 24px 32px;
+    }
+
+    .footer-cta {
+        max-width: 1920px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+        flex-wrap: wrap;
+        text-align: center;
+    }
+
+    .footer-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        color: var(--text-secondary);
+        font-size: 13px;
+    }
+
+    .footer-brand small {
+        font-size: 12px;
+        color: var(--text-tertiary);
+    }
+
+    .footer-center {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-secondary);
+        font-size: 13px;
+    }
+
+    .support-text {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .support-text .emoji {
+        font-size: 16px;
+    }
+
+    .footer-divider {
+        color: var(--border-default);
+    }
+
+    .footer-contact a {
+        color: var(--accent-blue);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .footer-contact a:hover {
+        text-decoration: underline;
+    }
+
+    .donate-button {
+        padding: 6px 18px;
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        color: #7c5d00;
+        border: none;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+    }
+
+    .donate-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+    }
+
+    .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .footer-links a:hover {
+        color: var(--accent-blue);
+    }
+
+    @media (max-width: 768px) {
+        .footer-cta {
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .footer-center {
+            flex-direction: column;
+            gap: 4px;
+        }
+    }
+</style>
+<footer class="app-footer">
+    <div class="footer-cta">
+        <div class="footer-brand">
+            <span>© <span id="footerYear"></span> Text Diff Tool · json.asia</span>
+            <small>精准文本对比与 JSON 工具箱</small>
+        </div>
+        <div class="footer-center">
+            <div class="support-text">
+                <span class="emoji">☕</span>
+                <span>觉得好用？请作者喝杯咖啡</span>
+            </div>
+            <span class="footer-divider">·</span>
+            <button class="donate-button" onclick="if (window.toggleDonate) { toggleDonate(); }">
+                <span>❤️</span>
+                <span>请作者喝杯咖啡</span>
+            </button>
+        </div>
+        <div class="footer-links">
+            <a href="mailto:xulilong@qq.com">问题反馈</a>
+            <a href="https://json.asia/sitemap.xml" target="_blank" rel="noopener">站点地图</a>
+        </div>
+    </div>
+</footer>
+

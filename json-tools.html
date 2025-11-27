@@ -32,6 +32,7 @@
         body {
             margin: 0;
             font-family: 'Inter', 'PingFang SC', 'Microsoft Yahei', sans-serif;
+            font-size: 14px;
             background: var(--bg-secondary);
             color: var(--text-primary);
         }
@@ -126,26 +127,42 @@
             box-shadow: 0 2px 6px rgba(9, 105, 218, 0.2);
         }
 
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-actions:empty {
+            display: none;
+        }
+
         .json-main {
             flex: 1;
-            padding: 32px;
-            max-width: 1400px;
-            width: 100%;
+            padding: clamp(24px, 4vw, 48px);
+            width: min(96vw, 1800px);
             margin: 0 auto;
         }
 
         .json-panels {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: clamp(16px, 2vw, 32px);
+            align-items: start;
+        }
+
+        .json-column {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(16px, 2vw, 32px);
         }
 
         .json-card {
-            background: var(--bg-primary);
+            background: var(--bg-secondary);
             border: 1px solid var(--border-default);
-            border-radius: 16px;
+            border-radius: var(--radius-md);
             padding: 24px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
             display: flex;
             flex-direction: column;
             min-height: 0;
@@ -155,17 +172,31 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            gap: 16px;
+            padding: 12px 16px;
+            margin: -24px -24px 0;
+            border-bottom: 1px solid var(--border-default);
+            background: var(--bg-tertiary);
+            border-top-left-radius: var(--radius-md);
+            border-top-right-radius: var(--radius-md);
+        }
+
+        .panel-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .panel-header h2 {
-            font-size: 18px;
             margin: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         .panel-header p {
             margin: 0;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-tertiary);
         }
 
@@ -173,7 +204,10 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 16px;
+            padding: 12px 16px;
+            margin: 0 -24px 16px;
+            border-bottom: 1px solid var(--border-default);
+            background: var(--bg-secondary);
         }
 
         .btn {
@@ -182,7 +216,7 @@
             border: 1px solid var(--border-default);
             background: var(--bg-secondary);
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
@@ -206,11 +240,11 @@
 
         textarea {
             width: 100%;
-            min-height: 360px;
+            min-height: 260px;
             padding: 16px;
             border-radius: 12px;
-            border: 1px solid var(--border-default);
-            background: var(--bg-secondary);
+            border: none;
+            background: #fafbfc;
             font-family: 'SF Mono', Monaco, 'Roboto Mono', Consolas, monospace;
             font-size: 13px;
             line-height: 1.6;
@@ -220,8 +254,16 @@
 
         textarea:focus {
             outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
+            background: #fff;
+            box-shadow: none;
+        }
+
+        #jsonInput {
+            min-height: 220px;
+        }
+
+        #jsonOutput {
+            min-height: 200px;
         }
 
         .json-output {
@@ -230,7 +272,7 @@
 
         .json-status {
             margin-top: 12px;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
         }
 
@@ -241,8 +283,8 @@
         .tree-container {
             flex: 1;
             min-height: 360px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-default);
+            background: #fafbfc;
+            border: none;
             border-radius: 12px;
             padding: 12px;
             overflow: auto;
@@ -315,6 +357,77 @@
             display: none;
         }
 
+        .tree-search {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin: 12px 0;
+        }
+
+        .tree-search input {
+            flex: 1;
+            min-width: 180px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-default);
+            background: var(--bg-primary);
+            font-size: 12px;
+        }
+
+        .tree-search input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.18);
+        }
+
+        .tree-search .btn {
+            flex: none;
+        }
+
+        .tree-search-result {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .tree-search-match {
+            background: rgba(255, 196, 0, 0.25) !important;
+        }
+
+        .panel-tools {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tree-card {
+            position: relative;
+        }
+
+        .tree-card.fullscreen {
+            position: fixed;
+            inset: 0;
+            z-index: 4000;
+            margin: 0;
+            border-radius: 0;
+            padding: clamp(16px, 3vw, 32px);
+            background: var(--bg-primary);
+        }
+
+        .tree-card.fullscreen .tree-container {
+            flex: 1;
+            min-height: unset;
+            height: calc(100vh - 220px);
+        }
+
+        .tree-card.fullscreen .tree-search {
+            margin-top: 16px;
+        }
+
+        body.tree-fullscreen-active {
+            overflow: hidden;
+        }
+
         .stats-row {
             display: flex;
             flex-wrap: wrap;
@@ -326,6 +439,14 @@
         @media (max-width: 1024px) {
             .json-panels {
                 grid-template-columns: 1fr;
+            }
+
+            .json-column {
+                order: 2;
+            }
+
+            .tree-card {
+                order: 1;
             }
         }
 
@@ -350,69 +471,533 @@
                 min-height: 260px;
             }
         }
+
+        /* Header Actions Buttons */
+        .history-button,
+        .share-button,
+        .help-button {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .history-button:hover,
+        .share-button:hover,
+        .help-button:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Share Modal */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2001;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .share-modal.show {
+            display: flex;
+        }
+
+        .share-content {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .share-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .share-header h2 {
+            font-size: 20px;
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .share-header p {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin: 0;
+        }
+
+        .share-options {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
+
+        .share-option {
+            flex: 1;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .share-option:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(9, 105, 218, 0.15);
+        }
+
+        .share-option .icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .share-option .label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .share-url {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .share-url input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-family: monospace;
+            background: var(--bg-secondary);
+        }
+
+        .share-url button {
+            padding: 10px 20px;
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .close-share {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .close-share:hover {
+            background: var(--bg-elevated);
+            border-color: var(--text-secondary);
+        }
+
+        /* Help Modal */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .help-modal.show {
+            display: flex;
+        }
+
+        .help-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 90%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .help-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-elevated);
+        }
+
+        .help-header h2 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .close-button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .close-button:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .help-body {
+            padding: 24px;
+        }
+
+        .help-section {
+            margin-bottom: 24px;
+        }
+
+        .help-section h3 {
+            font-size: 16px;
+            margin: 0 0 12px 0;
+            color: var(--text-primary);
+        }
+
+        .help-section ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .help-section li {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .kbd {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: monospace;
+            font-size: 11px;
+        }
+
+        /* History Drawer */
+        .history-drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100vh;
+            background: var(--bg-elevated);
+            border-left: 1px solid var(--border-default);
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+            z-index: 2001;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-drawer.show {
+            right: 0;
+        }
+
+        .history-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 2000;
+            backdrop-filter: blur(3px);
+            transition: opacity 0.3s ease;
+        }
+
+        .history-overlay.show {
+            display: block;
+        }
+
+        .history-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-default);
+            background: var(--bg-secondary);
+        }
+
+        .history-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .history-actions button {
+            padding: 8px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+
+        .history-actions button:hover {
+            background: var(--bg-elevated);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .history-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .history-item:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(9, 105, 218, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .history-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .history-item-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(9, 105, 218, 0.1);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(9, 105, 218, 0.2);
+        }
+
+        .history-item-time {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .history-item-delete {
+            padding: 4px 10px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-tertiary);
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+
+        .history-item-delete:hover {
+            background: rgba(248, 81, 73, 0.1);
+            border-color: rgba(248, 81, 73, 0.3);
+            color: #d1242f;
+        }
+
+        .history-item-preview {
+            margin-bottom: 10px;
+        }
+
+        .history-item-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .history-item-text {
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: var(--bg-tertiary);
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-default);
+            line-height: 1.4;
+        }
+
+        .history-item-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            padding-top: 8px;
+            border-top: 1px solid var(--border-default);
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 80px 32px;
+            color: var(--text-tertiary);
+        }
+
+        .history-empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .history-empty-text {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .history-drawer {
+                width: 100%;
+                right: -100%;
+            }
+
+            .history-button span:last-child,
+            .share-button span:last-child,
+            .help-button span:last-child {
+                display: none;
+            }
+        }
     </style>
 </head>
-<body>
+<body data-page="json" data-header-actions="json">
     <div class="app-container">
-        <header class="app-header">
-            <div class="header-container">
-                <div class="header-left">
-                    <div class="brand">
-                        <div class="brand-icon">⚡</div>
-                        <div class="brand-text">
-                            <h1>Text Diff 工具箱</h1>
-                            <p>JSON格式化 & 树结构查看</p>
-                        </div>
-                    </div>
-                    <nav class="header-nav">
-                        <a class="nav-link" href="index.html">文本对比</a>
-                        <a class="nav-link active" href="json-tools.html">JSON工具</a>
-                    </nav>
-                </div>
-            </div>
-        </header>
+        <div data-include="partials/header.html"></div>
 
         <main class="json-main">
             <div class="json-panels">
-                <section class="json-card">
-                    <div class="panel-header">
-                        <div>
-                            <h2>JSON 输入</h2>
-                            <p>支持粘贴、拖拽和载入文件</p>
-                        </div>
-                        <div class="stats-row" id="inputStats">0字符 · 0行</div>
-                    </div>
-                    <div class="action-row">
-                        <button class="btn primary" id="formatBtn">✨ 格式化</button>
-                        <button class="btn" id="compressBtn">📦 压缩</button>
-                        <button class="btn" id="escapeBtn">🔐 转义</button>
-                        <button class="btn" id="unescapeBtn">🔓 去转义</button>
-                        <button class="btn" id="loadSampleBtn">📋 示例</button>
-                        <button class="btn ghost" id="loadFileBtn">📂 导入文件</button>
-                        <button class="btn ghost" id="clearBtn">🗑️ 清空</button>
-                    </div>
-                    <textarea id="jsonInput" placeholder="在此输入或粘贴 JSON..."></textarea>
-                    <input type="file" id="fileInput" accept=".json,.txt,.log" style="display: none;">
-                    <div class="json-status" id="inputStatus">等待输入...</div>
-                </section>
-
-                <section class="json-card">
-                    <div class="panel-header">
-                        <div>
-                            <h2>格式化结果</h2>
-                            <p>可复制、下载以及树形查看</p>
+                <div class="json-column">
+                    <section class="json-card">
+                        <div class="panel-header">
+                            <div>
+                                <h2>JSON 输入</h2>
+                                <p>支持粘贴、拖拽和载入文件</p>
+                            </div>
+                            <div class="stats-row" id="inputStats">0字符 · 0行</div>
                         </div>
                         <div class="action-row">
-                            <button class="btn" id="copyOutputBtn">📋 复制结果</button>
+                            <button class="btn primary" id="formatBtn">✨ 格式化</button>
+                            <button class="btn" id="compressBtn">📦 压缩</button>
+                            <button class="btn" id="escapeBtn">🔐 转义</button>
+                            <button class="btn" id="unescapeBtn">🔓 去转义</button>
+                            <button class="btn" id="loadSampleBtn">📋 示例</button>
+                            <button class="btn ghost" id="loadFileBtn">📂 导入文件</button>
+                            <button class="btn ghost" id="clearBtn">🗑️ 清空</button>
                         </div>
-                    </div>
-                    <textarea id="jsonOutput" class="json-output" placeholder="格式化结果将在此展示" readonly></textarea>
-                    <div class="panel-header" style="margin-top: 24px;">
+                        <textarea id="jsonInput" placeholder="在此输入或粘贴 JSON..."></textarea>
+                        <input type="file" id="fileInput" accept=".json,.txt,.log" style="display: none;">
+                        <div class="json-status" id="inputStatus">等待输入...</div>
+                    </section>
+
+                    <section class="json-card">
+                        <div class="panel-header">
+                            <div>
+                                <h2>格式化结果</h2>
+                                <p>可复制、下载以及树形查看</p>
+                            </div>
+                            <div class="panel-actions">
+                                <button class="btn" id="copyOutputBtn">📋 复制结果</button>
+                            </div>
+                        </div>
+                        <textarea id="jsonOutput" class="json-output" placeholder="格式化结果将在此展示" readonly></textarea>
+                    </section>
+                </div>
+
+                <section class="json-card tree-card" id="treePanel">
+                    <div class="panel-header">
                         <div>
                             <h2>树形结构</h2>
                             <p>节点按需展开，避免大数据卡顿</p>
                         </div>
-                        <div class="stats-row" id="treeStats">未解析</div>
+                        <div class="panel-tools">
+                            <div class="stats-row" id="treeStats">未解析</div>
+                            <button class="btn ghost" id="treeFullscreenBtn" type="button" title="全屏查看树结构">⛶ 全屏</button>
+                        </div>
+                    </div>
+                    <div class="tree-search">
+                        <input type="text" id="treeSearchInput" placeholder="搜索字段或值...">
+                        <button class="btn" id="treeSearchBtn">🔍 搜索</button>
+                        <button class="btn ghost" id="treePrevBtn">⬆ 上一个</button>
+                        <button class="btn ghost" id="treeNextBtn">⬇ 下一个</button>
+                        <span class="tree-search-result" id="treeSearchResult">未搜索</span>
                     </div>
                     <div class="tree-container" id="jsonTree">
                         <p style="color: var(--text-tertiary);">解析后将在此展示为树形结构</p>
@@ -420,8 +1005,132 @@
                 </section>
             </div>
         </main>
+        
+        <div data-include="partials/footer.html"></div>
     </div>
 
+    <!-- History Drawer -->
+    <div class="history-overlay" id="historyOverlay" onclick="toggleHistory()"></div>
+    <div class="history-drawer" id="historyDrawer">
+        <div class="history-header">
+            <h3>
+                <span>📜</span>
+                <span>历史记录</span>
+            </h3>
+            <div class="history-actions">
+                <button onclick="clearHistory()" title="清空所有">🗑️ 清空</button>
+                <button onclick="toggleHistory()" title="关闭">×</button>
+            </div>
+        </div>
+        <div class="history-list" id="historyList">
+            <!-- History items will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="share-modal" id="shareModal" onclick="if(event.target===this) toggleShare()">
+        <div class="share-content">
+            <div class="share-header">
+                <h2>
+                    <span>🔗</span>
+                    <span>分享工具</span>
+                </h2>
+                <p>帮助更多人发现这个好用的工具</p>
+            </div>
+
+            <div class="share-options">
+                <div class="share-option" onclick="shareToWeChat()">
+                    <div class="icon">💬</div>
+                    <div class="label">微信分享</div>
+                </div>
+                <div class="share-option" onclick="shareToWeibo()">
+                    <div class="icon">🔵</div>
+                    <div class="label">微博分享</div>
+                </div>
+            </div>
+
+            <div id="wechatShareContent" style="display: none;">
+                <div style="background: var(--bg-secondary); padding: 16px; border-radius: var(--radius-md); margin-bottom: 16px;">
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 6px;">分享文案：</div>
+                        <div style="background: var(--bg-elevated); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-default); position: relative;">
+                            <p id="shareText" style="font-size: 13px; color: var(--text-primary); line-height: 1.6; margin: 0;">发现一个超好用的JSON格式化工具！✨ 支持格式化、压缩、转义、树结构查看，完全免费使用！开发者必备神器 🚀
+
+https://json.asia/json-tools.html</p>
+                            <button onclick="copyShareText()" style="position: absolute; top: 8px; right: 8px; padding: 4px 12px; background: var(--accent-blue); color: #fff; border: none; border-radius: 4px; font-size: 11px; cursor: pointer;">复制</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 6px;">链接：</div>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="shareUrlWechat" readonly value="" style="flex: 1; padding: 8px 12px; background: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); font-family: monospace;">
+                            <button onclick="copyWechatUrl()" style="padding: 8px 16px; background: var(--accent-green); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;">复制链接</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; font-size: 12px; color: var(--text-tertiary);">
+                    📱 复制后在微信中粘贴分享给好友
+                </div>
+            </div>
+
+            <div class="share-url" id="shareUrlSection">
+                <input type="text" id="shareUrl" readonly value="" placeholder="工具链接">
+                <button onclick="copyShareUrl()">复制链接</button>
+            </div>
+
+            <button class="close-share" onclick="toggleShare()">关闭</button>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="help-modal" id="helpModal" onclick="if(event.target===this) toggleHelp()">
+        <div class="help-content">
+            <div class="help-header">
+                <h2>💡 使用帮助</h2>
+                <button class="close-button" onclick="toggleHelp()">×</button>
+            </div>
+            <div class="help-body">
+                <div class="help-section">
+                    <h3>🎯 核心功能</h3>
+                    <ul>
+                        <li>✅ JSON格式化：美化JSON代码，提高可读性</li>
+                        <li>✅ JSON压缩：去除空格和换行，减小文件大小</li>
+                        <li>✅ 转义/去转义：处理JSON字符串转义</li>
+                        <li>✅ 树形结构：可视化查看JSON结构，支持搜索</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3>⚡ 快捷键</h3>
+                    <ul>
+                        <li><span class="kbd">Esc</span> - 关闭帮助/全屏</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3>📋 使用步骤</h3>
+                    <ul>
+                        <li><strong>1.</strong> 输入或粘贴JSON到输入框</li>
+                        <li><strong>2.</strong> 点击"格式化"美化代码</li>
+                        <li><strong>3.</strong> 查看格式化结果和树形结构</li>
+                        <li><strong>4.</strong> 使用搜索功能快速定位字段</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3>💡 使用技巧</h3>
+                    <ul>
+                        <li>支持拖拽文件加载JSON</li>
+                        <li>树形结构按需展开，避免大数据卡顿</li>
+                        <li>支持关键词搜索，快速定位数据</li>
+                        <li>完全免费使用，无需注册登录</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="include-partials.js"></script>
     <script>
         const jsonInput = document.getElementById('jsonInput');
         const jsonOutput = document.getElementById('jsonOutput');
@@ -430,6 +1139,15 @@
         const inputStats = document.getElementById('inputStats');
         const treeStats = document.getElementById('treeStats');
         const fileInput = document.getElementById('fileInput');
+        const treeSearchInput = document.getElementById('treeSearchInput');
+        const treeSearchResult = document.getElementById('treeSearchResult');
+        const treeFullscreenBtn = document.getElementById('treeFullscreenBtn');
+        const treePanel = document.getElementById('treePanel');
+
+        let treeSearchMatches = [];
+        let treeSearchIndex = -1;
+        let treeNodeRegistry = new Map();
+        let currentJsonData = null;
 
         document.getElementById('formatBtn').addEventListener('click', () => formatJson('pretty'));
         document.getElementById('compressBtn').addEventListener('click', () => formatJson('minify'));
@@ -441,6 +1159,17 @@
         document.getElementById('loadFileBtn').addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', handleFileSelect);
         jsonInput.addEventListener('input', updateStats);
+        document.getElementById('treeSearchBtn').addEventListener('click', searchTree);
+        document.getElementById('treePrevBtn').addEventListener('click', () => navigateTreeMatch(-1));
+        document.getElementById('treeNextBtn').addEventListener('click', () => navigateTreeMatch(1));
+        treeSearchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                searchTree();
+            }
+        });
+        if (treeFullscreenBtn) {
+            treeFullscreenBtn.addEventListener('click', toggleTreeFullscreen);
+        }
 
         updateStats();
 
@@ -458,11 +1187,14 @@
             }
             try {
                 const parsed = JSON.parse(text);
+                currentJsonData = parsed;
                 const formatted = mode === 'minify' ? JSON.stringify(parsed) : JSON.stringify(parsed, null, 2);
                 jsonOutput.value = formatted;
                 showStatus(mode === 'minify' ? '压缩成功' : '格式化成功');
                 treeStats.textContent = `根类型：${getTypeLabel(parsed)}`;
                 renderTree(parsed);
+                // 保存到历史记录
+                saveToHistory(text);
             } catch (err) {
                 showStatus('解析失败：' + err.message, 'error');
             }
@@ -492,6 +1224,9 @@
             treeStats.textContent = '未解析';
             showStatus('已清空');
             updateStats();
+            currentJsonData = null;
+            treeNodeRegistry = new Map();
+            resetTreeSearchState();
         }
 
         function copyOutput() {
@@ -547,16 +1282,21 @@
 
         function renderTree(value) {
             jsonTree.innerHTML = '';
-            const root = createTreeNode('root', value, 0);
-            jsonTree.appendChild(root);
+            treeNodeRegistry = new Map();
+            const rootNode = createTreeNode('root', value, 0, 'root');
+            jsonTree.appendChild(rootNode);
+            resetTreeSearchState();
         }
 
-        function createTreeNode(key, value, depth) {
+        function createTreeNode(key, value, depth, path) {
             const node = document.createElement('div');
             node.className = 'tree-node';
             const label = document.createElement('div');
             label.className = 'tree-label';
             label.style.paddingLeft = depth * 14 + 'px';
+            label.dataset.path = path;
+
+            const registryEntry = { value, label, depth, toggle: null, container: null };
 
             if (isExpandable(value)) {
                 const toggle = document.createElement('button');
@@ -581,11 +1321,13 @@
                 childrenContainer.className = 'tree-children hidden';
                 node.appendChild(childrenContainer);
 
+                registryEntry.toggle = toggle;
+                registryEntry.container = childrenContainer;
+
                 toggle.addEventListener('click', () => {
                     const expanded = toggle.getAttribute('data-expanded') === 'true';
-                    if (!expanded && !childrenContainer.dataset.loaded) {
-                        renderChildren(childrenContainer, value, depth + 1);
-                        childrenContainer.dataset.loaded = 'true';
+                    if (!expanded && childrenContainer.dataset.loaded !== 'true') {
+                        renderChildren(childrenContainer, value, depth + 1, path);
                     }
                     toggle.setAttribute('data-expanded', String(!expanded));
                     toggle.textContent = expanded ? '+' : '-';
@@ -606,10 +1348,13 @@
                 node.appendChild(label);
             }
 
+            treeNodeRegistry.set(path, registryEntry);
             return node;
         }
 
-        function renderChildren(container, value, depth) {
+        function renderChildren(container, value, depth, parentPath) {
+            if (container.dataset.loaded === 'true') return;
+            container.dataset.abort = 'false';
             const entries = Array.isArray(value)
                 ? value.map((v, i) => [i, v])
                 : Object.entries(value);
@@ -620,18 +1365,40 @@
                 : (cb) => setTimeout(() => cb({ timeRemaining: () => 0 }), 0);
 
             function process(deadline) {
+                if (container.dataset.abort === 'true' || container.dataset.loaded === 'true') {
+                    return;
+                }
                 const fragment = document.createDocumentFragment();
                 while (index < entries.length && (deadline.timeRemaining ? deadline.timeRemaining() > 0 : fragment.childNodes.length < 200)) {
                     const [childKey, childVal] = entries[index++];
-                    fragment.appendChild(createTreeNode(childKey, childVal, depth));
+                    const childPath = buildChildPath(parentPath, childKey);
+                    fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath));
                 }
                 container.appendChild(fragment);
                 if (index < entries.length) {
                     schedule(process);
+                } else {
+                    container.dataset.loaded = 'true';
+                    container.dataset.abort = 'false';
                 }
             }
 
             schedule(process);
+        }
+
+        function renderChildrenImmediate(container, value, depth, parentPath) {
+            if (container.dataset.loaded === 'true') return;
+            const fragment = document.createDocumentFragment();
+            const entries = Array.isArray(value)
+                ? value.map((v, i) => [i, v])
+                : Object.entries(value);
+            entries.forEach(([childKey, childVal]) => {
+                const childPath = buildChildPath(parentPath, childKey);
+                fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath));
+            });
+            container.appendChild(fragment);
+            container.dataset.loaded = 'true';
+            container.dataset.abort = 'true';
         }
 
         function isExpandable(value) {
@@ -648,6 +1415,502 @@
             if (typeof value === 'string') return '"' + value + '"';
             if (value === null) return 'null';
             return String(value);
+        }
+
+        function buildChildPath(parentPath, segment) {
+            return `${parentPath}/${encodePathSegment(segment)}`;
+        }
+
+        function encodePathSegment(segment) {
+            return String(segment).replace(/~/g, '~0').replace(/\//g, '~1');
+        }
+
+        function resetTreeSearchState() {
+            treeSearchMatches = [];
+            treeSearchIndex = -1;
+            treeSearchResult.textContent = '未搜索';
+            jsonTree.querySelectorAll('.tree-search-match').forEach(el => el.classList.remove('tree-search-match'));
+        }
+
+        function searchTree() {
+            const rawKeyword = treeSearchInput.value.trim();
+            const keyword = rawKeyword.toLowerCase();
+            jsonTree.querySelectorAll('.tree-search-match').forEach(el => el.classList.remove('tree-search-match'));
+            treeSearchMatches = [];
+            treeSearchIndex = -1;
+
+            if (!currentJsonData) {
+                treeSearchResult.textContent = '请先解析 JSON';
+                return;
+            }
+
+            if (!keyword) {
+                treeSearchResult.textContent = '请输入关键字';
+                return;
+            }
+
+            const matchPaths = new Set();
+            collectMatches(currentJsonData, 'root', keyword, matchPaths);
+
+            matchPaths.forEach((path) => {
+                const label = ensureNodeVisible(path);
+                if (label) {
+                    label.classList.add('tree-search-match');
+                    treeSearchMatches.push({ path, label });
+                }
+            });
+
+            if (treeSearchMatches.length === 0) {
+                treeSearchResult.textContent = `未找到 "${rawKeyword}"`;
+                return;
+            }
+
+            treeSearchIndex = 0;
+            scrollToTreeMatch();
+            updateTreeSearchInfo();
+        }
+
+        function collectMatches(value, path, keyword, resultSet) {
+            if (value === null || typeof value !== 'object') {
+                if (String(value).toLowerCase().includes(keyword)) {
+                    resultSet.add(path);
+                }
+                return;
+            }
+
+            if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    const childPath = buildChildPath(path, index);
+                    if (String(index).includes(keyword)) {
+                        resultSet.add(childPath);
+                    }
+                    collectMatches(item, childPath, keyword, resultSet);
+                });
+            } else {
+                Object.entries(value).forEach(([key, val]) => {
+                    const childPath = buildChildPath(path, key);
+                    if (key.toLowerCase().includes(keyword)) {
+                        resultSet.add(childPath);
+                    }
+                    collectMatches(val, childPath, keyword, resultSet);
+                });
+            }
+        }
+
+        function ensureNodeVisible(path) {
+            const segments = path.split('/');
+            if (segments[0] !== 'root') return null;
+            let currentPath = segments[0];
+
+            for (let i = 1; i < segments.length; i++) {
+                const parentPath = currentPath;
+                const parentEntry = treeNodeRegistry.get(parentPath);
+                if (parentEntry && parentEntry.toggle) {
+                    if (parentEntry.container && parentEntry.container.dataset.loaded !== 'true') {
+                        renderChildrenImmediate(parentEntry.container, parentEntry.value, parentEntry.depth + 1, parentPath);
+                    }
+                    if (parentEntry.toggle.getAttribute('data-expanded') === 'false') {
+                        parentEntry.toggle.setAttribute('data-expanded', 'true');
+                        parentEntry.toggle.textContent = '-';
+                        parentEntry.container.classList.remove('hidden');
+                    }
+                }
+
+                currentPath = `${currentPath}/${segments[i]}`;
+                let entry = treeNodeRegistry.get(currentPath);
+
+                if (!entry && parentEntry && parentEntry.container) {
+                    renderChildrenImmediate(parentEntry.container, parentEntry.value, parentEntry.depth + 1, parentPath);
+                    entry = treeNodeRegistry.get(currentPath);
+                }
+
+                if (!entry) {
+                    return null;
+                }
+            }
+
+            const targetEntry = treeNodeRegistry.get(path);
+            return targetEntry ? targetEntry.label : null;
+        }
+
+        function navigateTreeMatch(direction) {
+            if (treeSearchMatches.length === 0) return;
+            treeSearchIndex = (treeSearchIndex + direction + treeSearchMatches.length) % treeSearchMatches.length;
+            scrollToTreeMatch();
+            updateTreeSearchInfo();
+        }
+
+        function scrollToTreeMatch() {
+            const match = treeSearchMatches[treeSearchIndex];
+            if (!match) return;
+            ensureNodeVisible(match.path);
+            match.label.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function updateTreeSearchInfo() {
+            const keyword = treeSearchInput.value.trim();
+            treeSearchResult.textContent = `找到 ${treeSearchMatches.length} 项匹配（${treeSearchIndex + 1}/${treeSearchMatches.length}）：${keyword}`;
+        }
+
+        function toggleTreeFullscreen() {
+            if (!treePanel || !treeFullscreenBtn) return;
+            const entering = !treePanel.classList.contains('fullscreen');
+            if (entering) {
+                treePanel.classList.add('fullscreen');
+                document.body.classList.add('tree-fullscreen-active');
+                treeFullscreenBtn.textContent = '⛶ 退出';
+            } else {
+                treePanel.classList.remove('fullscreen');
+                document.body.classList.remove('tree-fullscreen-active');
+                treeFullscreenBtn.textContent = '⛶ 全屏';
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (treePanel && treePanel.classList.contains('fullscreen')) {
+                    treePanel.classList.remove('fullscreen');
+                    document.body.classList.remove('tree-fullscreen-active');
+                    if (treeFullscreenBtn) {
+                        treeFullscreenBtn.textContent = '⛶ 全屏';
+                    }
+                }
+                const helpModal = document.getElementById('helpModal');
+                const shareModal = document.getElementById('shareModal');
+                if (helpModal && helpModal.classList.contains('show')) {
+                    toggleHelp();
+                }
+                if (shareModal && shareModal.classList.contains('show')) {
+                    toggleShare();
+                }
+            }
+        });
+
+        // ==================== 历史记录功能 ====================
+        const JSON_HISTORY_KEY = 'jsonToolsHistory';
+        const MAX_HISTORY = 20;
+
+        function toggleHistory() {
+            const drawer = document.getElementById('historyDrawer');
+            const overlay = document.getElementById('historyOverlay');
+            const isOpening = !drawer.classList.contains('show');
+            
+            drawer.classList.toggle('show');
+            overlay.classList.toggle('show');
+            
+            if (isOpening) {
+                loadHistoryList();
+            }
+        }
+
+        function saveToHistory(jsonText) {
+            if (!jsonText) return;
+            
+            const history = getHistory();
+            const newRecord = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                jsonText: jsonText,
+                preview: jsonText.substring(0, 100),
+                length: jsonText.length
+            };
+            
+            history.unshift(newRecord);
+            if (history.length > MAX_HISTORY) {
+                history.splice(MAX_HISTORY);
+            }
+            
+            try {
+                localStorage.setItem(JSON_HISTORY_KEY, JSON.stringify(history));
+            } catch (e) {
+                console.error('保存历史记录失败:', e);
+                if (e.name === 'QuotaExceededError') {
+                    const reduced = history.slice(0, Math.floor(MAX_HISTORY / 2));
+                    localStorage.setItem(JSON_HISTORY_KEY, JSON.stringify(reduced));
+                }
+            }
+        }
+
+        function getHistory() {
+            try {
+                const data = localStorage.getItem(JSON_HISTORY_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                console.error('读取历史记录失败:', e);
+                return [];
+            }
+        }
+
+        function loadHistoryList() {
+            const history = getHistory();
+            const listContainer = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="history-empty">
+                        <div class="history-empty-icon">📜</div>
+                        <div class="history-empty-text">
+                            暂无历史记录<br>
+                            格式化JSON后会自动保存
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            listContainer.innerHTML = history.map((record, index) => {
+                const time = formatTime(record.timestamp);
+                const number = index + 1;
+                return `
+                    <div class="history-item" onclick="loadHistory(${record.id})">
+                        <div class="history-item-header">
+                            <div class="history-item-number">#${number}</div>
+                            <div class="history-item-time">${time}</div>
+                            <button class="history-item-delete" onclick="event.stopPropagation(); deleteHistory(${record.id})" title="删除">
+                                🗑️
+                            </button>
+                        </div>
+                        <div class="history-item-preview">
+                            <div class="history-item-label">JSON内容</div>
+                            <div class="history-item-text" title="${escapeHtml(record.preview)}">${escapeHtml(record.preview)}</div>
+                        </div>
+                        <div class="history-item-meta">
+                            <span>${formatSize(record.length)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadHistory(id) {
+            const history = getHistory();
+            const record = history.find(r => r.id === id);
+            
+            if (!record) return;
+            
+            jsonInput.value = record.jsonText;
+            updateStats();
+            toggleHistory();
+            
+            setTimeout(() => {
+                showStatus('✅ 已加载历史记录');
+            }, 100);
+        }
+
+        function deleteHistory(id) {
+            if (!confirm('确定删除这条记录吗？')) return;
+            
+            const history = getHistory();
+            const filtered = history.filter(r => r.id !== id);
+            localStorage.setItem(JSON_HISTORY_KEY, JSON.stringify(filtered));
+            
+            loadHistoryList();
+        }
+
+        function clearHistory() {
+            if (!confirm('确定清空所有历史记录吗？此操作不可恢复。')) return;
+            
+            localStorage.removeItem(JSON_HISTORY_KEY);
+            loadHistoryList();
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const yesterday = new Date(today - 86400000);
+            const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            
+            const hour = date.getHours().toString().padStart(2, '0');
+            const minute = date.getMinutes().toString().padStart(2, '0');
+            const second = date.getSeconds().toString().padStart(2, '0');
+            const timeStr = `${hour}:${minute}:${second}`;
+            
+            if (dateOnly.getTime() === today.getTime()) {
+                return `今天 ${timeStr}`;
+            } else if (dateOnly.getTime() === yesterday.getTime()) {
+                return `昨天 ${timeStr}`;
+            } else {
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                return `${month}月${day}日 ${timeStr}`;
+            }
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + '字符';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + 'MB';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+
+        // ==================== 分享功能 ====================
+        function toggleShare() {
+            const modal = document.getElementById('shareModal');
+            const isOpening = !modal.classList.contains('show');
+            modal.classList.toggle('show');
+            
+            if (isOpening) {
+                document.getElementById('wechatShareContent').style.display = 'none';
+                document.getElementById('shareUrlSection').style.display = 'flex';
+                const url = window.location.href;
+                document.getElementById('shareUrl').value = url;
+                document.getElementById('shareUrlWechat').value = url;
+            }
+        }
+
+        function shareToWeChat() {
+            document.getElementById('wechatShareContent').style.display = 'block';
+            document.getElementById('shareUrlSection').style.display = 'none';
+        }
+
+        function copyShareText() {
+            const text = document.getElementById('shareText').textContent;
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = '已复制！';
+                    btn.style.background = 'var(--accent-green)';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                }).catch(() => {
+                    fallbackCopyText(text, btn, originalText);
+                });
+            } else {
+                fallbackCopyText(text, btn, originalText);
+            }
+        }
+
+        function fallbackCopyText(text, btn, originalText) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    btn.textContent = '已复制！';
+                    btn.style.background = 'var(--accent-green)';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                } else {
+                    alert('复制失败，请长按文案手动复制');
+                }
+            } catch (err) {
+                alert('复制失败，请长按文案手动复制');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function copyShareUrl() {
+            const input = document.getElementById('shareUrl');
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
+            input.select();
+            input.setSelectionRange(0, 99999);
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(input.value).then(() => {
+                    btn.textContent = '已复制！';
+                    btn.style.background = 'var(--accent-green)';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                }).catch(() => {
+                    tryExecCommandCopy(input, btn, originalText);
+                });
+            } else {
+                tryExecCommandCopy(input, btn, originalText);
+            }
+        }
+
+        function tryExecCommandCopy(input, btn, originalText) {
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    btn.textContent = '已复制！';
+                    btn.style.background = 'var(--accent-green)';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                } else {
+                    alert('复制失败，请长按链接手动复制');
+                }
+            } catch (err) {
+                alert('复制失败，请长按链接手动复制');
+            }
+        }
+
+        function copyWechatUrl() {
+            const input = document.getElementById('shareUrlWechat');
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
+            input.select();
+            input.setSelectionRange(0, 99999);
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(input.value).then(() => {
+                    btn.textContent = '已复制！';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                }).catch(() => {
+                    copyWithExecCommand(input, btn, originalText);
+                });
+            } else {
+                copyWithExecCommand(input, btn, originalText);
+            }
+        }
+
+        function copyWithExecCommand(input, btn, originalText) {
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    btn.textContent = '已复制！';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                } else {
+                    alert('复制失败，请长按链接手动复制');
+                }
+            } catch (err) {
+                alert('复制失败，请长按链接手动复制');
+            }
+        }
+
+        function shareToWeibo() {
+            const text = '发现一个超好用的JSON格式化工具！✨ 支持格式化、压缩、转义、树结构查看，完全免费使用！开发者必备神器 🚀';
+            const url = encodeURIComponent(window.location.href);
+            const shareUrl = `https://service.weibo.com/share/share.php?url=${url}&title=${encodeURIComponent(text)}`;
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+
+        // ==================== 帮助功能 ====================
+        function toggleHelp() {
+            const modal = document.getElementById('helpModal');
+            modal.classList.toggle('show');
         }
     </script>
 </body>
