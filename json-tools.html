@@ -3,9 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON格式化工具 | Text Diff Tool</title>
-    <meta name="description" content="免费的JSON格式化、压缩、树结构查看工具，支持转义、去转义和大数据量处理。">
+    <title>JSON格式化工具 - 免费在线JSON解析、格式化、树结构查看 | Text Diff Tool</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="免费的JSON格式化、压缩、转义工具，支持树结构查看、节点操作和大数据量处理。专业的JSON解析工具，完全免费使用。">
+    <meta name="keywords" content="JSON格式化,JSON解析,JSON压缩,JSON转义,JSON树结构,在线JSON工具,JSON格式化工具,JSON查看器">
+    <meta name="author" content="json.asia">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://json.asia/json-tools.html">
+    <meta http-equiv="content-language" content="zh-CN">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://json.asia/json-tools.html">
+    <meta property="og:site_name" content="Text Diff Tool">
+    <meta property="og:title" content="JSON格式化工具 - 免费在线JSON解析和格式化">
+    <meta property="og:description" content="专业的JSON格式化、压缩、转义工具，支持树结构查看和节点操作">
+    <meta property="og:image" content="https://json.asia/og-image.png">
+    <meta property="og:locale" content="zh_CN">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="JSON格式化工具">
+    <meta name="twitter:description" content="免费在线JSON格式化、压缩、转义工具">
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg">
+    
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSON格式化工具",
+      "url": "https://json.asia/json-tools.html",
+      "description": "免费的JSON格式化、压缩、转义工具，支持树结构查看、节点操作和大数据量处理",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "JSON格式化",
+        "JSON压缩",
+        "JSON转义/去转义",
+        "树结构查看",
+        "节点搜索",
+        "节点操作（拖拽、添加、删除）",
+        "大数据量处理",
+        "完全免费使用"
+      ],
+      "browserRequirements": "需要启用JavaScript",
+      "author": {
+        "@type": "Organization",
+        "name": "json.asia"
+      }
+    }
+    </script>
     <style>
         :root {
             --bg-primary: #ffffff;
@@ -46,15 +104,18 @@
         .app-header {
             background: var(--bg-primary);
             border-bottom: 1px solid var(--border-default);
-            padding: 16px 24px;
+            padding: 16px clamp(24px, 3vw, 48px);
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 100;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            min-height: 64px;
+            box-sizing: border-box;
         }
 
         .header-container {
-            max-width: 1920px;
+            width: 100%;
+            max-width: 100%;
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -77,9 +138,8 @@
         .brand-icon {
             width: 32px;
             height: 32px;
-            border-radius: var(--radius-sm);
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            color: #fff;
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -87,15 +147,18 @@
         }
 
         .brand-text h1 {
-            margin: 0;
             font-size: 18px;
             font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.2;
         }
 
         .brand-text p {
-            margin: 0;
             font-size: 12px;
             color: var(--text-tertiary);
+            margin: 0;
+            line-height: 1.2;
         }
 
         .header-nav {
@@ -140,13 +203,14 @@
         .json-main {
             flex: 1;
             padding: clamp(24px, 4vw, 48px);
-            width: min(96vw, 1800px);
+            width: 100%;
+            max-width: 100%;
             margin: 0 auto;
         }
 
         .json-panels {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: clamp(16px, 2vw, 32px);
             align-items: start;
         }
@@ -208,6 +272,13 @@
             margin: 0;
             font-size: 12px;
             color: var(--text-tertiary);
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .panel-header p {
+                display: none;
+            }
         }
 
         .action-row {
@@ -690,6 +761,10 @@
         }
 
         @media (max-width: 768px) {
+            .app-header {
+                padding: 16px 12px;
+            }
+
             .json-main {
                 padding: 16px;
             }
@@ -715,12 +790,12 @@
         .history-button,
         .share-button,
         .help-button {
-            padding: 6px 12px;
-            background: transparent;
+            padding: 6px 14px;
+            background: var(--bg-elevated);
             border: 1px solid var(--border-default);
-            color: var(--text-secondary);
             border-radius: var(--radius-sm);
-            font-size: 12px;
+            color: var(--text-secondary);
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             display: inline-flex;
@@ -1224,7 +1299,7 @@
                     <div class="panel-header">
                         <div>
                             <h2>树形结构</h2>
-                            <p>节点按需展开，避免大数据卡顿</p>
+
                         </div>
                         <div class="panel-tools">
                             <div class="stats-row" id="treeStats">未解析</div>
