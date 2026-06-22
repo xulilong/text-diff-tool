@@ -1482,6 +1482,9 @@ https://json.asia/json-tools.html</p>
         document.getElementById('loadFileBtn').addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', handleFileSelect);
         jsonInput.addEventListener('input', updateStats);
+        jsonInput.addEventListener('paste', () => {
+            setTimeout(() => formatJson('pretty'), 0);
+        });
         document.getElementById('treeSearchBtn').addEventListener('click', searchTree);
         document.getElementById('treePrevBtn').addEventListener('click', () => navigateTreeMatch(-1));
         document.getElementById('treeNextBtn').addEventListener('click', () => navigateTreeMatch(1));
@@ -1621,7 +1624,7 @@ https://json.asia/json-tools.html</p>
             reader.onload = function(e) {
                 jsonInput.value = e.target.result;
                 updateStats();
-                showStatus('已载入文件：' + file.name);
+                formatJson('pretty');
             };
             reader.readAsText(file);
             event.target.value = '';
@@ -2965,10 +2968,7 @@ https://json.asia/json-tools.html</p>
             jsonInput.value = record.jsonText;
             updateStats();
             toggleHistory();
-            
-            setTimeout(() => {
-                showStatus('✅ 已加载历史记录');
-            }, 100);
+            formatJson('pretty');
         }
 
         function deleteHistory(id) {

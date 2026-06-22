@@ -487,4 +487,3 @@ Made with ❤️ by [Your Name]
 © 2025 Text Diff Tool. All rights reserved.
 
 </div>
-

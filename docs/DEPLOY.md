@@ -470,4 +470,3 @@ scp -r ./* user@server:/var/www/text-diff-tool/
 ---
 
 需要帮助？查看[主文档](../README.md)或[提交Issue](https://github.com/yourusername/text-diff-tool/issues)。
-
