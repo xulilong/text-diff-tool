@@ -1404,7 +1404,8 @@
             processingToken: 0,
             faceLandmarks: null,
             faceLandmarksManual: false,
-            faceLandmarksVisible: false
+            faceLandmarksVisible: false,
+            hasAutoScrolledToPreview: false
         };
 
         const photoInput = document.getElementById('photoInput');
@@ -1413,6 +1414,7 @@
         const uploadTitle = document.getElementById('uploadTitle');
         const uploadHint = document.getElementById('uploadHint');
         const canvasWrap = document.getElementById('canvasWrap');
+        const previewPanel = document.querySelector('.preview-panel');
         const previewCanvas = document.getElementById('previewCanvas');
         const faceLandmarks = document.getElementById('faceLandmarks');
         const previewSpec = document.getElementById('previewSpec');
@@ -1728,9 +1730,11 @@
                 state.faceLandmarks = null;
                 state.faceLandmarksManual = false;
                 state.faceLandmarksVisible = Number(slimFaceRange.value) > 0;
+                state.hasAutoScrolledToPreview = false;
                 setStatus('正在识别图片...');
                 setProcessing(true);
                 updatePreview();
+                scrollToPreviewOnMobile();
                 processForeground(file, image);
             };
             image.onerror = () => {
@@ -2481,6 +2485,18 @@
         function setStatus(message, isError = false) {
             statusText.textContent = message;
             statusText.classList.toggle('error', isError);
+        }
+
+        function scrollToPreviewOnMobile() {
+            if (state.hasAutoScrolledToPreview || !previewPanel) return;
+            if (!window.matchMedia('(max-width: 820px)').matches) return;
+            state.hasAutoScrolledToPreview = true;
+            window.setTimeout(() => {
+                previewPanel.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 120);
         }
 
         function setProcessing(isProcessing) {
