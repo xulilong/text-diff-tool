@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私政策 - json.asia 工具箱</title>
+    <meta name="description" content="json.asia 工具箱隐私政策，说明文本对比、JSON 格式化、证件照制作等工具的数据处理方式、日志、第三方服务和联系方式。">
+    <meta name="keywords" content="json.asia隐私政策,在线工具隐私,JSON工具隐私,证件照工具隐私">
+    <meta name="author" content="json.asia">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://json.asia/privacy.html">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f7fb;
+            --bg-elevated: #ffffff;
+            --bg-tertiary: #eef2f8;
+            --text-primary: #1f2328;
+            --text-secondary: #4c576a;
+            --text-tertiary: #8a93a5;
+            --accent-blue: #0969da;
+            --accent-purple: #8250df;
+            --border-default: #d0d7de;
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft Yahei', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-default);
+            padding: 16px clamp(24px, 3vw, 48px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .header-left,
+        .brand,
+        .header-nav,
+        .nav-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-left {
+            gap: 32px;
+        }
+
+        .brand {
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .brand-text p {
+            margin: 0;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .header-nav {
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav-group {
+            gap: 8px;
+        }
+
+        .nav-group-label {
+            color: var(--text-tertiary);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .nav-link {
+            padding: 6px 14px;
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            border-color: var(--border-default);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .content-main {
+            width: min(980px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 40px 0 8px;
+            flex: 1;
+        }
+
+        .page-card {
+            padding: clamp(24px, 4vw, 40px);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(28px, 4vw, 40px);
+            line-height: 1.2;
+        }
+
+        h2 {
+            margin: 28px 0 10px;
+            font-size: 20px;
+        }
+
+        p,
+        li {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        .updated {
+            color: var(--text-tertiary);
+            font-size: 13px;
+        }
+
+        @media (max-width: 820px) {
+            .header-container,
+            .header-left {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body data-page="privacy">
+    <div class="app-container">
+        <div data-include="partials/header.html"></div>
+        <main class="content-main">
+            <article class="page-card">
+                <h1>隐私政策</h1>
+                <p class="updated">最后更新：2026-06-22</p>
+                <p>本隐私政策说明 json.asia 工具箱在提供文本对比、JSON 格式化、证件照制作等在线工具时，如何处理与保护用户数据。</p>
+
+                <h2>我们处理哪些数据</h2>
+                <ul>
+                    <li>用户主动输入或上传的内容：例如文本、JSON、图片文件。这些内容主要用于在浏览器中完成相应工具处理。</li>
+                    <li>基础访问日志：服务器或托管平台可能记录 IP 地址、访问时间、浏览器类型、访问页面等常规日志，用于安全、排错和统计。</li>
+                    <li>用户主动发送的反馈：如果你通过邮件联系我们，我们会收到你的邮箱地址和邮件内容。</li>
+                </ul>
+
+                <h2>本地处理说明</h2>
+                <p>文本对比、JSON 格式化和证件照制作的主要处理流程尽量在浏览器本地完成。我们不会主动上传或保存你输入的文本、JSON 内容或证件照原图。证件照工具中的智能抠图模型可能从第三方 CDN 加载脚本或模型文件，但图片处理仍以浏览器本地执行为目标。</p>
+
+                <h2>Cookie、广告与第三方服务</h2>
+                <p>本站未来可能接入广告、统计或赞助服务。这类服务可能使用 Cookie、设备信息或匿名标识来衡量广告效果、防止欺诈或提供更相关的内容。我们会尽量选择合规服务，并避免在核心操作区域放置容易误点的广告。</p>
+
+                <h2>数据保存时间</h2>
+                <p>用户在工具中输入或上传的内容通常不会被本站服务器保存。浏览器本地历史、缓存或临时数据由你的浏览器控制，你可以通过浏览器设置清除。服务器访问日志会根据托管平台和安全维护需要保留一段时间。</p>
+
+                <h2>安全与限制</h2>
+                <p>我们会尽力保护网站安全，但任何互联网传输和浏览器环境都无法保证绝对安全。请不要在公共设备或不可信网络中处理高度敏感的个人信息、商业机密或受法律保护的数据。</p>
+
+                <h2>未成年人</h2>
+                <p>本站工具面向一般用户和开发者使用，不主动面向儿童收集个人信息。未成年人使用涉及个人照片或身份材料的功能时，应在监护人知情和同意下进行。</p>
+
+                <h2>联系我们</h2>
+                <p>如果你对隐私政策或数据处理方式有疑问，可以通过 <a href="mailto:xulilong@qq.com">xulilong@qq.com</a> 联系我们。</p>
+            </article>
+        </main>
+        <div data-include="partials/footer.html"></div>
+    </div>
+    <script src="include-partials.js"></script>
+</body>
+</html>

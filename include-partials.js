@@ -107,6 +107,13 @@
                     text-decoration: none;
                     font-size: 13px;
                 }
+                .footer-links {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 12px;
+                    flex-wrap: wrap;
+                }
                 .footer-links a:hover {
                     color: var(--accent-blue);
                 }
@@ -140,7 +147,9 @@
                       
                     </div>
                     <div class="footer-links">
-                      <a href="mailto:xulilong@qq.com">问题反馈</a>
+                        <a href="about.html">关于本站</a>
+                        <a href="privacy.html">隐私政策</a>
+                        <a href="mailto:xulilong@qq.com">问题反馈</a>
                         <a href="https://json.asia/sitemap.xml" target="_blank" rel="noopener">站点地图</a>
                     </div>
                 </div>
@@ -192,6 +201,7 @@
         activateNavLink();
         injectHeaderActions();
         setupFooterYear();
+        setupDonateModal();
     }
 
     function activateNavLink() {
@@ -236,6 +246,189 @@
         if (yearNode) {
             yearNode.textContent = new Date().getFullYear();
         }
+    }
+
+    function setupDonateModal() {
+        ensureDonateStyles();
+        ensureDonateMarkup();
+
+        if (typeof window.toggleDonate !== 'function') {
+            window.toggleDonate = function toggleDonate() {
+                const modal = document.getElementById('donateModal');
+                if (!modal) return;
+                const isOpening = !modal.classList.contains('show');
+                modal.classList.toggle('show');
+
+                if (typeof window.trackEvent === 'function') {
+                    window.trackEvent('donate', isOpening ? 'open' : 'close', 'donate_modal');
+                }
+            };
+        }
+    }
+
+    function ensureDonateStyles() {
+        if (document.getElementById('sharedDonateStyles')) return;
+        const style = document.createElement('style');
+        style.id = 'sharedDonateStyles';
+        style.textContent = `
+            .donate-modal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 2001;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(4px);
+            }
+
+            .donate-modal.show {
+                display: flex;
+            }
+
+            .donate-content {
+                width: min(500px, 100%);
+                max-height: calc(100vh - 40px);
+                overflow: auto;
+                padding: 32px;
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-md);
+                background: var(--bg-elevated, var(--bg-primary));
+                box-shadow: 0 18px 48px rgba(15, 23, 42, 0.22);
+                text-align: center;
+            }
+
+            .donate-header {
+                margin-bottom: 24px;
+            }
+
+            .donate-header h2 {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                margin: 0 0 8px;
+                font-size: 20px;
+                font-weight: 600;
+            }
+
+            .donate-header p {
+                margin: 0;
+                color: var(--text-secondary);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .qr-codes {
+                display: flex;
+                justify-content: center;
+                gap: 24px;
+                margin: 24px 0;
+            }
+
+            .qr-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .qr-item img {
+                width: 200px;
+                height: 200px;
+                border-radius: var(--radius-md);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .qr-label {
+                color: var(--text-primary);
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .donate-footer {
+                margin-top: 24px;
+                padding-top: 20px;
+                border-top: 1px solid var(--border-default);
+            }
+
+            .donate-footer p {
+                margin: 0;
+                color: var(--text-tertiary);
+                font-size: 12px;
+                line-height: 1.6;
+            }
+
+            .close-donate {
+                margin-top: 20px;
+                padding: 8px 24px;
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-sm);
+                background: var(--bg-tertiary);
+                color: var(--text-primary);
+                font-size: 13px;
+                cursor: pointer;
+            }
+
+            .close-donate:hover {
+                background: var(--bg-elevated, var(--bg-primary));
+                border-color: var(--text-secondary);
+            }
+
+            @media (max-width: 560px) {
+                .donate-content {
+                    padding: 24px 18px;
+                }
+
+                .qr-codes {
+                    flex-direction: column;
+                    align-items: center;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    function ensureDonateMarkup() {
+        if (document.getElementById('donateModal')) return;
+        const modal = document.createElement('div');
+        modal.className = 'donate-modal';
+        modal.id = 'donateModal';
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal && window.toggleDonate) {
+                window.toggleDonate();
+            }
+        });
+        modal.innerHTML = `
+            <div class="donate-content">
+                <div class="donate-header">
+                    <h2>
+                        <span>☕</span>
+                        <span>感谢您的支持</span>
+                    </h2>
+                    <p>您的每一份支持都是我们持续改进的动力<br>如果这个工具帮到了您，欢迎请作者喝杯咖啡</p>
+                </div>
+                <div class="qr-codes">
+                    <div class="qr-item">
+                        <img src="images/wechat-pay.png" alt="微信赞赏码">
+                        <div class="qr-label">💚 微信扫一扫</div>
+                    </div>
+                    <div class="qr-item">
+                        <img src="images/alipay.png" alt="支付宝收款码">
+                        <div class="qr-label">💙 支付宝扫一扫</div>
+                    </div>
+                </div>
+                <div class="donate-footer">
+                    <p>💡 所有功能永久免费使用，您的支持将帮助我们：<br>
+                    · 持续优化产品体验<br>
+                    · 增加更多实用功能<br>
+                    · 保持服务稳定运行</p>
+                </div>
+                <button class="close-donate" type="button" onclick="toggleDonate()">关闭</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
     }
 
     document.addEventListener('DOMContentLoaded', includePartials);
