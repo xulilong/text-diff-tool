@@ -146,6 +146,12 @@
             font-size: 18px;
         }
 
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
         .brand-text h1 {
             font-size: 18px;
             font-weight: 600;
@@ -164,7 +170,21 @@
         .header-nav {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-group-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            letter-spacing: 0;
         }
 
         .header-nav .nav-link {
@@ -371,19 +391,20 @@
             overflow: auto;
             font-family: 'SF Mono', Monaco, 'Roboto Mono', Consolas, monospace;
             font-size: 13px;
+            line-height: 1.65;
+            user-select: text;
         }
 
         .tree-node {
-            margin-bottom: 4px;
+            margin-bottom: 0;
         }
 
         .tree-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 6px;
+            display: block;
+            padding: 1px 6px;
             border-radius: 6px;
             transition: background 0.15s ease;
+            white-space: pre;
         }
 
         .tree-label:hover {
@@ -400,19 +421,25 @@
             line-height: 1;
             cursor: pointer;
             padding: 0;
+            user-select: none;
+            vertical-align: text-bottom;
+            margin-right: 4px;
         }
 
         .tree-key {
             font-weight: 600;
+            color: var(--accent-purple);
         }
 
         .tree-meta {
+            display: none;
             font-size: 12px;
             color: var(--text-tertiary);
+            user-select: none;
         }
 
         .tree-value {
-            color: var(--accent-purple);
+            color: var(--accent-green);
         }
 
         .tree-value.number {
@@ -429,9 +456,20 @@
         }
 
         .tree-children {
-            margin-left: 24px;
-            border-left: 1px dashed var(--border-default);
-            padding-left: 12px;
+            margin-left: 0;
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .tree-punctuation,
+        .tree-index {
+            color: var(--text-secondary);
+        }
+
+        .tree-closing-line {
+            padding: 1px 6px;
+            white-space: pre;
+            user-select: text;
         }
 
         .hidden {
@@ -492,7 +530,7 @@
         }
 
         .tree-node {
-            margin-bottom: 4px;
+            margin-bottom: 0;
             position: relative;
         }
 
@@ -520,9 +558,14 @@
 
 
         .tree-label {
+            cursor: text;
+            user-select: text;
+            position: relative;
+        }
+
+        .tree-label.selectable {
             cursor: pointer;
             user-select: none;
-            position: relative;
         }
 
         .tree-label.selectable {
@@ -581,6 +624,8 @@
             margin-left: 8px;
             opacity: 0;
             transition: opacity 0.15s ease;
+            user-select: none;
+            vertical-align: middle;
         }
 
         .tree-label:hover .tree-node-actions {
@@ -626,19 +671,23 @@
         }
 
         .tree-node.draggable {
-            cursor: grab;
+            cursor: text;
         }
 
         .tree-node.draggable:active {
-            cursor: grabbing;
+            cursor: text;
         }
 
         .tree-node.draggable .tree-label {
-            cursor: grab;
+            cursor: text;
         }
 
         .tree-node.draggable .tree-label:active {
-            cursor: grabbing;
+            cursor: text;
+        }
+
+        .tree-node.draggable .tree-label.selectable {
+            cursor: pointer;
         }
 
         .add-node-form {
@@ -777,7 +826,11 @@
 
             .header-nav {
                 width: 100%;
-                overflow-x: auto;
+                overflow-x: visible;
+            }
+
+            .nav-group {
+                flex-wrap: wrap;
             }
 
             textarea,
@@ -1642,18 +1695,18 @@ https://json.asia/json-tools.html</p>
         function renderTree(value) {
             jsonTree.innerHTML = '';
             treeNodeRegistry = new Map();
-            const rootNode = createTreeNode('root', value, 0, 'root', null, null);
+            const rootNode = createTreeNode('root', value, 0, 'root', null, null, true);
             jsonTree.appendChild(rootNode);
             resetTreeSearchState();
         }
 
-        function createTreeNode(key, value, depth, path, parentValue = null, parentPath = null) {
+        function createTreeNode(key, value, depth, path, parentValue = null, parentPath = null, isLast = true) {
             const node = document.createElement('div');
             node.className = 'tree-node';
             
             const label = document.createElement('div');
             label.className = 'tree-label';
-            label.style.paddingLeft = depth * 14 + 'px';
+            label.style.paddingLeft = '6px';
             label.dataset.path = path;
 
             // 添加选择功能（非根节点）
@@ -1675,7 +1728,7 @@ https://json.asia/json-tools.html</p>
                 }
             }
 
-            const registryEntry = { value, label, depth, toggle: null, container: null, node, key, parentValue, parentPath };
+            const registryEntry = { value, label, depth, toggle: null, container: null, node, key, parentValue, parentPath, isLast };
 
             // 操作按钮容器
             const actionsContainer = document.createElement('div');
@@ -1684,16 +1737,12 @@ https://json.asia/json-tools.html</p>
             if (isExpandable(value)) {
                 const toggle = document.createElement('button');
                 toggle.className = 'tree-toggle';
-                toggle.textContent = '+';
-                toggle.setAttribute('data-expanded', 'false');
+                toggle.textContent = '-';
+                toggle.setAttribute('data-expanded', 'true');
                 const meta = document.createElement('span');
                 meta.className = 'tree-meta';
                 const childCount = Array.isArray(value) ? value.length : Object.keys(value).length;
                 meta.textContent = `${childCount}项`;
-
-                const keySpan = document.createElement('span');
-                keySpan.className = 'tree-key';
-                keySpan.textContent = key;
 
                 // 添加节点按钮
                 const addBtn = document.createElement('button');
@@ -1720,14 +1769,16 @@ https://json.asia/json-tools.html</p>
                     actionsContainer.appendChild(deleteBtn);
                 }
 
+                appendJsonIndent(label, depth);
+                appendJsonPrefix(label, key, parentValue);
                 label.appendChild(toggle);
-                label.appendChild(keySpan);
+                appendPunctuation(label, Array.isArray(value) ? '[' : '{');
                 label.appendChild(meta);
                 label.appendChild(actionsContainer);
                 node.appendChild(label);
 
                 const childrenContainer = document.createElement('div');
-                childrenContainer.className = 'tree-children hidden';
+                childrenContainer.className = 'tree-children';
                 childrenContainer.dataset.path = path;
                 childrenContainer.dataset.parentValue = 'object';
                 node.appendChild(childrenContainer);
@@ -1797,14 +1848,15 @@ https://json.asia/json-tools.html</p>
                     toggle.setAttribute('data-expanded', String(!expanded));
                     toggle.textContent = expanded ? '+' : '-';
                     childrenContainer.classList.toggle('hidden');
+                    const closingLine = node.querySelector(':scope > .tree-closing-line');
+                    if (closingLine) closingLine.classList.toggle('hidden', expanded);
                 });
-            } else {
-                const keySpan = document.createElement('span');
-                keySpan.className = 'tree-key';
-                keySpan.textContent = key;
 
+                renderChildrenImmediate(childrenContainer, value, depth + 1, path, value);
+                node.appendChild(createClosingLine(value, depth, isLast));
+            } else {
                 const valueSpan = document.createElement('span');
-                valueSpan.className = 'tree-value ' + typeof value;
+                valueSpan.className = 'tree-value ' + getPrimitiveClass(value);
                 valueSpan.textContent = formatPrimitive(value);
 
                 // 删除按钮
@@ -1823,10 +1875,11 @@ https://json.asia/json-tools.html</p>
 
                 const dotSpan = document.createElement('span');
                 dotSpan.className = 'tree-dot';
-                dotSpan.textContent = '•';
-                label.appendChild(dotSpan);
-                label.appendChild(keySpan);
+                dotSpan.textContent = '';
+                appendJsonIndent(label, depth);
+                appendJsonPrefix(label, key, parentValue);
                 label.appendChild(valueSpan);
+                appendPunctuation(label, isLast ? '' : ',');
                 label.appendChild(actionsContainer);
                 node.appendChild(label);
             }
@@ -1834,7 +1887,7 @@ https://json.asia/json-tools.html</p>
             // 拖拽功能 - 所有非根节点都可以拖动
             if (parentValue !== null) {
                 node.classList.add('draggable');
-                node.draggable = true;
+                node.draggable = false;
                 node.dataset.path = path;
                 node.dataset.parentPath = parentPath || '';
                 node.dataset.key = key;
@@ -1954,7 +2007,7 @@ https://json.asia/json-tools.html</p>
                 while (index < entries.length && (deadline.timeRemaining ? deadline.timeRemaining() > 0 : fragment.childNodes.length < 200)) {
                     const [childKey, childVal] = entries[index++];
                     const childPath = buildChildPath(parentPath, childKey);
-                    fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath, value, parentPath));
+                    fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath, value, parentPath, index === entries.length));
                 }
                 container.appendChild(fragment);
                 if (index < entries.length) {
@@ -1974,13 +2027,55 @@ https://json.asia/json-tools.html</p>
             const entries = Array.isArray(value)
                 ? value.map((v, i) => [i, v])
                 : Object.entries(value);
-            entries.forEach(([childKey, childVal]) => {
+            entries.forEach(([childKey, childVal], index) => {
                 const childPath = buildChildPath(parentPath, childKey);
-                fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath, value, parentPath));
+                fragment.appendChild(createTreeNode(childKey, childVal, depth, childPath, value, parentPath, index === entries.length - 1));
             });
             container.appendChild(fragment);
             container.dataset.loaded = 'true';
             container.dataset.abort = 'true';
+        }
+
+        function appendJsonPrefix(label, key, parentValue) {
+            if (parentValue === null) return;
+
+            if (Array.isArray(parentValue)) {
+                const indexSpan = document.createElement('span');
+                indexSpan.className = 'tree-index';
+                indexSpan.textContent = '';
+                label.appendChild(indexSpan);
+                return;
+            }
+
+            const keySpan = document.createElement('span');
+            keySpan.className = 'tree-key';
+            keySpan.textContent = JSON.stringify(String(key));
+            label.appendChild(keySpan);
+            appendPunctuation(label, ': ');
+        }
+
+        function appendJsonIndent(label, depth) {
+            if (depth <= 0) return;
+            const span = document.createElement('span');
+            span.className = 'tree-punctuation';
+            span.textContent = '  '.repeat(depth);
+            label.appendChild(span);
+        }
+
+        function appendPunctuation(label, text) {
+            if (!text) return;
+            const span = document.createElement('span');
+            span.className = 'tree-punctuation';
+            span.textContent = text;
+            label.appendChild(span);
+        }
+
+        function createClosingLine(value, depth, isLast) {
+            const line = document.createElement('div');
+            line.className = 'tree-closing-line';
+            line.style.paddingLeft = '6px';
+            line.textContent = '  '.repeat(depth) + (Array.isArray(value) ? ']' : '}') + (isLast ? '' : ',');
+            return line;
         }
 
         function isExpandable(value) {
@@ -1994,9 +2089,14 @@ https://json.asia/json-tools.html</p>
         }
 
         function formatPrimitive(value) {
-            if (typeof value === 'string') return '"' + value + '"';
+            if (typeof value === 'string') return JSON.stringify(value);
             if (value === null) return 'null';
             return String(value);
+        }
+
+        function getPrimitiveClass(value) {
+            if (value === null) return 'null';
+            return typeof value;
         }
 
         function buildChildPath(parentPath, segment) {

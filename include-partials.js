@@ -5,15 +5,24 @@
                 <div class="header-container">
                     <div class="header-left">
                         <div class="brand">
-                            <div class="brand-icon">⚡</div>
+                            <div class="brand-icon">
+                                <img src="images/logo-ai-256.png" alt="json.asia 工具箱">
+                            </div>
                             <div class="brand-text">
-                                <h1>专业文本对比工具</h1>
-                                <p>Professional Text Diff Tool</p>
+                                <h1>json.asia 工具箱</h1>
+                                <p>开发、文档与图片处理工具</p>
                             </div>
                         </div>
                         <nav class="header-nav">
-                            <a href="index.html" class="nav-link" data-page="diff">文本对比</a>
-                            <a href="json-tools.html" class="nav-link" data-page="json">JSON格式化</a>
+                            <div class="nav-group">
+                                <span class="nav-group-label">开发</span>
+                                <a href="index.html" class="nav-link" data-page="diff">文本对比</a>
+                                <a href="json-tools.html" class="nav-link" data-page="json">JSON格式化</a>
+                            </div>
+                            <div class="nav-group">
+                                <span class="nav-group-label">图片</span>
+                                <a href="photo-id.html" class="nav-link" data-page="photo">证件照制作</a>
+                            </div>
                         </nav>
                     </div>
                     <div class="header-actions" data-header-slot></div>
@@ -115,8 +124,8 @@
             <footer class="app-footer">
                 <div class="footer-cta">
                     <div class="footer-brand">
-                        <span>© <span id="footerYear"></span> Text Diff Tool · json.asia</span>
-                        <small>精准文本对比与 JSON 工具箱</small>
+                        <span>© <span id="footerYear"></span> json.asia 工具箱</span>
+                        <small>开发、文档与图片处理工具集合</small>
                     </div>
                     <div class="footer-center">
                         <div class="support-text">
@@ -231,4 +240,3 @@
 
     document.addEventListener('DOMContentLoaded', includePartials);
 })();
-

@@ -1,0 +1,2510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>证件照制作工具 - 免费在线生成1寸、2寸证件照 | Text Diff Tool</title>
+    <meta name="description" content="免费在线证件照制作工具，支持上传照片生成1寸、2寸、小一寸、大一寸等尺寸，支持红、蓝、白、自定义背景色和多张照片排版下载。">
+    <meta name="keywords" content="证件照制作,1寸照片,2寸照片,在线证件照,证件照换背景,照片排版,免冠照片">
+    <meta name="author" content="json.asia">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://json.asia/photo-id.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://json.asia/photo-id.html">
+    <meta property="og:site_name" content="Text Diff Tool">
+    <meta property="og:title" content="证件照制作工具 - 在线生成1寸、2寸证件照">
+    <meta property="og:description" content="上传照片，本地生成证件照尺寸、换背景色并排版下载。">
+    <meta property="og:image" content="https://json.asia/og-image.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "证件照制作工具",
+      "url": "https://json.asia/photo-id.html",
+      "description": "免费在线生成1寸、2寸证件照，支持背景色替换和多张排版下载。",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "json.asia"
+      }
+    }
+    </script>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f7fb;
+            --bg-elevated: #ffffff;
+            --bg-tertiary: #eef2f8;
+            --text-primary: #1f2328;
+            --text-secondary: #4c576a;
+            --text-tertiary: #8a93a5;
+            --accent-blue: #0969da;
+            --accent-green: #2da44e;
+            --accent-red: #d1242f;
+            --accent-purple: #8250df;
+            --border-default: #d0d7de;
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft Yahei', sans-serif;
+            font-size: 14px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-default);
+            padding: 16px clamp(24px, 3vw, 48px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            min-height: 64px;
+        }
+
+        .header-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-group-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            letter-spacing: 0;
+        }
+
+        .header-nav .nav-link {
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            transition: all 0.15s ease;
+        }
+
+        .header-nav .nav-link:hover {
+            color: var(--text-primary);
+            border-color: var(--border-default);
+            background: var(--bg-secondary);
+        }
+
+        .header-nav .nav-link.active {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+            box-shadow: 0 2px 6px rgba(9, 105, 218, 0.2);
+        }
+
+        .photo-main {
+            flex: 1;
+            width: 100%;
+            padding: clamp(20px, 3vw, 40px);
+        }
+
+        .tool-shell {
+            display: grid;
+            grid-template-columns: minmax(300px, 380px) minmax(0, 1fr) minmax(300px, 420px);
+            gap: 16px;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 16px;
+        }
+
+        .panel h2 {
+            margin: 0 0 12px;
+            font-size: 16px;
+            line-height: 1.3;
+        }
+
+        .upload-zone {
+            border: 1px dashed var(--border-default);
+            border-radius: var(--radius-md);
+            background: #fbfcff;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--accent-blue);
+            background: rgba(9, 105, 218, 0.06);
+        }
+
+        .upload-zone.processing {
+            border-color: var(--accent-blue);
+            background: rgba(9, 105, 218, 0.07);
+            cursor: wait;
+        }
+
+        .upload-zone.processing::after {
+            content: '';
+            position: absolute;
+            left: -40%;
+            bottom: 0;
+            width: 40%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            animation: loadingBar 1.2s linear infinite;
+        }
+
+        @keyframes loadingBar {
+            from { left: -40%; }
+            to { left: 100%; }
+        }
+
+        .upload-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            color: var(--accent-blue);
+            font-size: 22px;
+        }
+
+        .upload-zone.processing .upload-icon {
+            animation: pulseIcon 1s ease-in-out infinite;
+        }
+
+        @keyframes pulseIcon {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.75; }
+        }
+
+        .control-group {
+            display: grid;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .control-group label,
+        .field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .scenario-summary {
+            min-height: 48px;
+            padding: 10px 12px;
+            border: 1px solid rgba(9, 105, 218, 0.18);
+            border-radius: var(--radius-sm);
+            background: rgba(9, 105, 218, 0.05);
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .scenario-summary strong {
+            display: block;
+            color: var(--text-primary);
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .scenario-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 4px 0 8px;
+        }
+
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            height: 22px;
+            padding: 0 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(45, 164, 78, 0.12);
+            color: #1a7f37;
+        }
+
+        .trust-badge.reference {
+            background: rgba(191, 135, 0, 0.14);
+            color: #8a5a00;
+        }
+
+        .trust-badge.custom {
+            background: rgba(76, 87, 106, 0.12);
+            color: var(--text-secondary);
+        }
+
+        .scenario-source {
+            color: var(--accent-blue);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .scenario-requirements {
+            margin: 8px 0 0;
+            padding-left: 18px;
+        }
+
+        .scenario-requirements li {
+            margin: 2px 0;
+        }
+
+        select,
+        input[type="number"],
+        input[type="range"],
+        input[type="color"] {
+            width: 100%;
+        }
+
+        select,
+        input[type="search"],
+        input[type="number"] {
+            height: 36px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            padding: 0 10px;
+            color: var(--text-primary);
+        }
+
+        input[type="search"] {
+            width: 100%;
+        }
+
+        input[type="range"] {
+            accent-color: var(--accent-blue);
+        }
+
+        .segmented {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .format-toggle {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .color-option {
+            min-height: 34px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .color-option.active {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.14);
+            color: var(--text-primary);
+        }
+
+        .swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.18);
+            flex: none;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .btn {
+            height: 38px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 14px;
+        }
+
+        .btn.primary {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
+
+        .btn.green {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: #fff;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .preview-panel {
+            min-height: calc(100vh - 144px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preview-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .preview-tabs {
+            display: inline-flex;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
+
+        .preview-tab {
+            height: 30px;
+            border: 0;
+            border-right: 1px solid var(--border-default);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0 12px;
+        }
+
+        .preview-tab:last-child {
+            border-right: 0;
+        }
+
+        .preview-tab.active {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .status {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .status.error {
+            color: var(--accent-red);
+        }
+
+        .canvas-wrap {
+            flex: 1;
+            min-height: 520px;
+            background:
+                linear-gradient(45deg, #eef2f8 25%, transparent 25%),
+                linear-gradient(-45deg, #eef2f8 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #eef2f8 75%),
+                linear-gradient(-45deg, transparent 75%, #eef2f8 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            padding: 24px;
+            position: relative;
+        }
+
+        .face-landmarks {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            pointer-events: none;
+            display: none;
+        }
+
+        .face-landmarks.show {
+            display: block;
+        }
+
+        .landmark-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: var(--accent-red);
+            box-shadow: 0 0 0 2px rgba(209, 36, 47, 0.72), 0 4px 12px rgba(15, 23, 42, 0.24);
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            pointer-events: auto;
+            touch-action: none;
+        }
+
+        .landmark-point:active {
+            cursor: grabbing;
+        }
+
+        .landmark-point::after {
+            content: attr(data-label);
+            position: absolute;
+            left: 50%;
+            top: calc(100% + 7px);
+            transform: translateX(-50%);
+            white-space: nowrap;
+            padding: 2px 6px;
+            border-radius: 999px;
+            background: rgba(31, 35, 40, 0.86);
+            color: #fff;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .preview-spec {
+            position: absolute;
+            left: 14px;
+            bottom: 14px;
+            z-index: 3;
+            max-width: min(420px, calc(100% - 28px));
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .preview-spec strong {
+            color: var(--text-primary);
+        }
+
+        .canvas-wrap.processing::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.72);
+            z-index: 1;
+        }
+
+        .canvas-wrap.processing::after {
+            content: '正在识别图片并处理背景，请稍等';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            width: min(320px, calc(100% - 32px));
+            padding: 14px 16px;
+            border: 1px solid rgba(9, 105, 218, 0.24);
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        #previewCanvas {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 680px;
+            background: #fff;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.18);
+            cursor: grab;
+            touch-action: none;
+        }
+
+        #previewCanvas.preview-single {
+            max-width: min(52%, 360px);
+            max-height: min(58vh, 620px);
+        }
+
+        #previewCanvas.preview-sheet {
+            max-width: 96%;
+            max-height: min(68vh, 720px);
+        }
+
+        #previewCanvas.preview-compare {
+            max-width: 96%;
+            max-height: min(62vh, 680px);
+        }
+
+        #previewCanvas:active {
+            cursor: grabbing;
+        }
+
+        .result-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .sheet-capacity {
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            background: #fbfcff;
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .result-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            background: #fbfcff;
+            font-size: 13px;
+        }
+
+        .result-card strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .result-card span {
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .hint {
+            margin-top: 10px;
+            color: var(--text-tertiary);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .processing-note {
+            display: none;
+            margin-top: 12px;
+            padding: 10px 12px;
+            border: 1px solid rgba(9, 105, 218, 0.22);
+            border-radius: var(--radius-sm);
+            background: rgba(9, 105, 218, 0.06);
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .processing-note.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .processing-note.show::before {
+            content: '';
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(9, 105, 218, 0.22);
+            border-top-color: var(--accent-blue);
+            animation: spin 0.8s linear infinite;
+            flex: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        .sticky-downloads {
+            display: none;
+        }
+
+        @media (max-width: 1180px) {
+            .tool-shell {
+                grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+            }
+
+            .output-panel {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .app-header {
+                padding: 14px 16px;
+            }
+
+            .header-container,
+            .header-left {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .header-nav {
+                flex-wrap: wrap;
+            }
+
+            .nav-group {
+                flex-wrap: wrap;
+            }
+
+            .tool-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .photo-main {
+                padding: 16px;
+            }
+
+            .canvas-wrap {
+                min-height: 360px;
+                padding: 14px;
+            }
+
+            .preview-spec {
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+                max-width: none;
+            }
+
+            .sticky-downloads {
+                position: sticky;
+                bottom: 0;
+                z-index: 20;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+                padding: 10px;
+                margin: 16px -16px -16px;
+                border-top: 1px solid var(--border-default);
+                background: rgba(255, 255, 255, 0.94);
+                backdrop-filter: blur(8px);
+            }
+        }
+    </style>
+</head>
+<body data-page="photo">
+    <div class="app-container">
+        <div data-include="partials/header.html"></div>
+
+        <main class="photo-main">
+            <div class="tool-shell">
+                <section class="panel">
+                    <h2>照片与尺寸</h2>
+                    <input class="hidden-input" id="photoInput" type="file" accept="image/*">
+                    <div class="upload-zone" id="uploadZone" role="button" tabindex="0">
+                        <div class="upload-icon" id="uploadIcon">↑</div>
+                        <strong id="uploadTitle">上传照片</strong>
+                        <span id="uploadHint">支持 JPG、PNG、WebP，所有处理都在本地浏览器完成</span>
+                    </div>
+                    <div class="control-group">
+                        <button class="btn" id="preloadModelBtn" type="button">预热智能抠图</button>
+                        <span class="hint" id="preloadStatus">可先预热模型，上传照片时等待更短。</span>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="scenarioSearch">搜索场景</label>
+                        <input id="scenarioSearch" type="search" placeholder="输入国考、签证、社保卡、简历等">
+                    </div>
+                    <div class="row">
+                        <div class="control-group">
+                            <label for="scenarioCategory">一级分类</label>
+                            <select id="scenarioCategory">
+                                <option value="common">通用证件照</option>
+                                <option value="exam">考试报名</option>
+                                <option value="id">证件办理</option>
+                                <option value="visa">签证出国</option>
+                                <option value="work">办公校园</option>
+                                <option value="custom">自定义</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="scenarioPreset">二级场景</label>
+                            <select id="scenarioPreset"></select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="scenario-summary" id="scenarioSummary">
+                            <strong>通用 1 寸证件照</strong>
+                            25 × 35 mm，白底，适合日常表格与证件照打印。
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="sizePreset">证件照尺寸</label>
+                        <select id="sizePreset">
+                            <option value="oneInch">1寸 25 × 35 mm</option>
+                            <option value="twoInch">2寸 35 × 49 mm</option>
+                            <option value="smallOne">小一寸 22 × 32 mm</option>
+                            <option value="largeOne">大一寸 33 × 48 mm</option>
+                            <option value="smallTwo">小二寸 35 × 45 mm</option>
+                            <option value="exam295x413">报名照 295 × 413 px</option>
+                            <option value="exam413x531">考试照 413 × 531 px</option>
+                            <option value="passportChina">中国护照 33 × 48 mm</option>
+                            <option value="usSquare">美国签证 600 × 600 px</option>
+                            <option value="visa35x45">签证 35 × 45 mm</option>
+                            <option value="visa45x45">日本签证 45 × 45 mm</option>
+                            <option value="socialSecurity">社保卡 358 × 441 px</option>
+                            <option value="driverLicense">驾驶证 22 × 32 mm</option>
+                            <option value="resumeAvatar">头像 600 × 600 px</option>
+                            <option value="custom">自定义尺寸</option>
+                        </select>
+                    </div>
+
+                    <div class="row" id="customSizeRow" style="display: none;">
+                        <div class="control-group">
+                            <label for="customWidth">宽度 mm</label>
+                            <input id="customWidth" type="number" min="10" max="100" value="25">
+                        </div>
+                        <div class="control-group">
+                            <label for="customHeight">高度 mm</label>
+                            <input id="customHeight" type="number" min="10" max="140" value="35">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="dpiSelect">输出分辨率</label>
+                        <select id="dpiSelect">
+                            <option value="300">300 DPI 标准打印</option>
+                            <option value="350">350 DPI 高清</option>
+                            <option value="600">600 DPI 精细打印</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <span class="field-label">背景颜色</span>
+                        <div class="segmented" id="colorOptions">
+                            <button class="color-option active" data-color="#ffffff" type="button"><span class="swatch" style="background:#fff"></span>白</button>
+                            <button class="color-option" data-color="#438edb" type="button"><span class="swatch" style="background:#438edb"></span>蓝</button>
+                            <button class="color-option" data-color="#d92d20" type="button"><span class="swatch" style="background:#d92d20"></span>红</button>
+                            <button class="color-option" data-color="custom" type="button"><span class="swatch" id="customSwatch" style="background:#f5f5f5"></span>自定</button>
+                        </div>
+                        <input id="customColor" type="color" value="#f5f5f5" style="display:none;">
+                    </div>
+
+                    <div class="processing-note" id="processingNote">正在识别图片中的人物区域，并生成新的背景效果，请稍等。</div>
+                </section>
+
+                <section class="panel preview-panel">
+                    <div class="preview-head">
+                        <h2>预览</h2>
+                        <div class="preview-tools">
+                            <div class="preview-tabs" aria-label="预览模式">
+                                <button class="preview-tab active" data-preview-mode="single" type="button">单张</button>
+                                <button class="preview-tab" data-preview-mode="compare" type="button">对比</button>
+                                <button class="preview-tab" data-preview-mode="sheet" type="button">排版</button>
+                            </div>
+                            <span class="status" id="statusText">请先上传照片</span>
+                        </div>
+                    </div>
+                    <div class="canvas-wrap" id="canvasWrap">
+                        <canvas id="previewCanvas" width="295" height="413"></canvas>
+                        <div class="face-landmarks" id="faceLandmarks" aria-label="瘦脸定位点">
+                            <button class="landmark-point" data-point="leftEye" data-label="左眼" type="button" aria-label="拖动左眼定位点"></button>
+                            <button class="landmark-point" data-point="rightEye" data-label="右眼" type="button" aria-label="拖动右眼定位点"></button>
+                            <button class="landmark-point" data-point="mouth" data-label="嘴巴" type="button" aria-label="拖动嘴巴定位点"></button>
+                        </div>
+                        <div class="preview-spec" id="previewSpec"><strong>通用 1 寸证件照</strong><br>25 × 35 mm · 白底</div>
+                    </div>
+                </section>
+
+                <section class="panel output-panel">
+                    <h2>裁切与排版</h2>
+                    <div class="control-group">
+                        <label for="zoomRange">缩放 <span id="zoomValue">100%</span></label>
+                        <input id="zoomRange" type="range" min="60" max="220" value="100">
+                    </div>
+                    <div class="control-group">
+                        <label for="offsetXRange">水平位置 <span id="offsetXValue">0</span></label>
+                        <input id="offsetXRange" type="range" min="-100" max="100" value="0">
+                    </div>
+                    <div class="control-group">
+                        <label for="offsetYRange">垂直位置 <span id="offsetYValue">0</span></label>
+                        <input id="offsetYRange" type="range" min="-100" max="100" value="0">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="slimFaceRange">瘦脸 <span id="slimFaceValue">0</span></label>
+                        <input id="slimFaceRange" type="range" min="0" max="40" value="0">
+                        <span class="hint">调高瘦脸后，可拖动预览图上的左眼、右眼、嘴巴定位点。</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="smoothSkinRange">磨皮 <span id="smoothSkinValue">0</span></label>
+                        <input id="smoothSkinRange" type="range" min="0" max="60" value="0">
+                    </div>
+                    <div class="row">
+                        <div class="control-group">
+                            <label for="brightenRange">提亮 <span id="brightenValue">0</span></label>
+                            <input id="brightenRange" type="range" min="0" max="40" value="0">
+                        </div>
+                        <div class="control-group">
+                            <label for="warmthRange">肤色 <span id="warmthValue">0</span></label>
+                            <input id="warmthRange" type="range" min="0" max="40" value="0">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="control-group">
+                            <label for="sheetPreset">排版纸张</label>
+                            <select id="sheetPreset">
+                                <option value="sixInch">6寸相纸 152 × 102 mm</option>
+                                <option value="a4">A4 210 × 297 mm</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="gapSize">间距 mm</label>
+                            <input id="gapSize" type="number" min="0" max="10" step="0.5" value="2">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="copyCount">排版数量</label>
+                        <input id="copyCount" type="number" min="1" max="40" value="8">
+                    </div>
+
+                    <div class="row">
+                        <div class="control-group">
+                            <span class="field-label">下载格式</span>
+                            <select id="outputFormat" style="display: none;">
+                                <option value="jpeg">JPG/JPEG 报名常用</option>
+                                <option value="png">PNG 高清透明友好</option>
+                            </select>
+                            <div class="segmented format-toggle" id="formatOptions">
+                                <button class="color-option active" data-format="jpeg" type="button">JPG</button>
+                                <button class="color-option" data-format="png" type="button">PNG</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="targetSize">目标大小</label>
+                            <select id="targetSize">
+                                <option value="none">不限制</option>
+                                <option value="15">小于 15KB</option>
+                                <option value="30">小于 30KB</option>
+                                <option value="100">小于 100KB</option>
+                                <option value="200">小于 200KB</option>
+                                <option value="240">小于 240KB</option>
+                                <option value="custom">自定义</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group" id="customTargetRow" style="display: none;">
+                        <label for="customTargetSize">自定义目标 KB</label>
+                        <input id="customTargetSize" type="number" min="5" max="2048" value="200">
+                    </div>
+
+                    <div class="sheet-capacity" id="sheetCapacity">6寸相纸可排 8 张，当前生成 8 张。</div>
+
+                    <div class="result-grid" style="margin-top: 16px;">
+                        <div class="result-card">
+                            <div>
+                                <strong id="singleInfo">1寸 · 295 × 413 px</strong>
+                                <span id="singleDownloadMeta">单张证件照 JPG</span>
+                            </div>
+                            <button class="btn primary" id="downloadSingleBtn" type="button" disabled>下载</button>
+                        </div>
+                        <div class="result-card">
+                            <div>
+                                <strong id="sheetInfo">6寸相纸 · 自动排版</strong>
+                                <span id="sheetDownloadMeta">多张平铺 JPG</span>
+                            </div>
+                            <button class="btn green" id="downloadSheetBtn" type="button" disabled>下载</button>
+                        </div>
+                    </div>
+
+                    <p class="hint">预设规格仅作制作参考；美颜建议轻度使用，正式提交前请以报名系统、当地办事平台或签证中心最新要求为准。</p>
+                    <div class="sticky-downloads">
+                        <button class="btn primary" id="mobileDownloadSingleBtn" type="button" disabled>下载单张</button>
+                        <button class="btn green" id="mobileDownloadSheetBtn" type="button" disabled>下载排版</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <div data-include="partials/footer.html"></div>
+    </div>
+
+    <script src="include-partials.js"></script>
+    <script>
+        const sizePresets = {
+            oneInch: { name: '1寸', widthMm: 25, heightMm: 35 },
+            twoInch: { name: '2寸', widthMm: 35, heightMm: 49 },
+            smallOne: { name: '小一寸', widthMm: 22, heightMm: 32 },
+            largeOne: { name: '大一寸', widthMm: 33, heightMm: 48 },
+            smallTwo: { name: '小二寸', widthMm: 35, heightMm: 45 },
+            exam295x413: { name: '报名照', widthPx: 295, heightPx: 413 },
+            exam413x531: { name: '考试照', widthPx: 413, heightPx: 531 },
+            passportChina: { name: '中国护照', widthMm: 33, heightMm: 48 },
+            usSquare: { name: '美国签证', widthPx: 600, heightPx: 600 },
+            visa35x45: { name: '签证照', widthMm: 35, heightMm: 45 },
+            visa45x45: { name: '日本签证', widthMm: 45, heightMm: 45 },
+            socialSecurity: { name: '社保卡', widthPx: 358, heightPx: 441 },
+            driverLicense: { name: '驾驶证', widthMm: 22, heightMm: 32 },
+            resumeAvatar: { name: '简历头像', widthPx: 600, heightPx: 600 }
+        };
+
+        const scenarioGroups = {
+            common: {
+                label: '通用证件照',
+                scenarios: ['standardOne', 'standardTwo', 'smallOneGeneral', 'smallTwoGeneral']
+            },
+            exam: {
+                label: '考试报名',
+                scenarios: ['civilService', 'postgraduateExam', 'teacherCert', 'accountingExam', 'computerExam', 'englishExam', 'medicalExam']
+            },
+            id: {
+                label: '证件办理',
+                scenarios: ['chinaPassport', 'idCard', 'socialSecurityCard', 'driverLicense', 'residencePermit', 'hkMacauPass']
+            },
+            visa: {
+                label: '签证出国',
+                scenarios: ['chinaVisa', 'usVisa', 'japanVisa', 'schengenVisa', 'ukVisa', 'canadaVisa', 'australiaVisa', 'koreaVisa', 'singaporeVisa']
+            },
+            work: {
+                label: '办公校园',
+                scenarios: ['resumeAvatar', 'workBadge', 'studentCard', 'campusCard', 'onboarding']
+            },
+            custom: {
+                label: '自定义',
+                scenarios: ['custom']
+            }
+        };
+
+        const scenarioPresets = {
+            standardOne: {
+                title: '通用 1 寸证件照',
+                size: 'oneInch',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '25 × 35 mm，白底，适合日常表格与证件照打印。'
+            },
+            standardTwo: {
+                title: '通用 2 寸证件照',
+                size: 'twoInch',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 4,
+                note: '35 × 49 mm，白底，适合常见纸质证件照打印。'
+            },
+            smallOneGeneral: {
+                title: '通用小一寸证件照',
+                size: 'smallOne',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 10,
+                note: '22 × 32 mm，适合部分表格、考试和档案资料。'
+            },
+            smallTwoGeneral: {
+                title: '通用小二寸证件照',
+                size: 'smallTwo',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 6,
+                note: '35 × 45 mm，适合签证、考试和档案类照片。'
+            },
+            civilService: {
+                title: '公务员考试 / 国考报名',
+                size: 'exam295x413',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                trust: 'reference',
+                requirements: ['JPG/JPEG 常见', '白底或蓝底', '宽不低于 295px，高不低于 413px'],
+                note: '常见报名照为 JPG/JPEG、白底或蓝底，宽不低于 295px、高不低于 413px；请以当年报名系统为准。'
+            },
+            postgraduateExam: {
+                title: '研究生考试 / 考研报名',
+                size: 'exam295x413',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '适合考研网上确认和报名资料预处理；具体背景、尺寸和文件大小以研招网/报考点要求为准。'
+            },
+            teacherCert: {
+                title: '教师资格证报名',
+                size: 'exam295x413',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '常见为近期免冠报名照片，白底优先，具体像素和文件大小以报名系统提示为准。'
+            },
+            accountingExam: {
+                title: '会计/职业资格考试',
+                size: 'exam295x413',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '适合多数职业资格报名照预处理；部分考试要求 413 × 531px，可在尺寸下拉中切换。'
+            },
+            computerExam: {
+                title: '计算机等级考试 NCRE',
+                size: 'exam295x413',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '适合计算机等级考试报名照预处理；请按报名系统限制调整像素和文件大小。'
+            },
+            englishExam: {
+                title: '英语四六级 / 外语考试',
+                size: 'exam295x413',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '适合四六级、专四专八等考试报名照片预处理；具体要求以学校或报名系统为准。'
+            },
+            medicalExam: {
+                title: '医师/护士资格考试',
+                size: 'exam295x413',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '适合医师、护士等资格考试报名照预处理；建议上传前核对报名系统审核要求。'
+            },
+            chinaPassport: {
+                title: '中国护照 / 旅行证',
+                size: 'passportChina',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 6,
+                trust: 'official',
+                sourceText: '中国驻美使馆',
+                sourceUrl: 'https://us.china-embassy.gov.cn/lsfw/zj/hzlxz/201903/t20190309_5098803.htm',
+                requirements: ['33 × 48 mm', '白色背景', '头部宽 15-22mm，头部高 28-33mm'],
+                note: '常见规格为 33 × 48 mm、白色背景，头部比例需按办证要求拍摄。'
+            },
+            idCard: {
+                title: '身份证照片',
+                size: 'driverLicense',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 10,
+                note: '身份证采集通常由现场设备完成；此预设适合资料预览和非正式表格使用。'
+            },
+            socialSecurityCard: {
+                title: '社保卡照片',
+                size: 'socialSecurity',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '常见电子社保卡照片为白底，部分地区采用 358 × 441px；请以当地人社平台为准。'
+            },
+            driverLicense: {
+                title: '驾驶证照片',
+                size: 'driverLicense',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 10,
+                note: '常见小一寸规格，白底；不同车管业务可能有差异。'
+            },
+            residencePermit: {
+                title: '居住证照片',
+                size: 'oneInch',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '适合居住证、暂住登记等资料照片预处理；具体规格以当地平台为准。'
+            },
+            hkMacauPass: {
+                title: '港澳通行证 / 出入境',
+                size: 'passportChina',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 6,
+                note: '出入境证件常用白底人像照，拍摄姿态和头部比例需按官方要求。'
+            },
+            chinaVisa: {
+                title: '中国签证',
+                size: 'passportChina',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 6,
+                trust: 'official',
+                sourceText: '中国驻洛杉矶总领馆',
+                sourceUrl: 'https://losangeles.china-consulate.gov.cn/lbqw/lszj/fhqz/202401/t20240103_11216139.htm',
+                requirements: ['48 × 33 mm', '白色背景', '无边框、近期彩色照片'],
+                note: '常见规格为 33 × 48 mm，背景白色或接近白色，无边框。'
+            },
+            usVisa: {
+                title: '美国签证 / EVUS',
+                size: 'usSquare',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 2,
+                trust: 'official',
+                sourceText: 'Travel.State.Gov',
+                sourceUrl: 'https://travel.state.gov/content/travel/en/us-visas/visa-information-resources/photos.html',
+                requirements: ['600 × 600px 电子图像', '纸质 2 × 2 英寸', '白色或近白色背景'],
+                note: '常见纸质规格为 2 × 2 英寸，即约 51 × 51 mm；电子照片常见 600 × 600px。'
+            },
+            japanVisa: {
+                title: '日本旅游签证',
+                size: 'visa45x45',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 4,
+                trust: 'official',
+                sourceText: '日本驻上海总领馆',
+                sourceUrl: 'https://www.shanghai.cn.emb-japan.go.jp/apply/images/shinsei.doc',
+                requirements: ['约 45 × 45 mm', '白底、无阴影', '近期正面免冠照片'],
+                note: '常见规格为 45 × 45 mm，白底、无阴影；不同领区要求可能存在差异。'
+            },
+            schengenVisa: {
+                title: '申根/欧洲签证',
+                size: 'visa35x45',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 6,
+                note: '常见规格为 35 × 45 mm，浅色或白色背景，适合多数欧洲签证照。'
+            },
+            ukVisa: {
+                title: '英国签证',
+                size: 'visa35x45',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 6,
+                trust: 'official',
+                sourceText: 'GOV.UK',
+                sourceUrl: 'https://www.gov.uk/photos-for-passports/photo-requirements',
+                requirements: ['35 × 45 mm', '近照', '头部高度 29-34mm'],
+                note: '常见规格为 35 × 45 mm，浅灰/白色背景；请以签证中心最新要求为准。'
+            },
+            canadaVisa: {
+                title: '加拿大签证',
+                size: 'visa35x45',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 4,
+                trust: 'official',
+                sourceText: 'Canada.ca',
+                sourceUrl: 'https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/temporary-resident-visa-application-photograph-specifications.html',
+                requirements: ['至少 35 × 45 mm', '脸在照片中间', '头部高度 31-36mm'],
+                note: '常见签证照片规格接近 35 × 45 mm，浅色背景；请以加拿大签证中心要求为准。'
+            },
+            australiaVisa: {
+                title: '澳大利亚签证',
+                size: 'visa35x45',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 4,
+                trust: 'official',
+                sourceText: 'Australia Home Affairs',
+                sourceUrl: 'https://immi.homeaffairs.gov.au/citizenship/photo-requirements-for-citizenship-applications',
+                requirements: ['宽 35-40mm，高 45-50mm', '中性或浅灰背景', '头部高度 32-36mm'],
+                note: '适合澳大利亚签证照片预处理，常用浅色背景和 35 × 45 mm 类规格。'
+            },
+            koreaVisa: {
+                title: '韩国签证',
+                size: 'visa35x45',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 6,
+                note: '常见规格为 35 × 45 mm，白底或浅色背景；请以领馆最新要求为准。'
+            },
+            singaporeVisa: {
+                title: '新加坡签证',
+                size: 'visa35x45',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 6,
+                note: '常见规格为 35 × 45 mm，白底或浅色背景；请以申请系统要求为准。'
+            },
+            resumeAvatar: {
+                title: '简历头像',
+                size: 'resumeAvatar',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 1,
+                note: '正方形头像，适合简历、招聘网站和电子资料。'
+            },
+            workBadge: {
+                title: '工牌 / 员工证',
+                size: 'oneInch',
+                dpi: 300,
+                bgColor: '#438edb',
+                copies: 8,
+                note: '常用 1 寸蓝底，适合工牌、员工证和企业档案。'
+            },
+            studentCard: {
+                title: '学生证',
+                size: 'oneInch',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '常用 1 寸白底，适合学生证、报名表和校园资料。'
+            },
+            campusCard: {
+                title: '校园卡',
+                size: 'resumeAvatar',
+                dpi: 300,
+                bgColor: '#438edb',
+                copies: 1,
+                note: '正方形蓝底头像，适合校园卡、系统头像和电子档案。'
+            },
+            onboarding: {
+                title: '入职资料照片',
+                size: 'oneInch',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '常用 1 寸白底，适合入职表、员工档案和资料登记。'
+            },
+            custom: {
+                title: '自定义场景',
+                size: 'custom',
+                dpi: 300,
+                bgColor: '#ffffff',
+                copies: 8,
+                note: '自行设置尺寸、背景、DPI 和排版数量。'
+            }
+        };
+
+        const sheetPresets = {
+            sixInch: { name: '6寸相纸', widthMm: 152, heightMm: 102 },
+            a4: { name: 'A4', widthMm: 210, heightMm: 297 }
+        };
+
+        const state = {
+            image: null,
+            foregroundImage: null,
+            fileName: 'photo',
+            bgColor: '#ffffff',
+            previewMode: 'single',
+            lastSingleCanvas: null,
+            lastSheetCanvas: null,
+            sheetCapacity: 0,
+            sheetTotal: 0,
+            processingToken: 0,
+            faceLandmarks: null,
+            faceLandmarksManual: false,
+            faceLandmarksVisible: false
+        };
+
+        const photoInput = document.getElementById('photoInput');
+        const uploadZone = document.getElementById('uploadZone');
+        const uploadIcon = document.getElementById('uploadIcon');
+        const uploadTitle = document.getElementById('uploadTitle');
+        const uploadHint = document.getElementById('uploadHint');
+        const canvasWrap = document.getElementById('canvasWrap');
+        const previewCanvas = document.getElementById('previewCanvas');
+        const faceLandmarks = document.getElementById('faceLandmarks');
+        const previewSpec = document.getElementById('previewSpec');
+        const statusText = document.getElementById('statusText');
+        const scenarioSearch = document.getElementById('scenarioSearch');
+        const scenarioCategory = document.getElementById('scenarioCategory');
+        const scenarioPreset = document.getElementById('scenarioPreset');
+        const scenarioSummary = document.getElementById('scenarioSummary');
+        const sizePreset = document.getElementById('sizePreset');
+        const customSizeRow = document.getElementById('customSizeRow');
+        const customWidth = document.getElementById('customWidth');
+        const customHeight = document.getElementById('customHeight');
+        const dpiSelect = document.getElementById('dpiSelect');
+        const colorOptions = document.getElementById('colorOptions');
+        const customColor = document.getElementById('customColor');
+        const customSwatch = document.getElementById('customSwatch');
+        const processingNote = document.getElementById('processingNote');
+        const zoomRange = document.getElementById('zoomRange');
+        const offsetXRange = document.getElementById('offsetXRange');
+        const offsetYRange = document.getElementById('offsetYRange');
+        const slimFaceRange = document.getElementById('slimFaceRange');
+        const smoothSkinRange = document.getElementById('smoothSkinRange');
+        const brightenRange = document.getElementById('brightenRange');
+        const warmthRange = document.getElementById('warmthRange');
+        const zoomValue = document.getElementById('zoomValue');
+        const offsetXValue = document.getElementById('offsetXValue');
+        const offsetYValue = document.getElementById('offsetYValue');
+        const slimFaceValue = document.getElementById('slimFaceValue');
+        const smoothSkinValue = document.getElementById('smoothSkinValue');
+        const brightenValue = document.getElementById('brightenValue');
+        const warmthValue = document.getElementById('warmthValue');
+        const sheetPreset = document.getElementById('sheetPreset');
+        const gapSize = document.getElementById('gapSize');
+        const copyCount = document.getElementById('copyCount');
+        const outputFormat = document.getElementById('outputFormat');
+        const targetSize = document.getElementById('targetSize');
+        const customTargetRow = document.getElementById('customTargetRow');
+        const customTargetSize = document.getElementById('customTargetSize');
+        const sheetCapacity = document.getElementById('sheetCapacity');
+        const singleInfo = document.getElementById('singleInfo');
+        const sheetInfo = document.getElementById('sheetInfo');
+        const singleDownloadMeta = document.getElementById('singleDownloadMeta');
+        const sheetDownloadMeta = document.getElementById('sheetDownloadMeta');
+        const downloadSingleBtn = document.getElementById('downloadSingleBtn');
+        const downloadSheetBtn = document.getElementById('downloadSheetBtn');
+        const mobileDownloadSingleBtn = document.getElementById('mobileDownloadSingleBtn');
+        const mobileDownloadSheetBtn = document.getElementById('mobileDownloadSheetBtn');
+        const preloadModelBtn = document.getElementById('preloadModelBtn');
+        const preloadStatus = document.getElementById('preloadStatus');
+        const formatOptions = document.getElementById('formatOptions');
+        const previewModeButtons = document.querySelectorAll('[data-preview-mode]');
+        const scenarioToCategory = Object.entries(scenarioGroups).reduce((result, [category, group]) => {
+            group.scenarios.forEach((key) => {
+                result[key] = category;
+            });
+            return result;
+        }, {});
+        let previewDrag = null;
+        let landmarkDrag = null;
+
+        uploadZone.addEventListener('click', () => photoInput.click());
+        uploadZone.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                photoInput.click();
+            }
+        });
+        uploadZone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+        uploadZone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const file = event.dataTransfer.files[0];
+            if (file) loadPhoto(file);
+        });
+        photoInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) loadPhoto(file);
+            event.target.value = '';
+        });
+
+        [
+            zoomRange,
+            offsetXRange,
+            offsetYRange,
+            smoothSkinRange,
+            brightenRange,
+            warmthRange,
+            gapSize
+        ].forEach((control) => control.addEventListener('input', updatePreview));
+
+        slimFaceRange.addEventListener('input', () => {
+            state.faceLandmarksVisible = Number(slimFaceRange.value) > 0;
+            updatePreview();
+        });
+
+        [sheetPreset, outputFormat].forEach((control) => {
+            control.addEventListener('input', updatePreview);
+            control.addEventListener('change', updatePreview);
+        });
+
+        formatOptions.addEventListener('click', (event) => {
+            const button = event.target.closest('[data-format]');
+            if (!button) return;
+            outputFormat.value = button.dataset.format;
+            syncFormatButtons();
+            updatePreview();
+        });
+
+        targetSize.addEventListener('change', () => {
+            customTargetRow.style.display = targetSize.value === 'custom' ? 'grid' : 'none';
+            updatePreview();
+        });
+
+        customTargetSize.addEventListener('input', updatePreview);
+
+        scenarioSearch.addEventListener('input', () => {
+            const keyword = scenarioSearch.value.trim();
+            if (!keyword) {
+                populateScenarioOptions(scenarioCategory.value, scenarioPreset.value);
+                applyScenarioPreset(scenarioPreset.value);
+                return;
+            }
+            populateScenarioSearchResults(keyword);
+            applyScenarioPreset(scenarioPreset.value);
+        });
+
+        [
+            customWidth,
+            customHeight,
+            dpiSelect,
+            copyCount
+        ].forEach((control) => {
+            const markCustom = () => {
+                scenarioPreset.value = 'custom';
+                scenarioCategory.value = 'custom';
+                populateScenarioOptions('custom', 'custom');
+                updateScenarioSummary();
+                updatePreview();
+            };
+            control.addEventListener('input', markCustom);
+            control.addEventListener('change', markCustom);
+        });
+
+        scenarioCategory.addEventListener('change', () => {
+            scenarioSearch.value = '';
+            const group = scenarioGroups[scenarioCategory.value] || scenarioGroups.common;
+            populateScenarioOptions(scenarioCategory.value, group.scenarios[0]);
+            applyScenarioPreset(scenarioPreset.value);
+        });
+
+        scenarioPreset.addEventListener('change', () => {
+            const category = scenarioToCategory[scenarioPreset.value];
+            if (category) {
+                scenarioCategory.value = category;
+            }
+            applyScenarioPreset(scenarioPreset.value);
+        });
+
+        sizePreset.addEventListener('change', () => {
+            scenarioPreset.value = 'custom';
+            scenarioCategory.value = 'custom';
+            populateScenarioOptions('custom', 'custom');
+            customSizeRow.style.display = sizePreset.value === 'custom' ? 'grid' : 'none';
+            updateScenarioSummary();
+            updatePreview();
+        });
+
+        colorOptions.addEventListener('click', (event) => {
+            const button = event.target.closest('.color-option');
+            if (!button) return;
+            colorOptions.querySelectorAll('.color-option').forEach((item) => item.classList.remove('active'));
+            button.classList.add('active');
+            if (button.dataset.color === 'custom') {
+                state.bgColor = customColor.value;
+                customColor.click();
+            } else {
+                state.bgColor = button.dataset.color;
+            }
+            scenarioCategory.value = 'custom';
+            populateScenarioOptions('custom', 'custom');
+            scenarioPreset.value = 'custom';
+            updateScenarioSummary();
+            updatePreview();
+        });
+
+        customColor.addEventListener('input', () => {
+            state.bgColor = customColor.value;
+            customSwatch.style.background = customColor.value;
+            colorOptions.querySelectorAll('.color-option').forEach((item) => item.classList.remove('active'));
+            colorOptions.querySelector('[data-color="custom"]').classList.add('active');
+            scenarioCategory.value = 'custom';
+            populateScenarioOptions('custom', 'custom');
+            scenarioPreset.value = 'custom';
+            updateScenarioSummary();
+            updatePreview();
+        });
+
+        previewModeButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                state.previewMode = button.dataset.previewMode;
+                previewModeButtons.forEach((item) => item.classList.toggle('active', item === button));
+                updatePreview();
+            });
+        });
+
+        canvasWrap.addEventListener('pointerdown', () => {
+            if (!state.image || state.previewMode !== 'single' || Number(slimFaceRange.value) <= 0) return;
+            state.faceLandmarksVisible = true;
+            positionFaceLandmarks();
+        });
+
+        document.addEventListener('pointerdown', (event) => {
+            if (canvasWrap.contains(event.target) || event.target === slimFaceRange) return;
+            if (!state.faceLandmarksVisible) return;
+            state.faceLandmarksVisible = false;
+            positionFaceLandmarks();
+        });
+
+        previewCanvas.addEventListener('pointerdown', (event) => {
+            if (!state.image || state.previewMode !== 'single') return;
+            previewCanvas.setPointerCapture(event.pointerId);
+            previewDrag = {
+                x: event.clientX,
+                y: event.clientY,
+                offsetX: Number(offsetXRange.value),
+                offsetY: Number(offsetYRange.value)
+            };
+        });
+
+        previewCanvas.addEventListener('pointermove', (event) => {
+            if (!previewDrag) return;
+            const rect = previewCanvas.getBoundingClientRect();
+            const nextX = previewDrag.offsetX + ((event.clientX - previewDrag.x) / Math.max(1, rect.width)) * 200;
+            const nextY = previewDrag.offsetY + ((event.clientY - previewDrag.y) / Math.max(1, rect.height)) * 200;
+            offsetXRange.value = Math.round(clampNumber(nextX, -100, 100));
+            offsetYRange.value = Math.round(clampNumber(nextY, -100, 100));
+            updatePreview();
+        });
+
+        previewCanvas.addEventListener('pointerup', () => {
+            previewDrag = null;
+        });
+
+        previewCanvas.addEventListener('pointercancel', () => {
+            previewDrag = null;
+        });
+
+        canvasWrap.addEventListener('wheel', (event) => {
+            if (!state.image || state.previewMode !== 'single') return;
+            event.preventDefault();
+            const delta = event.deltaY > 0 ? -5 : 5;
+            zoomRange.value = Math.round(clampNumber(Number(zoomRange.value) + delta, Number(zoomRange.min), Number(zoomRange.max)));
+            updatePreview();
+        }, { passive: false });
+
+        faceLandmarks.querySelectorAll('[data-point]').forEach((point) => {
+            point.addEventListener('pointerdown', (event) => {
+                if (!state.image || state.previewMode !== 'single') return;
+                event.preventDefault();
+                event.stopPropagation();
+                point.setPointerCapture(event.pointerId);
+                landmarkDrag = point.dataset.point;
+                state.faceLandmarksManual = true;
+                updateLandmarkFromPointer(event, landmarkDrag);
+            });
+
+            point.addEventListener('pointermove', (event) => {
+                if (landmarkDrag !== point.dataset.point) return;
+                event.preventDefault();
+                updateLandmarkFromPointer(event, landmarkDrag);
+            });
+
+            point.addEventListener('pointerup', () => {
+                landmarkDrag = null;
+            });
+
+            point.addEventListener('pointercancel', () => {
+                landmarkDrag = null;
+            });
+        });
+
+        window.addEventListener('resize', positionFaceLandmarks);
+
+        downloadSingleBtn.addEventListener('click', () => downloadCanvas(state.lastSingleCanvas, `${state.fileName}-single`));
+        downloadSheetBtn.addEventListener('click', () => downloadCanvas(state.lastSheetCanvas, `${state.fileName}-sheet`));
+        mobileDownloadSingleBtn.addEventListener('click', () => downloadCanvas(state.lastSingleCanvas, `${state.fileName}-single`));
+        mobileDownloadSheetBtn.addEventListener('click', () => downloadCanvas(state.lastSheetCanvas, `${state.fileName}-sheet`));
+        preloadModelBtn.addEventListener('click', preloadSmartModel);
+
+        populateScenarioOptions(scenarioCategory.value, 'standardOne');
+        applyScenarioPreset(scenarioPreset.value);
+        drawEmptyPreview();
+        updatePreview();
+
+        function loadPhoto(file) {
+            if (!file.type.startsWith('image/')) {
+                setStatus('请选择图片文件', true);
+                return;
+            }
+
+            processingNote.textContent = '正在识别图片中的人物区域，并生成新的背景效果，请稍等。';
+            const image = new Image();
+            const url = URL.createObjectURL(file);
+            image.onload = () => {
+                URL.revokeObjectURL(url);
+                state.image = image;
+                state.foregroundImage = image;
+                state.fileName = file.name.replace(/\.[^.]+$/, '') || 'photo';
+                state.faceLandmarks = null;
+                state.faceLandmarksManual = false;
+                state.faceLandmarksVisible = Number(slimFaceRange.value) > 0;
+                setStatus('正在识别图片...');
+                setProcessing(true);
+                updatePreview();
+                processForeground(file, image);
+            };
+            image.onerror = () => {
+                URL.revokeObjectURL(url);
+                setStatus('图片加载失败', true);
+            };
+            image.src = url;
+        }
+
+        function updatePreview() {
+            zoomValue.textContent = `${zoomRange.value}%`;
+            offsetXValue.textContent = offsetXRange.value;
+            offsetYValue.textContent = offsetYRange.value;
+            slimFaceValue.textContent = slimFaceRange.value;
+            smoothSkinValue.textContent = smoothSkinRange.value;
+            brightenValue.textContent = brightenRange.value;
+            warmthValue.textContent = warmthRange.value;
+
+            const spec = getCurrentSize();
+            const dpi = Number(dpiSelect.value);
+            const widthPx = spec.widthPx || mmToPx(spec.widthMm, dpi);
+            const heightPx = spec.heightPx || mmToPx(spec.heightMm, dpi);
+            const sizeLabel = getSizeLabel(spec, widthPx, heightPx);
+            singleInfo.textContent = `${spec.name} · ${sizeLabel}`;
+
+            const sheet = sheetPresets[sheetPreset.value];
+            const sheetWidthPx = mmToPx(sheet.widthMm, dpi);
+            const sheetHeightPx = mmToPx(sheet.heightMm, dpi);
+            sheetInfo.textContent = `${sheet.name} · ${sheetWidthPx} × ${sheetHeightPx} px`;
+            updatePreviewSpec(sizeLabel);
+            updateSheetCapacity(widthPx, heightPx, sheetWidthPx, sheetHeightPx, dpi);
+            updateDownloadLabels();
+
+            if (!state.image) {
+                if (state.previewMode === 'sheet') {
+                    drawEmptyPreview(sheetWidthPx, sheetHeightPx, '上传照片后预览排版');
+                } else if (state.previewMode === 'compare') {
+                    drawEmptyPreview(widthPx * 2, heightPx, '上传照片后预览对比');
+                } else {
+                    drawEmptyPreview(widthPx, heightPx, '上传照片后预览单张');
+                }
+                updateFaceLandmarkVisibility();
+                return;
+            }
+
+            state.lastSingleCanvas = renderSingleCanvas(widthPx, heightPx);
+            state.lastSheetCanvas = renderSheetCanvas(state.lastSingleCanvas, sheetWidthPx, sheetHeightPx, dpi);
+            updateSheetCapacity(widthPx, heightPx, sheetWidthPx, sheetHeightPx, dpi);
+            ensureFaceLandmarks(state.lastSingleCanvas);
+            if (state.previewMode === 'sheet') {
+                drawScaledPreview(state.lastSheetCanvas);
+            } else if (state.previewMode === 'compare') {
+                drawScaledPreview(renderCompareCanvas(widthPx, heightPx));
+            } else {
+                drawScaledPreview(state.lastSingleCanvas);
+            }
+            positionFaceLandmarks();
+        }
+
+        function getCurrentSize() {
+            if (sizePreset.value === 'custom') {
+                return {
+                    name: '自定义',
+                    widthMm: clampNumber(Number(customWidth.value), 10, 100),
+                    heightMm: clampNumber(Number(customHeight.value), 10, 140)
+                };
+            }
+            return sizePresets[sizePreset.value];
+        }
+
+        function getSizeLabel(spec, widthPx, heightPx) {
+            return spec.widthPx
+                ? `${spec.widthPx} × ${spec.heightPx} px`
+                : `${spec.widthMm} × ${spec.heightMm} mm · ${widthPx} × ${heightPx} px`;
+        }
+
+        function updatePreviewSpec(sizeLabel) {
+            const preset = scenarioPresets[scenarioPreset.value] || scenarioPresets.custom;
+            const formatLabel = outputFormat.value === 'png' ? 'PNG' : 'JPG';
+            const modeNote = state.previewMode === 'sheet'
+                ? ' · 由当前单张生成排版'
+                : state.previewMode === 'compare'
+                    ? ' · 左未美颜 / 右当前效果'
+                    : '';
+            previewSpec.innerHTML = `<strong>${preset.title}</strong><br>${sizeLabel} · ${getColorName(state.bgColor)}底 · ${formatLabel}${modeNote}`;
+        }
+
+        function updateDownloadLabels() {
+            syncFormatButtons();
+            const targetKb = getTargetKilobytes();
+            const formatLabel = targetKb !== null || outputFormat.value === 'jpeg' ? 'JPG' : 'PNG';
+            const sizeLabel = targetKb ? ` · 目标 ${targetKb}KB` : '';
+            singleDownloadMeta.textContent = `单张证件照 ${formatLabel}${sizeLabel}`;
+            sheetDownloadMeta.textContent = `多张平铺 ${formatLabel}${sizeLabel}`;
+            downloadSingleBtn.textContent = `下载${formatLabel}`;
+            downloadSheetBtn.textContent = `下载${formatLabel}`;
+            mobileDownloadSingleBtn.textContent = `下载单张${formatLabel}`;
+            mobileDownloadSheetBtn.textContent = `下载排版${formatLabel}`;
+        }
+
+        function syncFormatButtons() {
+            formatOptions.querySelectorAll('[data-format]').forEach((button) => {
+                button.classList.toggle('active', button.dataset.format === outputFormat.value);
+            });
+        }
+
+        function updateSheetCapacity(photoWidth, photoHeight, sheetWidth, sheetHeight, dpi) {
+            const layout = calculateSheetLayout(photoWidth, photoHeight, sheetWidth, sheetHeight, dpi);
+            state.sheetCapacity = layout.capacity;
+            state.sheetTotal = Math.min(clampNumber(Number(copyCount.value), 1, 40), layout.capacity);
+            sheetCapacity.textContent = `${sheetPresets[sheetPreset.value].name}可排 ${layout.capacity} 张，当前生成 ${state.sheetTotal} 张。`;
+        }
+
+        function populateScenarioOptions(category, selectedKey) {
+            const group = scenarioGroups[category] || scenarioGroups.common;
+            scenarioPreset.innerHTML = group.scenarios.map((key) => {
+                const preset = scenarioPresets[key];
+                return `<option value="${key}">${preset.title}</option>`;
+            }).join('');
+            scenarioPreset.value = selectedKey && group.scenarios.includes(selectedKey)
+                ? selectedKey
+                : group.scenarios[0];
+        }
+
+        function populateScenarioSearchResults(keyword) {
+            const normalized = keyword.toLowerCase();
+            const matches = Object.entries(scenarioPresets)
+                .filter(([key, preset]) => {
+                    if (key === 'custom') return false;
+                    const group = scenarioGroups[scenarioToCategory[key]];
+                    const category = group ? group.label : '';
+                    return `${category} ${preset.title} ${preset.note}`.toLowerCase().includes(normalized);
+                });
+
+            scenarioPreset.innerHTML = matches.length
+                ? matches.map(([key, preset]) => {
+                    const group = scenarioGroups[scenarioToCategory[key]];
+                    const category = group ? group.label : '场景';
+                    return `<option value="${key}">${category} / ${preset.title}</option>`;
+                }).join('')
+                : '<option value="custom">自定义场景</option>';
+
+            scenarioPreset.value = matches.length ? matches[0][0] : 'custom';
+            scenarioCategory.value = scenarioToCategory[scenarioPreset.value] || 'custom';
+        }
+
+        function applyScenarioPreset(key) {
+            const preset = scenarioPresets[key] || scenarioPresets.standardOne;
+            sizePreset.value = preset.size;
+            dpiSelect.value = String(preset.dpi);
+            copyCount.value = preset.copies;
+            setBackgroundColor(preset.bgColor);
+            customSizeRow.style.display = preset.size === 'custom' ? 'grid' : 'none';
+            updateScenarioSummary();
+            updatePreview();
+        }
+
+        function updateScenarioSummary() {
+            const preset = scenarioPresets[scenarioPreset.value] || scenarioPresets.custom;
+            const trust = getTrustMeta(preset.trust);
+            const source = preset.sourceUrl
+                ? `<a class="scenario-source" href="${preset.sourceUrl}" target="_blank" rel="noopener">${preset.sourceText || '查看来源'}</a>`
+                : '';
+            const requirements = getRequirements(preset).map((item) => `<li>${item}</li>`).join('');
+            scenarioSummary.innerHTML = `
+                <strong>${preset.title}</strong>
+                <div class="scenario-meta">
+                    <span class="trust-badge ${trust.className}">${trust.label}</span>
+                    ${source}
+                </div>
+                <div>${preset.note}</div>
+                <ul class="scenario-requirements">${requirements}</ul>
+            `;
+        }
+
+        function getTrustMeta(trust) {
+            if (trust === 'official') return { label: '官方核对', className: 'official' };
+            if (trust === 'custom') return { label: '自定义', className: 'custom' };
+            return { label: '常见参考', className: 'reference' };
+        }
+
+        function getRequirements(preset) {
+            if (preset.requirements && preset.requirements.length) {
+                return preset.requirements;
+            }
+            return ['常见规格参考', '正式提交前请核对最新要求'];
+        }
+
+        function setBackgroundColor(color) {
+            state.bgColor = color;
+            const matched = colorOptions.querySelector(`[data-color="${color}"]`);
+            colorOptions.querySelectorAll('.color-option').forEach((item) => {
+                item.classList.toggle('active', item === matched);
+            });
+
+            if (!matched) {
+                customColor.value = color;
+                customSwatch.style.background = color;
+                colorOptions.querySelector('[data-color="custom"]').classList.add('active');
+            }
+        }
+
+        function getColorName(color) {
+            const colorMap = {
+                '#ffffff': '白',
+                '#438edb': '蓝',
+                '#d92d20': '红'
+            };
+            return colorMap[color.toLowerCase()] || '自定义';
+        }
+
+        function renderSingleCanvas(widthPx, heightPx, options = {}) {
+            const withBeauty = options.withBeauty !== false;
+            const canvas = document.createElement('canvas');
+            canvas.width = widthPx;
+            canvas.height = heightPx;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = state.bgColor;
+            ctx.fillRect(0, 0, widthPx, heightPx);
+
+            const imageLayer = createCroppedImageLayer(widthPx, heightPx);
+            ensureFaceLandmarks(imageLayer);
+            if (withBeauty) {
+                applyBeautyEffects(imageLayer);
+            }
+            ctx.drawImage(imageLayer, 0, 0);
+            return canvas;
+        }
+
+        function createCroppedImageLayer(widthPx, heightPx) {
+            const canvas = document.createElement('canvas');
+            canvas.width = widthPx;
+            canvas.height = heightPx;
+            const ctx = canvas.getContext('2d');
+
+            const image = state.foregroundImage || state.image;
+            const coverScale = Math.max(widthPx / image.naturalWidth, heightPx / image.naturalHeight);
+            const userScale = Number(zoomRange.value) / 100;
+            const scale = coverScale * userScale;
+            const drawWidth = image.naturalWidth * scale;
+            const drawHeight = image.naturalHeight * scale;
+            const maxOffsetX = Math.max(0, (drawWidth - widthPx) / 2);
+            const maxOffsetY = Math.max(0, (drawHeight - heightPx) / 2);
+            const offsetX = (Number(offsetXRange.value) / 100) * maxOffsetX;
+            const offsetY = (Number(offsetYRange.value) / 100) * maxOffsetY;
+            const x = (widthPx - drawWidth) / 2 + offsetX;
+            const y = (heightPx - drawHeight) / 2 + offsetY;
+
+            ctx.drawImage(image, x, y, drawWidth, drawHeight);
+            return canvas;
+        }
+
+        function applyBeautyEffects(canvas) {
+            const slim = Number(slimFaceRange.value) / 100;
+            const smooth = Number(smoothSkinRange.value) / 100;
+            const brighten = Number(brightenRange.value);
+            const warmth = Number(warmthRange.value);
+
+            if (slim > 0) {
+                applySlimFace(canvas, slim);
+            }
+            if (smooth > 0) {
+                applySkinSmoothing(canvas, smooth);
+            }
+            if (brighten > 0 || warmth > 0) {
+                applyToneAdjustments(canvas, brighten, warmth);
+            }
+        }
+
+        function ensureFaceLandmarks(canvas) {
+            if (!canvas || state.faceLandmarksManual && state.faceLandmarks) return;
+            if (state.faceLandmarks) return;
+
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const region = estimateFaceRegion(imageData, canvas.width, canvas.height);
+            state.faceLandmarks = createDefaultFaceLandmarks(region, canvas.width, canvas.height);
+        }
+
+        function createDefaultFaceLandmarks(region, width, height) {
+            const eyeY = region.centerY - region.radiusY * 0.42;
+            const eyeGap = region.radiusX * 0.72;
+            const mouthY = region.centerY + region.radiusY * 0.42;
+            return {
+                leftEye: normalizePoint(region.centerX - eyeGap, eyeY, width, height),
+                rightEye: normalizePoint(region.centerX + eyeGap, eyeY, width, height),
+                mouth: normalizePoint(region.centerX, mouthY, width, height)
+            };
+        }
+
+        function normalizePoint(x, y, width, height) {
+            return {
+                x: clampNumber(x / Math.max(1, width), 0.02, 0.98),
+                y: clampNumber(y / Math.max(1, height), 0.02, 0.98)
+            };
+        }
+
+        function getLandmarkFaceRegion(width, height) {
+            if (!state.faceLandmarks) return null;
+            const leftEye = denormalizePoint(state.faceLandmarks.leftEye, width, height);
+            const rightEye = denormalizePoint(state.faceLandmarks.rightEye, width, height);
+            const mouth = denormalizePoint(state.faceLandmarks.mouth, width, height);
+            const eyeCenter = {
+                x: (leftEye.x + rightEye.x) / 2,
+                y: (leftEye.y + rightEye.y) / 2
+            };
+            const eyeDistance = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y);
+            const eyeToMouth = Math.hypot(mouth.x - eyeCenter.x, mouth.y - eyeCenter.y);
+            const faceCenterX = eyeCenter.x * 0.45 + mouth.x * 0.55;
+            const faceCenterY = eyeCenter.y + Math.max(eyeToMouth, height * 0.12) * 0.62;
+
+            return {
+                centerX: faceCenterX,
+                centerY: faceCenterY,
+                radiusX: clampNumber(eyeDistance * 1.08, width * 0.18, width * 0.48),
+                radiusY: clampNumber(eyeToMouth * 1.36, height * 0.18, height * 0.48)
+            };
+        }
+
+        function denormalizePoint(point, width, height) {
+            return {
+                x: point.x * width,
+                y: point.y * height
+            };
+        }
+
+        function updateLandmarkFromPointer(event, pointName) {
+            const rect = previewCanvas.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+            if (!state.faceLandmarks) {
+                state.faceLandmarks = createDefaultFaceLandmarks({
+                    centerX: previewCanvas.width / 2,
+                    centerY: previewCanvas.height * 0.38,
+                    radiusX: previewCanvas.width * 0.3,
+                    radiusY: previewCanvas.height * 0.24
+                }, previewCanvas.width, previewCanvas.height);
+            }
+            state.faceLandmarks[pointName] = {
+                x: clampNumber((event.clientX - rect.left) / rect.width, 0.02, 0.98),
+                y: clampNumber((event.clientY - rect.top) / rect.height, 0.02, 0.98)
+            };
+            positionFaceLandmarks();
+            updatePreview();
+        }
+
+        function positionFaceLandmarks() {
+            updateFaceLandmarkVisibility();
+            if (!faceLandmarks.classList.contains('show') || !state.faceLandmarks) return;
+
+            const canvasRect = previewCanvas.getBoundingClientRect();
+            const wrapRect = canvasWrap.getBoundingClientRect();
+            faceLandmarks.querySelectorAll('[data-point]').forEach((point) => {
+                const landmark = state.faceLandmarks[point.dataset.point];
+                if (!landmark) return;
+                point.style.left = `${canvasRect.left - wrapRect.left + canvasRect.width * landmark.x}px`;
+                point.style.top = `${canvasRect.top - wrapRect.top + canvasRect.height * landmark.y}px`;
+            });
+        }
+
+        function updateFaceLandmarkVisibility() {
+            const shouldShow = Boolean(
+                state.image &&
+                state.previewMode === 'single' &&
+                Number(slimFaceRange.value) > 0 &&
+                state.faceLandmarksVisible
+            );
+            faceLandmarks.classList.toggle('show', shouldShow);
+        }
+
+        function applySlimFace(canvas, strength) {
+            const ctx = canvas.getContext('2d');
+            const source = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const result = ctx.createImageData(canvas.width, canvas.height);
+            const width = canvas.width;
+            const height = canvas.height;
+            const faceRegion = getLandmarkFaceRegion(width, height) || estimateFaceRegion(source, width, height);
+            const centerX = faceRegion.centerX;
+            const centerY = faceRegion.centerY;
+            const radiusX = faceRegion.radiusX;
+            const radiusY = faceRegion.radiusY;
+            const amount = Math.min(0.18, strength * 0.45);
+
+            for (let y = 0; y < height; y += 1) {
+                for (let x = 0; x < width; x += 1) {
+                    const dx = x - centerX;
+                    const dy = y - centerY;
+                    const ellipse = (dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY);
+                    let sourceX = x;
+
+                    if (ellipse < 1 && Math.abs(dx) > radiusX * 0.18) {
+                        const falloff = Math.pow(1 - ellipse, 1.4);
+                        const sideRatio = Math.min(1, Math.abs(dx) / radiusX);
+                        sourceX = centerX + dx * (1 + amount * falloff * sideRatio);
+                    }
+
+                    copyPixelNearest(source, result, sourceX, y, x, y, width, height);
+                }
+            }
+
+            ctx.putImageData(result, 0, 0);
+        }
+
+        function estimateFaceRegion(imageData, width, height) {
+            const subject = getAlphaBounds(imageData.data, width, height, 0, height);
+            if (!subject) {
+                return {
+                    centerX: width / 2,
+                    centerY: height * 0.34,
+                    radiusX: width * 0.34,
+                    radiusY: height * 0.26
+                };
+            }
+
+            const subjectHeight = subject.bottom - subject.top + 1;
+            const upperLimit = Math.min(height, Math.round(subject.top + subjectHeight * 0.46));
+            const upper = getAlphaBounds(imageData.data, width, height, subject.top, upperLimit) || subject;
+            const faceWidth = Math.max(24, upper.right - upper.left + 1);
+            const faceHeight = Math.max(24, upper.bottom - upper.top + 1);
+
+            return {
+                centerX: (upper.left + upper.right) / 2,
+                centerY: upper.top + faceHeight * 0.52,
+                radiusX: Math.max(18, faceWidth * 0.48),
+                radiusY: Math.max(22, faceHeight * 0.58)
+            };
+        }
+
+        function getAlphaBounds(data, width, height, startY, endY) {
+            let left = width;
+            let right = -1;
+            let top = height;
+            let bottom = -1;
+
+            for (let y = Math.max(0, startY); y < Math.min(height, endY); y += 1) {
+                for (let x = 0; x < width; x += 1) {
+                    const alpha = data[(y * width + x) * 4 + 3];
+                    if (alpha > 24) {
+                        if (x < left) left = x;
+                        if (x > right) right = x;
+                        if (y < top) top = y;
+                        if (y > bottom) bottom = y;
+                    }
+                }
+            }
+
+            if (right < left || bottom < top) return null;
+            return { left, right, top, bottom };
+        }
+
+        function copyPixelNearest(source, target, sourceX, sourceY, targetX, targetY, width, height) {
+            const sx = Math.max(0, Math.min(width - 1, Math.round(sourceX)));
+            const sy = Math.max(0, Math.min(height - 1, Math.round(sourceY)));
+            const sourceIndex = (sy * width + sx) * 4;
+            const targetIndex = (targetY * width + targetX) * 4;
+            target.data[targetIndex] = source.data[sourceIndex];
+            target.data[targetIndex + 1] = source.data[sourceIndex + 1];
+            target.data[targetIndex + 2] = source.data[sourceIndex + 2];
+            target.data[targetIndex + 3] = source.data[sourceIndex + 3];
+        }
+
+        function applySkinSmoothing(canvas, strength) {
+            const ctx = canvas.getContext('2d');
+            const original = document.createElement('canvas');
+            original.width = canvas.width;
+            original.height = canvas.height;
+            original.getContext('2d').drawImage(canvas, 0, 0);
+
+            ctx.save();
+            ctx.globalAlpha = 0.16 + strength * 0.22;
+            ctx.filter = `blur(${Math.max(0.5, strength * 2.2)}px)`;
+            ctx.drawImage(original, 0, 0);
+            ctx.restore();
+
+            ctx.save();
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.drawImage(original, 0, 0);
+            ctx.restore();
+        }
+
+        function applyToneAdjustments(canvas, brighten, warmth) {
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            const brightenFactor = brighten * 1.2;
+            const warmFactor = warmth * 0.8;
+
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i + 3] === 0) continue;
+                const alpha = data[i + 3] / 255;
+                data[i] = clampColor(data[i] + brightenFactor * alpha + warmFactor * alpha);
+                data[i + 1] = clampColor(data[i + 1] + brightenFactor * alpha + warmFactor * 0.38 * alpha);
+                data[i + 2] = clampColor(data[i + 2] + brightenFactor * 0.86 * alpha - warmFactor * 0.18 * alpha);
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function clampColor(value) {
+            return Math.max(0, Math.min(255, Math.round(value)));
+        }
+
+        async function processForeground(file, fallbackImage) {
+            const token = state.processingToken + 1;
+            state.processingToken = token;
+
+            try {
+                const removeBackground = await loadBackgroundRemoval();
+                if (state.processingToken !== token) return;
+                setStatus('正在识别人像并替换背景...');
+                processingNote.textContent = '正在识别人像边缘并生成透明前景，请保持页面打开。';
+                const blob = await removeBackground(file, {
+                    model: 'isnet_quint8',
+                    output: {
+                        format: 'image/png',
+                        type: 'foreground'
+                    }
+                });
+                if (state.processingToken !== token) return;
+                const foreground = await blobToImage(blob);
+                if (state.processingToken !== token) return;
+                state.foregroundImage = foreground;
+                if (!state.faceLandmarksManual) {
+                    state.faceLandmarks = null;
+                }
+                setProcessing(false);
+                setStatus(`背景处理完成，可下载 · 原图 ${fallbackImage.naturalWidth} × ${fallbackImage.naturalHeight}px`);
+                updatePreview();
+            } catch (error) {
+                console.error('智能抠图失败:', error);
+                state.foregroundImage = fallbackImage;
+                setProcessing(false);
+                setStatus('智能抠图加载失败，当前仅显示原图裁切', true);
+                updatePreview();
+            }
+        }
+
+        async function preloadSmartModel() {
+            preloadModelBtn.disabled = true;
+            preloadStatus.textContent = '正在预热智能抠图，请稍等。';
+            try {
+                const module = await loadBackgroundRemovalModule();
+                if (module.preload) {
+                    await module.preload({ model: 'isnet_quint8' });
+                }
+                preloadStatus.textContent = '智能抠图已预热，上传照片时会更快。';
+            } catch (error) {
+                console.error('预热失败:', error);
+                preloadStatus.textContent = '预热失败，上传时仍会自动加载。';
+            } finally {
+                preloadModelBtn.disabled = false;
+            }
+        }
+
+        async function loadBackgroundRemovalModule() {
+            if (window.__photoIdBackgroundRemovalModule) {
+                return window.__photoIdBackgroundRemovalModule;
+            }
+            window.__photoIdBackgroundRemovalModule = await import('https://esm.sh/@imgly/background-removal@1.5.8');
+            return window.__photoIdBackgroundRemovalModule;
+        }
+
+        async function loadBackgroundRemoval() {
+            if (window.__photoIdRemoveBackground) {
+                return window.__photoIdRemoveBackground;
+            }
+            const module = await loadBackgroundRemovalModule();
+            window.__photoIdRemoveBackground = module.default || module.removeBackground;
+            return window.__photoIdRemoveBackground;
+        }
+
+        function blobToImage(blob) {
+            return new Promise((resolve, reject) => {
+                const image = new Image();
+                const url = URL.createObjectURL(blob);
+                image.onload = () => {
+                    URL.revokeObjectURL(url);
+                    resolve(image);
+                };
+                image.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    reject(new Error('前景图片加载失败'));
+                };
+                image.src = url;
+            });
+        }
+
+        function renderSheetCanvas(singleCanvas, sheetWidthPx, sheetHeightPx, dpi) {
+            const canvas = document.createElement('canvas');
+            canvas.width = sheetWidthPx;
+            canvas.height = sheetHeightPx;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, sheetWidthPx, sheetHeightPx);
+
+            const layout = calculateSheetLayout(singleCanvas.width, singleCanvas.height, sheetWidthPx, sheetHeightPx, dpi);
+            const total = Math.min(clampNumber(Number(copyCount.value), 1, 40), layout.capacity);
+            state.sheetCapacity = layout.capacity;
+            state.sheetTotal = total;
+
+            for (let i = 0; i < total; i += 1) {
+                const col = i % layout.cols;
+                const row = Math.floor(i / layout.cols);
+                const x = layout.startX + col * (singleCanvas.width + layout.gapPx);
+                const y = layout.startY + row * (singleCanvas.height + layout.gapPx);
+                ctx.drawImage(singleCanvas, x, y);
+            }
+
+            return canvas;
+        }
+
+        function renderCompareCanvas(widthPx, heightPx) {
+            const beforeCanvas = renderSingleCanvas(widthPx, heightPx, { withBeauty: false });
+            const afterCanvas = state.lastSingleCanvas || renderSingleCanvas(widthPx, heightPx);
+            const gap = Math.max(16, Math.round(widthPx * 0.06));
+            const labelHeight = Math.max(34, Math.round(heightPx * 0.08));
+            const canvas = document.createElement('canvas');
+            canvas.width = widthPx * 2 + gap;
+            canvas.height = heightPx + labelHeight;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(beforeCanvas, 0, 0);
+            ctx.drawImage(afterCanvas, widthPx + gap, 0);
+            drawCompareLabel(ctx, '未美颜', widthPx / 2, heightPx + labelHeight / 2, labelHeight);
+            drawCompareLabel(ctx, '当前效果', widthPx + gap + widthPx / 2, heightPx + labelHeight / 2, labelHeight);
+            return canvas;
+        }
+
+        function drawCompareLabel(ctx, text, x, y, labelHeight) {
+            ctx.fillStyle = '#1f2328';
+            ctx.font = `${Math.max(12, Math.round(labelHeight * 0.42))}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, x, y);
+        }
+
+        function calculateSheetLayout(photoWidth, photoHeight, sheetWidth, sheetHeight, dpi) {
+            const gapPx = mmToPx(clampNumber(Number(gapSize.value), 0, 10), dpi);
+            const cols = Math.max(1, Math.floor((sheetWidth + gapPx) / (photoWidth + gapPx)));
+            const rows = Math.max(1, Math.floor((sheetHeight + gapPx) / (photoHeight + gapPx)));
+            const capacity = cols * rows;
+            const usedWidth = cols * photoWidth + (cols - 1) * gapPx;
+            return {
+                gapPx,
+                cols,
+                rows,
+                capacity,
+                startX: Math.max(0, Math.floor((sheetWidth - usedWidth) / 2)),
+                startY: Math.max(0, gapPx)
+            };
+        }
+
+        function drawScaledPreview(sourceCanvas) {
+            previewCanvas.classList.toggle('preview-sheet', state.previewMode === 'sheet');
+            previewCanvas.classList.toggle('preview-compare', state.previewMode === 'compare');
+            previewCanvas.classList.toggle('preview-single', state.previewMode !== 'sheet');
+            const ctx = previewCanvas.getContext('2d');
+            previewCanvas.width = sourceCanvas.width;
+            previewCanvas.height = sourceCanvas.height;
+            ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+            ctx.drawImage(sourceCanvas, 0, 0);
+            requestAnimationFrame(positionFaceLandmarks);
+        }
+
+        function drawEmptyPreview(width = 295, height = 413, text = '上传照片后预览') {
+            previewCanvas.classList.toggle('preview-sheet', state.previewMode === 'sheet');
+            previewCanvas.classList.toggle('preview-compare', state.previewMode === 'compare');
+            previewCanvas.classList.toggle('preview-single', state.previewMode !== 'sheet');
+            const ctx = previewCanvas.getContext('2d');
+            previewCanvas.width = width;
+            previewCanvas.height = height;
+            ctx.fillStyle = state.bgColor;
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = '#8a93a5';
+            ctx.font = `${Math.max(14, Math.round(width / 18))}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, width / 2, height / 2);
+            requestAnimationFrame(positionFaceLandmarks);
+        }
+
+        async function downloadCanvas(canvas, fileName) {
+            if (!canvas) return;
+            const targetKb = getTargetKilobytes();
+            const forceJpeg = targetKb !== null;
+            const mimeType = forceJpeg || outputFormat.value === 'jpeg' ? 'image/jpeg' : 'image/png';
+            const extension = mimeType === 'image/jpeg' ? 'jpg' : 'png';
+            const blob = await exportCanvasBlob(canvas, mimeType, targetKb);
+            if (!blob) return;
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${fileName}.${extension}`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+
+            const sizeKb = Math.ceil(blob.size / 1024);
+            if (targetKb && sizeKb > targetKb) {
+                setStatus(`已下载，但当前约 ${sizeKb}KB，未完全压到 ${targetKb}KB`, true);
+            } else {
+                setStatus(`已下载 ${extension.toUpperCase()} · 约 ${sizeKb}KB`);
+            }
+        }
+
+        async function exportCanvasBlob(canvas, mimeType, targetKb) {
+            if (mimeType === 'image/png') {
+                return canvasToBlob(canvas, 'image/png');
+            }
+
+            let bestBlob = null;
+            for (let quality = 0.92; quality >= 0.35; quality -= 0.07) {
+                const blob = await canvasToBlob(canvas, 'image/jpeg', quality);
+                bestBlob = blob;
+                if (!targetKb || blob.size <= targetKb * 1024) {
+                    return blob;
+                }
+            }
+            return bestBlob;
+        }
+
+        function canvasToBlob(canvas, mimeType, quality) {
+            return new Promise((resolve) => {
+                canvas.toBlob((blob) => resolve(blob), mimeType, quality);
+            });
+        }
+
+        function getTargetKilobytes() {
+            if (targetSize.value === 'none') return null;
+            if (targetSize.value === 'custom') {
+                return clampNumber(Number(customTargetSize.value), 5, 2048);
+            }
+            return Number(targetSize.value);
+        }
+
+        function mmToPx(mm, dpi) {
+            return Math.round((mm / 25.4) * dpi);
+        }
+
+        function clampNumber(value, min, max) {
+            if (Number.isNaN(value)) return min;
+            return Math.min(max, Math.max(min, value));
+        }
+
+        function setStatus(message, isError = false) {
+            statusText.textContent = message;
+            statusText.classList.toggle('error', isError);
+        }
+
+        function setProcessing(isProcessing) {
+            processingNote.classList.toggle('show', isProcessing);
+            canvasWrap.classList.toggle('processing', isProcessing);
+            uploadZone.classList.toggle('processing', isProcessing);
+            uploadZone.setAttribute('aria-busy', String(isProcessing));
+            uploadIcon.textContent = isProcessing ? '…' : '↑';
+            uploadTitle.textContent = isProcessing ? '正在处理照片' : '上传照片';
+            uploadHint.textContent = isProcessing
+                ? '正在识别图片并处理背景，请稍等'
+                : '支持 JPG、PNG、WebP，所有处理都在本地浏览器完成';
+            if (isProcessing) {
+                downloadSingleBtn.textContent = '处理中';
+                downloadSheetBtn.textContent = '处理中';
+                mobileDownloadSingleBtn.textContent = '处理中';
+                mobileDownloadSheetBtn.textContent = '处理中';
+            } else {
+                updateDownloadLabels();
+            }
+            downloadSingleBtn.disabled = isProcessing || !state.image;
+            downloadSheetBtn.disabled = isProcessing || !state.image;
+            mobileDownloadSingleBtn.disabled = isProcessing || !state.image;
+            mobileDownloadSheetBtn.disabled = isProcessing || !state.image;
+        }
+    </script>
+</body>
+</html>
