@@ -1,4 +1,11 @@
 (function () {
+    const ADSENSE_CLIENT = 'ca-pub-1211476692473879';
+    const ADSENSE_SLOTS = {
+        default: '7415878599',
+        toolBottom: '7415878599',
+        articleBottom: '7415878599'
+    };
+
     const fallbackPartials = {
         'partials/header.html': `
             <header class="app-header">
@@ -203,6 +210,7 @@
         injectHeaderActions();
         setupFooterYear();
         setupDonateModal();
+        setupAdsense();
     }
 
     function activateNavLink() {
@@ -430,6 +438,109 @@
             </div>
         `;
         document.body.appendChild(modal);
+    }
+
+    function setupAdsense() {
+        const adNodes = Array.from(document.querySelectorAll('[data-ad-slot]'));
+        if (!adNodes.length) return;
+
+        ensureAdsenseStyles();
+        ensureAdsenseScript();
+
+        adNodes.forEach((node) => {
+            if (node.dataset.adRendered === 'true') return;
+            const slotKey = node.dataset.adSlot || 'default';
+            const slotId = ADSENSE_SLOTS[slotKey] || ADSENSE_SLOTS.default;
+            const isToolSlot = slotKey === 'toolBottom';
+            node.dataset.adRendered = 'true';
+            node.classList.add('ad-section');
+            node.classList.add(`ad-section-${slotKey}`);
+            node.setAttribute('aria-label', '广告');
+            node.innerHTML = `
+                <span class="ad-label">广告</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="${ADSENSE_CLIENT}"
+                     data-ad-slot="${slotId}"
+                     data-ad-format="${isToolSlot ? 'horizontal' : 'auto'}"
+                     data-full-width-responsive="${isToolSlot ? 'false' : 'true'}"></ins>
+            `;
+
+            requestAnimationFrame(() => {
+                try {
+                    window.adsbygoogle = window.adsbygoogle || [];
+                    window.adsbygoogle.push({});
+                } catch (error) {
+                    console.warn('AdSense 初始化失败:', error);
+                }
+            });
+        });
+    }
+
+    function ensureAdsenseScript() {
+        if (document.getElementById('adsenseScript')) return;
+        const script = document.createElement('script');
+        script.id = 'adsenseScript';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;
+        document.head.appendChild(script);
+    }
+
+    function ensureAdsenseStyles() {
+        if (document.getElementById('sharedAdsenseStyles')) return;
+        const style = document.createElement('style');
+        style.id = 'sharedAdsenseStyles';
+        style.textContent = `
+            .ad-section {
+                width: min(1180px, calc(100% - 32px));
+                min-height: 76px;
+                margin: 20px auto 0;
+                padding: 10px 12px;
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-md);
+                background: var(--bg-primary);
+                box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+            }
+
+            .ad-section-articleBottom {
+                min-height: 110px;
+                margin-top: 28px;
+            }
+
+            .ad-section-toolBottom {
+                max-height: 118px;
+                overflow: hidden;
+            }
+
+            .ad-label {
+                display: block;
+                margin-bottom: 4px;
+                color: var(--text-tertiary);
+                font-size: 12px;
+                line-height: 1.4;
+            }
+
+            .ad-section ins.adsbygoogle {
+                min-height: 48px;
+            }
+
+            .ad-section-toolBottom ins.adsbygoogle {
+                max-height: 90px;
+            }
+
+            .ad-section-articleBottom ins.adsbygoogle {
+                min-height: 80px;
+            }
+
+            @media (max-width: 820px) {
+                .ad-section {
+                    width: calc(100% - 32px);
+                    margin-top: 20px;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     }
 
     document.addEventListener('DOMContentLoaded', includePartials);
