@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文本对比工具怎么用 - 代码、JSON、文案差异对比指南</title>
+    <meta name="description" content="文本对比工具使用指南，说明如何对比代码、JSON、配置文件、合同文案和 Markdown 文档，快速查看新增、删除和修改内容。">
+    <meta name="keywords" content="文本对比工具,代码对比工具,JSON对比,文案对比,文件差异对比,在线diff工具">
+    <meta name="author" content="json.asia">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://json.asia/text-diff-guide.html">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <style>
+        :root { --bg-primary:#fff; --bg-secondary:#f5f7fb; --bg-elevated:#fff; --bg-tertiary:#eef2f8; --text-primary:#1f2328; --text-secondary:#4c576a; --text-tertiary:#8a93a5; --accent-blue:#0969da; --accent-purple:#8250df; --border-default:#d0d7de; --radius-sm:6px; --radius-md:8px; --shadow-sm:0 2px 8px rgba(15,23,42,.08); }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft Yahei',sans-serif; background:var(--bg-secondary); color:var(--text-primary); }
+        a { color:inherit; text-decoration:none; }
+        .app-container { min-height:100vh; display:flex; flex-direction:column; }
+        .app-header { background:var(--bg-primary); border-bottom:1px solid var(--border-default); padding:16px clamp(24px,3vw,48px); position:sticky; top:0; z-index:100; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+        .header-container { display:flex; align-items:center; justify-content:space-between; gap:24px; }
+        .header-left,.brand,.header-nav,.nav-group { display:flex; align-items:center; }
+        .header-left { gap:32px; }
+        .brand { gap:12px; }
+        .brand-icon { width:32px; height:32px; border-radius:var(--radius-sm); overflow:hidden; }
+        .brand-icon img { width:100%; height:100%; display:block; }
+        .brand-title,
+        .brand-text h1 { margin:0; font-size:18px; line-height:1.2; }
+        .brand-text p { margin:0; color:var(--text-tertiary); font-size:12px; }
+        .header-nav { gap:16px; flex-wrap:wrap; }
+        .nav-group { gap:8px; }
+        .nav-group-label { color:var(--text-tertiary); font-size:11px; font-weight:700; }
+        .nav-link { padding:6px 14px; border:1px solid transparent; border-radius:var(--radius-sm); color:var(--text-secondary); font-size:13px; font-weight:500; }
+        .nav-link:hover { border-color:var(--border-default); background:var(--bg-secondary); color:var(--text-primary); }
+        .content-main { width:min(980px, calc(100% - 32px)); margin:0 auto; padding:40px 0 8px; flex:1; }
+        .page-card { padding:clamp(24px,4vw,40px); border:1px solid var(--border-default); border-radius:var(--radius-md); background:var(--bg-primary); box-shadow:var(--shadow-sm); }
+        h1 { margin:0 0 12px; font-size:clamp(28px,4vw,40px); line-height:1.2; }
+        h2 { margin:30px 0 10px; font-size:20px; }
+        p,li { color:var(--text-secondary); font-size:15px; line-height:1.8; }
+        ul,ol { padding-left:20px; }
+        .intro { color:var(--text-secondary); font-size:16px; }
+        .cta-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
+        .cta-row a { padding:9px 14px; border:1px solid var(--border-default); border-radius:var(--radius-sm); color:var(--accent-blue); font-weight:700; }
+        @media (max-width:820px) { .header-container,.header-left { align-items:flex-start; flex-direction:column; gap:12px; } }
+    </style>
+</head>
+<body data-page="help">
+    <div class="app-container">
+        <div data-include="partials/header.html"></div>
+        <main class="content-main">
+            <article class="page-card">
+                <h1>文本对比工具怎么用</h1>
+                <p class="intro">文本对比工具适合比较两段代码、配置文件、接口返回、合同文案或 Markdown 文档，帮助你快速看到新增、删除和修改内容。</p>
+
+                <h2>基本使用步骤</h2>
+                <ol>
+                    <li>把旧版本内容粘贴到左侧，把新版本内容粘贴到右侧。</li>
+                    <li>选择文本类型，或者保持自动识别。</li>
+                    <li>需要时先点击格式化，例如 JSON、HTML、XML 或 SQL。</li>
+                    <li>点击开始对比，查看差异统计和详细对比结果。</li>
+                    <li>如果需要留档，可以导出对比结果。</li>
+                </ol>
+
+                <h2>适合对比哪些内容</h2>
+                <ul>
+                    <li>代码修改：查看函数、配置项、样式和 SQL 的变化。</li>
+                    <li>JSON 数据：比较接口返回、测试数据或配置文件差异。</li>
+                    <li>文案版本：比较合同条款、公告、产品说明和运营文案。</li>
+                    <li>日志片段：定位两次运行结果中不同的字段或错误信息。</li>
+                </ul>
+
+                <h2>什么时候需要先格式化</h2>
+                <p>如果内容是一整行 JSON、压缩 HTML 或没有缩进的 SQL，先格式化再对比通常更容易阅读。格式化后，对比结果会按更清晰的行结构展示。</p>
+
+                <h2>隐私与本地历史</h2>
+                <p>文本对比主要在浏览器本地完成。历史记录功能使用浏览器本地存储，适合保存常用对比片段，但处理敏感文本后建议及时清理。</p>
+
+                <div class="cta-row">
+                    <a href="index.html">打开文本对比工具</a>
+                    <a href="help.html">返回使用指南</a>
+                </div>
+            </article>
+        </main>
+        <div data-include="partials/footer.html"></div>
+    </div>
+    <script src="include-partials.js"></script>
+</body>
+</html>

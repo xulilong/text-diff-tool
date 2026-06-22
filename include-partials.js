@@ -9,7 +9,7 @@
                                 <img src="images/logo-ai-256.png" alt="json.asia 工具箱">
                             </div>
                             <div class="brand-text">
-                                <h1>json.asia 工具箱</h1>
+                                <div class="brand-title">json.asia 工具箱</div>
                                 <p>开发、文档与图片处理工具</p>
                             </div>
                         </div>
@@ -147,6 +147,7 @@
                       
                     </div>
                     <div class="footer-links">
+                        <a href="help.html">使用指南</a>
                         <a href="about.html">关于本站</a>
                         <a href="privacy.html">隐私政策</a>
                         <a href="mailto:xulilong@qq.com">问题反馈</a>
