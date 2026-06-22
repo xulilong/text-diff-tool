@@ -117,9 +117,29 @@
             margin-bottom: 6px;
         }
 
+        .guide-topic {
+            margin-top: 28px;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .link-grid a {
+            padding: 9px 14px;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--accent-blue);
+            font-weight: 700;
+            background: #fbfcff;
+        }
+
         @media (max-width: 820px) {
             .header-container, .header-left { align-items: flex-start; flex-direction: column; gap: 12px; }
-            .guide-grid { grid-template-columns: 1fr; }
+            .guide-grid, .link-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -149,6 +169,45 @@
                     </div>
                 </section>
 
+
+                <section class="guide-topic" aria-label="证件照专题">
+                    <h2>证件照专题</h2>
+                    <div class="link-grid">
+                        <a href="one-inch-photo-size.html">1寸照片尺寸是多少</a>
+                        <a href="two-inch-photo-size.html">2寸照片尺寸是多少</a>
+                        <a href="id-photo-blue-background.html">证件照蓝底颜色值参考</a>
+                        <a href="id-photo-white-to-blue.html">白底证件照怎么换蓝底</a>
+                        <a href="civil-service-photo-size.html">公务员考试照片尺寸要求参考</a>
+                        <a href="social-security-photo-size.html">社保卡照片尺寸要求参考</a>
+                        <a href="passport-photo-size.html">护照照片尺寸参考</a>
+                        <a href="visa-photo-size.html">签证照片尺寸参考</a>
+                        <a href="make-one-inch-photo-on-phone.html">手机怎么制作一寸照片</a>
+                        <a href="id-photo-print-layout.html">证件照排版怎么做</a>
+                    </div>
+                </section>
+
+                <section class="guide-topic" aria-label="JSON 专题">
+                    <h2>JSON 专题</h2>
+                    <div class="link-grid">
+                        <a href="json-format-error.html">JSON格式化失败是什么原因</a>
+                        <a href="json-escape-unescape.html">JSON转义和反转义区别</a>
+                        <a href="json-minify-one-line.html">JSON压缩成一行怎么做</a>
+                        <a href="json-tree-viewer.html">JSON树形结构查看器怎么用</a>
+                        <a href="json-remove-backslash.html">JSON字符串里的反斜杠怎么去掉</a>
+                    </div>
+                </section>
+
+                <section class="guide-topic" aria-label="文本对比专题">
+                    <h2>文本对比专题</h2>
+                    <div class="link-grid">
+                        <a href="compare-two-texts.html">两个文本怎么对比不同</a>
+                        <a href="code-diff-tool.html">代码差异对比工具怎么用</a>
+                        <a href="json-diff-compare.html">JSON差异对比怎么做</a>
+                        <a href="contract-text-compare.html">合同文本对比怎么做</a>
+                        <a href="markdown-diff-tool.html">Markdown文档对比工具</a>
+                    </div>
+                </section>
+
                 <section aria-label="常见问题">
                     <h2>常见问题</h2>
                     <div class="faq-item">
@@ -170,7 +229,7 @@
                 </section>
             </article>
         </main>
-        <div data-ad-slot="articleBottom"></div>
+        <div data-ad-slot="toolBottom"></div>
         <div data-include="partials/footer.html"></div>
     </div>
     <script src="include-partials.js"></script>

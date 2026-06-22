@@ -503,11 +503,6 @@
                 box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
             }
 
-            .ad-section-articleBottom {
-                min-height: 110px;
-                margin-top: 28px;
-            }
-
             .ad-section-toolBottom {
                 max-height: 118px;
                 overflow: hidden;
@@ -527,10 +522,6 @@
 
             .ad-section-toolBottom ins.adsbygoogle {
                 max-height: 90px;
-            }
-
-            .ad-section-articleBottom ins.adsbygoogle {
-                min-height: 80px;
             }
 
             @media (max-width: 820px) {
