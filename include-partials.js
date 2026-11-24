@@ -441,11 +441,10 @@
     }
 
     function setupAdsense() {
-        const adNodes = Array.from(document.querySelectorAll('[data-ad-slot]'));
+        const adNodes = Array.from(document.querySelectorAll('[data-ad-slot]:not(.adsbygoogle)'));
         if (!adNodes.length) return;
 
         ensureAdsenseStyles();
-        ensureAdsenseScript();
 
         adNodes.forEach((node) => {
             if (node.dataset.adRendered === 'true') return;
@@ -453,6 +452,7 @@
             const slotId = ADSENSE_SLOTS[slotKey] || ADSENSE_SLOTS.default;
             const isToolSlot = slotKey === 'toolBottom';
             node.dataset.adRendered = 'true';
+            node.dataset.adState = 'pending';
             node.classList.add('ad-section');
             node.classList.add(`ad-section-${slotKey}`);
             node.setAttribute('aria-label', '广告');
@@ -466,25 +466,61 @@
                      data-full-width-responsive="${isToolSlot ? 'false' : 'true'}"></ins>
             `;
 
+            const ad = node.querySelector('ins.adsbygoogle');
+            // Keep the slot visible until Google has actually returned a result.
+            // Initially hidden slots may never issue an ad request.
+            const observer = new MutationObserver(() => {
+                const status = ad.getAttribute('data-ad-status');
+                if (!status) return;
+                node.dataset.adState = status;
+                node.hidden = status === 'unfilled';
+            });
+            observer.observe(ad, {
+                attributes: true,
+                attributeFilter: ['data-ad-status']
+            });
+
             requestAnimationFrame(() => {
+                if (node.dataset.adState === 'error') return;
                 try {
                     window.adsbygoogle = window.adsbygoogle || [];
                     window.adsbygoogle.push({});
                 } catch (error) {
+                    observer.disconnect();
+                    node.dataset.adState = 'error';
+                    node.hidden = true;
                     console.warn('AdSense 初始化失败:', error);
                 }
             });
         });
+
+        ensureAdsenseScript();
     }
 
     function ensureAdsenseScript() {
-        if (document.getElementById('adsenseScript')) return;
+        const existingScript = document.getElementById('adsenseScript');
+        if (existingScript) {
+            if (existingScript.dataset.loadState === 'error') hideFailedAds();
+            return;
+        }
         const script = document.createElement('script');
         script.id = 'adsenseScript';
         script.async = true;
         script.crossOrigin = 'anonymous';
         script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;
+        script.addEventListener('error', () => {
+            script.dataset.loadState = 'error';
+            hideFailedAds();
+            console.warn('AdSense 脚本加载失败，请检查网络连接或广告拦截设置。');
+        });
         document.head.appendChild(script);
+    }
+
+    function hideFailedAds() {
+        document.querySelectorAll('.ad-section').forEach((node) => {
+            node.dataset.adState = 'error';
+            node.hidden = true;
+        });
     }
 
     function ensureAdsenseStyles() {
@@ -503,9 +539,8 @@
                 box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
             }
 
-            .ad-section-toolBottom {
-                max-height: 118px;
-                overflow: hidden;
+            .ad-section[hidden] {
+                display: none !important;
             }
 
             .ad-label {
@@ -518,10 +553,6 @@
 
             .ad-section ins.adsbygoogle {
                 min-height: 48px;
-            }
-
-            .ad-section-toolBottom ins.adsbygoogle {
-                max-height: 90px;
             }
 
             @media (max-width: 820px) {
